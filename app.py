@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+import os
 
 st.set_page_config(
     page_title="Dashboard Clustering Instansi",
@@ -9,24 +10,36 @@ st.set_page_config(
     layout="wide"
 )
 
-# ==============================
-# SESSION STATE
-# ==============================
+# =============================
+# FILE DATA
+# =============================
 
-if "menu" not in st.session_state:
-    st.session_state.menu = "beranda"
+DATA_FILE = "data_instansi.csv"
 
-if "data" not in st.session_state:
-    st.session_state.data = pd.DataFrame(columns=[
+# jika file belum ada
+if not os.path.exists(DATA_FILE):
+    df_init = pd.DataFrame(columns=[
         "Asal Instansi",
         "Permasalahan",
         "Permohonan",
         "Pertanyaan"
     ])
+    df_init.to_csv(DATA_FILE, index=False)
 
-# ==============================
-# SIDEBAR
-# ==============================
+# fungsi load data
+def load_data():
+    return pd.read_csv(DATA_FILE)
+
+# fungsi simpan data
+def save_data(df):
+    df.to_csv(DATA_FILE, index=False)
+
+# =============================
+# MENU
+# =============================
+
+if "menu" not in st.session_state:
+    st.session_state.menu = "beranda"
 
 st.sidebar.title("📁 Navigasi")
 
@@ -40,6 +53,7 @@ if st.sidebar.button("🤖 Cek Cluster Instansi"):
     st.session_state.menu = "cluster"
 
 menu = st.session_state.menu
+
 
 # ====================================================
 # BERANDA
@@ -60,16 +74,27 @@ berdasarkan jumlah:
 menggunakan metode **K-Means Clustering**.
 """)
 
+    df = load_data()
+
     st.divider()
 
     col1, col2, col3 = st.columns(3)
 
-    total_data = len(st.session_state.data)
-    total_instansi = st.session_state.data["Asal Instansi"].nunique()
-
-    col1.metric("Jumlah Data", total_data)
-    col2.metric("Jumlah Instansi", total_instansi)
+    col1.metric("Jumlah Data", len(df))
+    col2.metric("Jumlah Instansi", df["Asal Instansi"].nunique())
     col3.metric("Jumlah Variabel", 3)
+
+    st.divider()
+
+    st.subheader("Cara Menggunakan Dashboard")
+
+    st.write("""
+1️⃣ Input data instansi  
+2️⃣ Tambahkan beberapa instansi  
+3️⃣ Jalankan clustering  
+4️⃣ Lihat instansi masuk cluster mana
+""")
+
 
 # ====================================================
 # INPUT DATA INSTANSI
@@ -110,6 +135,8 @@ elif menu == "input":
 
             else:
 
+                df = load_data()
+
                 data_baru = {
                     "Asal Instansi": nama,
                     "Permasalahan": permasalahan,
@@ -117,12 +144,11 @@ elif menu == "input":
                     "Pertanyaan": pertanyaan
                 }
 
-                st.session_state.data = pd.concat(
-                    [st.session_state.data, pd.DataFrame([data_baru])],
-                    ignore_index=True
-                )
+                df = pd.concat([df, pd.DataFrame([data_baru])], ignore_index=True)
 
-                st.success("Data berhasil ditambahkan")
+                save_data(df)
+
+                st.success("Data berhasil disimpan")
 
         if reset:
             st.rerun()
@@ -131,7 +157,7 @@ elif menu == "input":
 
     st.subheader("📋 Data Instansi")
 
-    df = st.session_state.data
+    df = load_data()
 
     st.dataframe(df, use_container_width=True)
 
@@ -150,13 +176,14 @@ elif menu == "input":
 
         if st.button("Hapus Data"):
 
-            st.session_state.data = df[
-                df["Asal Instansi"] != instansi_hapus
-            ]
+            df = df[df["Asal Instansi"] != instansi_hapus]
+
+            save_data(df)
 
             st.success("Data berhasil dihapus")
 
             st.rerun()
+
 
 # ====================================================
 # CLUSTERING
@@ -166,7 +193,7 @@ elif menu == "cluster":
 
     st.title("🤖 Cek Cluster Instansi")
 
-    df = st.session_state.data.copy()
+    df = load_data()
 
     if len(df) < 4:
 
