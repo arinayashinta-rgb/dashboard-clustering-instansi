@@ -7,9 +7,12 @@ from sklearn.cluster import KMeans
 
 st.set_page_config(page_title="Clustering Instansi", layout="wide")
 
-# =====================
+# =========================
 # SESSION STATE
-# =====================
+# =========================
+
+if "menu" not in st.session_state:
+    st.session_state.menu = "Input"
 
 if "data_instansi" not in st.session_state:
     st.session_state.data_instansi = pd.DataFrame(columns=[
@@ -19,80 +22,165 @@ if "data_instansi" not in st.session_state:
         "Pertanyaan"
     ])
 
-# =====================
-# BERANDA
-# =====================
+# =========================
+# SIDEBAR MENU
+# =========================
 
-st.title("Clustering Instansi")
+st.sidebar.title("Menu Dashboard")
 
-st.write("""
-Masukkan data instansi satu per satu kemudian lakukan clustering.
-""")
+if st.sidebar.button("Input Data Instansi"):
+    st.session_state.menu = "Input"
 
-# =====================
-# INPUT DATA INSTANSI
-# =====================
+if st.sidebar.button("Cek Cluster Instansi"):
+    st.session_state.menu = "Cluster"
 
-st.subheader("Input Data Instansi")
+menu = st.session_state.menu
 
-nama = st.text_input("Nama Instansi")
 
-permasalahan = st.number_input("Jumlah Permasalahan", min_value=0)
+# =====================================================
+# HALAMAN 1 : INPUT DATA INSTANSI
+# =====================================================
 
-permohonan = st.number_input("Jumlah Permohonan", min_value=0)
+if menu == "Input":
 
-pertanyaan = st.number_input("Jumlah Pertanyaan", min_value=0)
+    st.title("Input Data Instansi")
 
-col1, col2 = st.columns(2)
+    st.subheader("Tambah / Edit Data")
 
-# =====================
-# BUTTON TAMBAH DATA
-# =====================
+    nama = st.text_input("Nama Instansi")
 
-if col1.button("Tambah Data"):
+    permasalahan = st.number_input("Jumlah Permasalahan", min_value=0)
 
-    data_baru = {
-        "Asal Instansi": nama,
-        "Permasalahan": permasalahan,
-        "Permohonan": permohonan,
-        "Pertanyaan": pertanyaan
-    }
+    permohonan = st.number_input("Jumlah Permohonan", min_value=0)
 
-    st.session_state.data_instansi = pd.concat([
-        st.session_state.data_instansi,
-        pd.DataFrame([data_baru])
-    ], ignore_index=True)
+    pertanyaan = st.number_input("Jumlah Pertanyaan", min_value=0)
 
-    st.success("Data instansi berhasil ditambahkan")
+    col1, col2 = st.columns(2)
 
-# =====================
-# RESET FORM
-# =====================
+    # =========================
+    # TAMBAH DATA
+    # =========================
 
-if col2.button("Hapus Isian"):
+    if col1.button("Tambah Data"):
 
-    st.rerun()
+        data_baru = {
+            "Asal Instansi": nama,
+            "Permasalahan": permasalahan,
+            "Permohonan": permohonan,
+            "Pertanyaan": pertanyaan
+        }
 
-# =====================
-# TABEL DATA
-# =====================
+        st.session_state.data_instansi = pd.concat(
+            [st.session_state.data_instansi, pd.DataFrame([data_baru])],
+            ignore_index=True
+        )
 
-st.subheader("Data Instansi")
+        st.success("Data berhasil ditambahkan")
 
-st.dataframe(st.session_state.data_instansi)
+    # =========================
+    # RESET FORM
+    # =========================
 
-# =====================
-# CLUSTERING
-# =====================
+    if col2.button("Hapus Isian"):
+        st.rerun()
 
-st.subheader("Proses Clustering")
+    st.divider()
 
-if st.button("Proses Clustering"):
+    # =========================
+    # TABEL DATA
+    # =========================
 
-    df = st.session_state.data_instansi.copy()
+    st.subheader("Data Instansi")
+
+    df = st.session_state.data_instansi
+
+    st.dataframe(df, use_container_width=True)
+
+    # =========================
+    # HAPUS DATA
+    # =========================
+
+    if len(df) > 0:
+
+        st.subheader("Hapus Data Instansi")
+
+        instansi_hapus = st.selectbox(
+            "Pilih Instansi",
+            df["Asal Instansi"]
+        )
+
+        if st.button("Hapus Data"):
+
+            st.session_state.data_instansi = df[
+                df["Asal Instansi"] != instansi_hapus
+            ]
+
+            st.success("Data berhasil dihapus")
+
+            st.rerun()
+
+    # =========================
+    # EDIT DATA
+    # =========================
+
+    if len(df) > 0:
+
+        st.subheader("Edit Data Instansi")
+
+        instansi_edit = st.selectbox(
+            "Pilih Instansi untuk Edit",
+            df["Asal Instansi"],
+            key="edit_instansi"
+        )
+
+        data_edit = df[df["Asal Instansi"] == instansi_edit].iloc[0]
+
+        permasalahan_edit = st.number_input(
+            "Permasalahan Baru",
+            value=int(data_edit["Permasalahan"])
+        )
+
+        permohonan_edit = st.number_input(
+            "Permohonan Baru",
+            value=int(data_edit["Permohonan"])
+        )
+
+        pertanyaan_edit = st.number_input(
+            "Pertanyaan Baru",
+            value=int(data_edit["Pertanyaan"])
+        )
+
+        if st.button("Update Data"):
+
+            idx = df[df["Asal Instansi"] == instansi_edit].index[0]
+
+            st.session_state.data_instansi.loc[idx,
+                ["Permasalahan","Permohonan","Pertanyaan"]
+            ] = [
+                permasalahan_edit,
+                permohonan_edit,
+                pertanyaan_edit
+            ]
+
+            st.success("Data berhasil diperbarui")
+
+            st.rerun()
+
+
+# =====================================================
+# HALAMAN 2 : CEK CLUSTER INSTANSI
+# =====================================================
+
+elif menu == "Cluster":
+
+    st.title("Cek Cluster Instansi")
+
+    df = st.session_state.data_instansi
 
     if len(df) < 4:
-        st.warning("Minimal 4 data instansi untuk clustering")
+
+        st.warning("Minimal 4 data instansi untuk melakukan clustering")
+
     else:
 
         X = df[['Permasalahan','Permohonan','Pertanyaan']]
@@ -114,6 +202,7 @@ if st.button("Proses Clustering"):
 
         df['Kategori Cluster'] = df['Cluster'].map(cluster_names)
 
-        st.success("Clustering selesai")
+        st.subheader("Hasil Clustering")
 
-        st.dataframe(df[['Asal Instansi','Kategori Cluster']])
+        st.dataframe(df[['Asal Instansi','Kategori Cluster']],
+                     use_container_width=True)
