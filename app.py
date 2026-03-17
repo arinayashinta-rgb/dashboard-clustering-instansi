@@ -74,16 +74,6 @@ berdasarkan jumlah:
 menggunakan metode **K-Means Clustering**.
 """)
 
-    df = load_data()
-
-    st.divider()
-
-    col1, col2, col3 = st.columns(3)
-
-    col1.metric("Jumlah Data", len(df))
-    col2.metric("Jumlah Instansi", df["Asal Instansi"].nunique())
-    col3.metric("Jumlah Variabel", 3)
-
     st.divider()
 
     st.subheader("Cara Menggunakan Dashboard")
