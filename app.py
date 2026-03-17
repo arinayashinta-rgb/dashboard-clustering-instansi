@@ -9,9 +9,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# =============================
+# ==============================
 # SESSION STATE
-# =============================
+# ==============================
 
 if "menu" not in st.session_state:
     st.session_state.menu = "beranda"
@@ -24,21 +24,9 @@ if "data" not in st.session_state:
         "Pertanyaan"
     ])
 
-if "nama" not in st.session_state:
-    st.session_state.nama = ""
-
-if "permasalahan" not in st.session_state:
-    st.session_state.permasalahan = 0
-
-if "permohonan" not in st.session_state:
-    st.session_state.permohonan = 0
-
-if "pertanyaan" not in st.session_state:
-    st.session_state.pertanyaan = 0
-
-# =============================
-# SIDEBAR MENU
-# =============================
+# ==============================
+# SIDEBAR
+# ==============================
 
 st.sidebar.title("📁 Navigasi")
 
@@ -53,25 +41,24 @@ if st.sidebar.button("🤖 Cek Cluster Instansi"):
 
 menu = st.session_state.menu
 
-
-# =====================================================
-# HALAMAN BERANDA
-# =====================================================
+# ====================================================
+# BERANDA
+# ====================================================
 
 if menu == "beranda":
 
     st.title("📊 Dashboard Clustering Instansi")
 
     st.markdown("""
-    Dashboard ini digunakan untuk **mengelompokkan instansi**
-    berdasarkan jumlah:
+Dashboard ini digunakan untuk **mengelompokkan instansi**
+berdasarkan jumlah:
 
-    - Permasalahan
-    - Permohonan
-    - Pertanyaan
+- Permasalahan
+- Permohonan
+- Pertanyaan
 
-    menggunakan metode **K-Means Clustering**.
-    """)
+menggunakan metode **K-Means Clustering**.
+""")
 
     st.divider()
 
@@ -84,106 +71,61 @@ if menu == "beranda":
     col2.metric("Jumlah Instansi", total_instansi)
     col3.metric("Jumlah Variabel", 3)
 
-    st.divider()
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.subheader("🧠 Tentang Clustering")
-
-        st.markdown("""
-        **Clustering** adalah metode dalam data mining
-        yang digunakan untuk mengelompokkan data berdasarkan
-        karakteristik yang mirip.
-
-        Dalam dashboard ini digunakan algoritma:
-
-        **K-Means Clustering**
-        """)
-
-    with col2:
-
-        st.subheader("📊 Alur Penggunaan Dashboard")
-
-        st.markdown("""
-        1️⃣ Input data instansi  
-        2️⃣ Tambahkan beberapa instansi  
-        3️⃣ Jalankan clustering  
-        4️⃣ Lihat instansi masuk cluster mana  
-        """)
-
-
-# =====================================================
-# HALAMAN INPUT DATA INSTANSI
-# =====================================================
+# ====================================================
+# INPUT DATA INSTANSI
+# ====================================================
 
 elif menu == "input":
 
     st.title("📝 Input Data Instansi")
 
-    st.subheader("Form Input")
+    with st.form("form_input"):
 
-    nama = st.text_input(
-        "Nama Instansi",
-        key="nama"
-    )
+        nama = st.text_input("Nama Instansi")
 
-    permasalahan = st.number_input(
-        "Jumlah Permasalahan",
-        min_value=0,
-        key="permasalahan"
-    )
+        permasalahan = st.number_input(
+            "Jumlah Permasalahan",
+            min_value=0
+        )
 
-    permohonan = st.number_input(
-        "Jumlah Permohonan",
-        min_value=0,
-        key="permohonan"
-    )
+        permohonan = st.number_input(
+            "Jumlah Permohonan",
+            min_value=0
+        )
 
-    pertanyaan = st.number_input(
-        "Jumlah Pertanyaan",
-        min_value=0,
-        key="pertanyaan"
-    )
+        pertanyaan = st.number_input(
+            "Jumlah Pertanyaan",
+            min_value=0
+        )
 
-    col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
 
-    if col1.button("➕ Tambah Data"):
+        tambah = col1.form_submit_button("➕ Tambah Data")
+        reset = col2.form_submit_button("🧹 Hapus Isian")
 
-        if nama == "":
-            st.warning("Nama instansi harus diisi")
-        else:
+        if tambah:
 
-            data_baru = {
-                "Asal Instansi": nama,
-                "Permasalahan": permasalahan,
-                "Permohonan": permohonan,
-                "Pertanyaan": pertanyaan
-            }
+            if nama == "":
+                st.warning("Nama instansi harus diisi")
 
-            st.session_state.data = pd.concat(
-                [st.session_state.data, pd.DataFrame([data_baru])],
-                ignore_index=True
-            )
+            else:
 
-            st.success("Data berhasil ditambahkan")
+                data_baru = {
+                    "Asal Instansi": nama,
+                    "Permasalahan": permasalahan,
+                    "Permohonan": permohonan,
+                    "Pertanyaan": pertanyaan
+                }
 
-            st.session_state.nama = ""
-            st.session_state.permasalahan = 0
-            st.session_state.permohonan = 0
-            st.session_state.pertanyaan = 0
+                st.session_state.data = pd.concat(
+                    [st.session_state.data, pd.DataFrame([data_baru])],
+                    ignore_index=True
+                )
 
+                st.success("Data berhasil ditambahkan")
+
+        if reset:
             st.rerun()
-
-    if col2.button("🧹 Hapus Isian"):
-
-        st.session_state.nama = ""
-        st.session_state.permasalahan = 0
-        st.session_state.permohonan = 0
-        st.session_state.pertanyaan = 0
-
-        st.rerun()
 
     st.divider()
 
@@ -192,6 +134,10 @@ elif menu == "input":
     df = st.session_state.data
 
     st.dataframe(df, use_container_width=True)
+
+    # ============================
+    # HAPUS DATA
+    # ============================
 
     if len(df) > 0:
 
@@ -212,53 +158,9 @@ elif menu == "input":
 
             st.rerun()
 
-    if len(df) > 0:
-
-        st.subheader("✏ Edit Data Instansi")
-
-        instansi_edit = st.selectbox(
-            "Pilih Instansi untuk Edit",
-            df["Asal Instansi"],
-            key="edit"
-        )
-
-        data_edit = df[df["Asal Instansi"] == instansi_edit].iloc[0]
-
-        permasalahan_edit = st.number_input(
-            "Permasalahan Baru",
-            value=int(data_edit["Permasalahan"])
-        )
-
-        permohonan_edit = st.number_input(
-            "Permohonan Baru",
-            value=int(data_edit["Permohonan"])
-        )
-
-        pertanyaan_edit = st.number_input(
-            "Pertanyaan Baru",
-            value=int(data_edit["Pertanyaan"])
-        )
-
-        if st.button("Update Data"):
-
-            idx = df[df["Asal Instansi"] == instansi_edit].index[0]
-
-            st.session_state.data.loc[idx,
-                ["Permasalahan","Permohonan","Pertanyaan"]
-            ] = [
-                permasalahan_edit,
-                permohonan_edit,
-                pertanyaan_edit
-            ]
-
-            st.success("Data berhasil diperbarui")
-
-            st.rerun()
-
-
-# =====================================================
-# HALAMAN CLUSTERING
-# =====================================================
+# ====================================================
+# CLUSTERING
+# ====================================================
 
 elif menu == "cluster":
 
@@ -275,7 +177,6 @@ elif menu == "cluster":
         X = df[['Permasalahan','Permohonan','Pertanyaan']]
 
         scaler = StandardScaler()
-
         X_scaled = scaler.fit_transform(X)
 
         kmeans = KMeans(n_clusters=4, random_state=42)
