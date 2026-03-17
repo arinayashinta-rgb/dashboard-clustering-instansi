@@ -126,7 +126,7 @@ elif menu == "input":
         col1, col2 = st.columns(2)
 
         tambah = col1.form_submit_button("➕ Tambah Data")
-
+        reset = col2.form_submit_button("🧹 Hapus Isian")
         if tambah:
 
             if nama == "":
