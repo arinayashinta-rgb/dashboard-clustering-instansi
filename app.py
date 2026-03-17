@@ -1,16 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 
-st.set_page_config(
-    page_title="Clustering Instansi",
-    layout="wide"
-)
+st.set_page_config(page_title="Clustering Instansi", layout="wide")
 
 # ======================
 # SESSION STATE
@@ -20,10 +15,10 @@ if "menu" not in st.session_state:
     st.session_state.menu = "Beranda"
 
 # ======================
-# SIDEBAR MENU
+# SIDEBAR
 # ======================
 
-st.sidebar.title("Menu Dashboard")
+st.sidebar.title("Menu")
 
 if st.sidebar.button("Beranda"):
     st.session_state.menu = "Beranda"
@@ -49,17 +44,16 @@ if menu == "Beranda":
     st.title("Dashboard Clustering Instansi")
 
     st.write("""
-    Aplikasi ini digunakan untuk melakukan **clustering instansi**
-    berdasarkan:
+    Sistem ini digunakan untuk melakukan **clustering instansi**
+    berdasarkan jumlah:
 
     - Permasalahan
     - Permohonan
     - Pertanyaan
 
-    Menggunakan metode **K-Means Clustering**.
+    Setelah model dibuat, Anda bisa **menginput instansi baru**
+    untuk mengetahui instansi tersebut **masuk cluster mana**.
     """)
-
-    st.info("Silakan mulai dari menu **Import Data**")
 
 
 # ======================
@@ -68,9 +62,9 @@ if menu == "Beranda":
 
 elif menu == "Import":
 
-    st.title("Import Data Instansi")
+    st.title("Import Dataset")
 
-    file = st.file_uploader("Upload file Excel", type=["xlsx"])
+    file = st.file_uploader("Upload dataset Excel", type=["xlsx"])
 
     if file is not None:
 
@@ -78,9 +72,7 @@ elif menu == "Import":
 
         st.session_state["data"] = df
 
-        st.success("Data berhasil diupload")
-
-        st.write("Preview Data")
+        st.success("Dataset berhasil diupload")
 
         st.dataframe(df)
 
@@ -95,23 +87,17 @@ elif menu == "Preprocessing":
 
     if "data" not in st.session_state:
 
-        st.warning("Upload data terlebih dahulu")
+        st.warning("Upload dataset terlebih dahulu")
 
     else:
 
         df = st.session_state["data"]
 
-        st.subheader("Cek Missing Value")
-
-        st.write(df.isnull().sum())
-
         # hapus missing
         df = df.dropna()
 
-        # hapus duplikasi
+        # hapus duplikat
         df = df.drop_duplicates()
-
-        st.success("Missing value dan duplikasi telah dibersihkan")
 
         X = df[['Permasalahan','Permohonan','Pertanyaan']]
 
@@ -123,13 +109,13 @@ elif menu == "Preprocessing":
         st.session_state["X_scaled"] = X_scaled
         st.session_state["scaler"] = scaler
 
-        st.write("Data setelah preprocessing")
+        st.success("Preprocessing selesai")
 
         st.dataframe(df)
 
 
 # ======================
-# CLUSTERING
+# CLUSTERING + PREDIKSI
 # ======================
 
 elif menu == "Clustering":
@@ -144,59 +130,14 @@ elif menu == "Clustering":
 
         df = st.session_state["df_clean"].copy()
         X_scaled = st.session_state["X_scaled"]
+        scaler = st.session_state["scaler"]
 
-        st.subheader("Menentukan Jumlah Cluster")
+        # model clustering
+        kmeans = KMeans(n_clusters=4, random_state=42)
 
-        k = st.slider("Pilih jumlah cluster", 2, 6, 4)
+        df['Cluster'] = kmeans.fit_predict(X_scaled)
 
-        # silhouette
-        labels = KMeans(n_clusters=k, random_state=42).fit_predict(X_scaled)
-
-        score = silhouette_score(X_scaled, labels)
-
-        st.metric("Silhouette Score", round(score,3))
-
-        # elbow method
-        wcss = []
-
-        for i in range(1,10):
-
-            kmeans = KMeans(n_clusters=i, random_state=42)
-
-            kmeans.fit(X_scaled)
-
-            wcss.append(kmeans.inertia_)
-
-        fig, ax = plt.subplots()
-
-        ax.plot(range(1,10), wcss, marker='o')
-
-        ax.set_xlabel("Jumlah Cluster")
-        ax.set_ylabel("WCSS")
-
-        ax.set_title("Elbow Method")
-
-        st.pyplot(fig)
-
-        # ======================
-        # MODEL CLUSTER
-        # ======================
-
-        kmeans = KMeans(n_clusters=k, random_state=42)
-
-        labels = kmeans.fit_predict(X_scaled)
-
-        df['Cluster'] = labels
-
-        cluster_summary = df.groupby('Cluster')[[
-            'Permasalahan',
-            'Permohonan',
-            'Pertanyaan'
-        ]].mean()
-
-        st.subheader("Rata-rata tiap cluster")
-
-        st.dataframe(cluster_summary)
+        st.session_state["kmeans"] = kmeans
 
         cluster_names = {
             0: "Dominan Permasalahan",
@@ -207,21 +148,36 @@ elif menu == "Clustering":
 
         df['Kategori Cluster'] = df['Cluster'].map(cluster_names)
 
-        st.subheader("Hasil Clustering")
+        st.subheader("Hasil Clustering Dataset")
 
-        hasil = df[['Asal Instansi','Cluster','Kategori Cluster']]
+        st.dataframe(df[['Asal Instansi','Cluster','Kategori Cluster']])
 
-        st.dataframe(hasil)
+        st.divider()
 
-        st.subheader("Instansi masuk cluster mana")
+        # ======================
+        # INPUT INSTANSI BARU
+        # ======================
 
-        instansi = st.selectbox(
-            "Pilih Instansi",
-            df['Asal Instansi']
-        )
+        st.subheader("Coba Cluster Instansi Baru")
 
-        hasil_instansi = hasil[hasil['Asal Instansi'] == instansi]
+        nama = st.text_input("Nama Instansi")
 
-        st.success(
-            f"Instansi {instansi} masuk ke {hasil_instansi['Kategori Cluster'].values[0]}"
-        )
+        permasalahan = st.number_input("Jumlah Permasalahan", min_value=0)
+
+        permohonan = st.number_input("Jumlah Permohonan", min_value=0)
+
+        pertanyaan = st.number_input("Jumlah Pertanyaan", min_value=0)
+
+        if st.button("Proses Clustering"):
+
+            data_baru = np.array([[permasalahan, permohonan, pertanyaan]])
+
+            data_scaled = scaler.transform(data_baru)
+
+            cluster = kmeans.predict(data_scaled)[0]
+
+            kategori = cluster_names.get(cluster, "Cluster Tidak Diketahui")
+
+            st.success(
+                f"Instansi **{nama}** masuk ke cluster: **{kategori}**"
+            )
