@@ -61,7 +61,7 @@ menu = st.session_state.menu
 
 if menu == "beranda":
 
-    st.title("📊 Dashboard Clustering Instansi")
+    st.title("📊 Clustering Instansi")
 
     st.markdown("""
 Dashboard ini digunakan untuk **mengelompokkan instansi**
