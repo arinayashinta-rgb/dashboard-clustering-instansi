@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 import os
 
 st.set_page_config(
-    page_title="Dashboard Clustering Instansi",
+    page_title="Clustering Instansi",
     page_icon="📊",
     layout="wide"
 )
