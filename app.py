@@ -52,7 +52,8 @@ img_base64 = get_base64_image("Unsia.png")
 # =========================
 if st.session_state.page == "landing":
 
-    components.html(f"""
+    # COMPONENT HTML + BUTTON TERINTEGRASI
+    mulai = components.html(f"""
     <html>
     <head>
     <style>
@@ -66,7 +67,6 @@ if st.session_state.page == "landing":
         height: 100vh;
     }}
 
-    /* LEFT */
     .left {{
         width: 55%;
         background: linear-gradient(135deg, #1abc9c, #16a085);
@@ -79,7 +79,6 @@ if st.session_state.page == "landing":
         width: 260px;
     }}
 
-    /* RIGHT */
     .right {{
         width: 45%;
         display: flex;
@@ -93,17 +92,11 @@ if st.session_state.page == "landing":
         text-align: center;
     }}
 
-    .box h2 {{
-        margin-bottom: 10px;
-    }}
-
     .box p {{
         color: gray;
-        font-size: 14px;
         margin-bottom: 20px;
     }}
 
-    /* BUTTON */
     .btn {{
         width: 100%;
         padding: 12px;
@@ -113,12 +106,10 @@ if st.session_state.page == "landing":
         border-radius: 6px;
         font-size: 15px;
         cursor: pointer;
-        transition: 0.3s;
     }}
 
     .btn:hover {{
         background: #16a085;
-        transform: translateY(-2px);
     }}
     </style>
     </head>
@@ -127,12 +118,10 @@ if st.session_state.page == "landing":
 
     <div class="container">
 
-        <!-- LEFT -->
         <div class="left">
             <img src="data:image/png;base64,{img_base64}">
         </div>
 
-        <!-- RIGHT -->
         <div class="right">
             <div class="box">
                 <h2><b>Clustering Instansi</b></h2>
@@ -140,9 +129,9 @@ if st.session_state.page == "landing":
                 Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
                 </p>
 
-                <!-- BUTTON -->
+                <!-- BUTTON UTAMA -->
                 <button class="btn"
-                    onclick="window.parent.postMessage({{type:'streamlit:setComponentValue', value: true}}, '*')">
+                    onclick="window.parent.postMessage({{type:'streamlit:setComponentValue', value:true}}, '*')">
                     🚀 Mulai
                 </button>
 
@@ -155,14 +144,8 @@ if st.session_state.page == "landing":
     </html>
     """, height=700)
 
-    # HANDLE BUTTON HTML (REAL WORKING)
-    mulai = st.session_state.get("component_value")
-
+    # HANDLE BUTTON (INI YANG BUAT BERFUNGSI)
     if mulai:
-        pindah("beranda")
-
-    # fallback (jaga-jaga)
-    if st.button("🚀 Mulai"):
         pindah("beranda")
 
 # =========================
@@ -191,7 +174,7 @@ else:
         # BERANDA
         if st.session_state.page == "beranda":
 
-            st.title("📊 Aplikasi Clustering Instansi")
+            st.title("📊 Dashboard Clustering Instansi")
 
             col1, col2, col3 = st.columns(3)
 
@@ -223,12 +206,11 @@ else:
 
             with st.form("form_input"):
                 nama = st.text_input("Nama Instansi")
-                
+                total = st.number_input("Total Pengaduan", min_value=0)
 
                 permasalahan = st.text_area("Permasalahan")
                 permohonan = st.text_area("Permohonan")
                 pertanyaan = st.text_area("Pertanyaan")
-                total = st.number_input("Total Pengaduan", min_value=0)
 
                 submit = st.form_submit_button("Proses")
 
@@ -276,6 +258,12 @@ else:
                     st.error("Data tidak ditemukan")
 
                 st.divider()
+
+                col1, col2, col3 = st.columns(3)
+
+                col1.metric("Permasalahan", hitung_jumlah(data["permasalahan"]))
+                col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
+                col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
 
             else:
                 st.warning("Belum ada data")
