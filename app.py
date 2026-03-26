@@ -71,12 +71,13 @@ elif st.session_state.page == "menu":
             pindah("info")
 
     with col2:
-        if st.button("📊\nLihat Hasil", use_container_width=True):
-            pindah("hasil")
-
-    with col3:
         if st.button("📝\nInput Data", use_container_width=True):
             pindah("input")
+
+    with col3:
+         if st.button("📊\nLihat Hasil", use_container_width=True):
+            pindah("hasil")
+        
        
 
 # =========================
