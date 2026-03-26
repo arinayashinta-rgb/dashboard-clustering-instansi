@@ -12,47 +12,6 @@ st.set_page_config(
 )
 
 # =========================
-# GLOBAL CSS
-# =========================
-st.markdown("""
-<style>
-.block-container {
-    padding: 1rem 2rem;
-}
-
-/* SIDEBAR */
-.menu-box {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-/* BUTTON */
-.stButton>button {
-    width: 100%;
-    border-radius: 8px;
-    height: 45px;
-    font-size: 15px;
-}
-
-/* CARD */
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
-
-/* TITLE */
-.title {
-    font-size: 26px;
-    font-weight: bold;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# =========================
 # LOAD DATA
 # =========================
 @st.cache_data
@@ -65,7 +24,10 @@ df = load_data()
 # SESSION
 # =========================
 if "page" not in st.session_state:
-    st.session_state.page = "landing"
+    st.session_state.page = "login"
+
+if "login" not in st.session_state:
+    st.session_state.login = False
 
 def pindah(page):
     st.session_state.page = page
@@ -79,80 +41,133 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING PAGE (FIXED & FULL)
+# LOGIN PAGE (DESIGN MODERN)
 # =========================
-if st.session_state.page == "landing":
+if st.session_state.page == "login":
 
     components.html("""
-    <div style="font-family:Arial;">
+    <html>
+    <head>
+    <style>
+    body {
+        margin: 0;
+        font-family: Arial;
+    }
 
-        <!-- NAVBAR -->
-        <div style="background:#0a58ca;color:white;padding:15px 40px;
-                    display:flex;justify-content:space-between;">
-            <div><b>Clustering Instansi</b></div>
-            <div>Dashboard Data</div>
+    .container {
+        display: flex;
+        height: 100vh;
+    }
+
+    /* LEFT */
+    .left {
+        width: 55%;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .left img {
+        width: 350px;
+    }
+
+    /* RIGHT */
+    .right {
+        width: 45%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+    }
+
+    .login-box {
+        width: 320px;
+        text-align: center;
+    }
+
+    .login-box h2 {
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #1abc9c;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #16a085;
+    }
+    </style>
+    </head>
+
+    <body>
+
+    <div class="container">
+
+        <div class="left">
+            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
         </div>
 
-        <!-- HERO -->
-        <div style="display:flex;min-height:85vh;">
+        <div class="right">
+            <div class="login-box">
+                <h2><b>Clustering App</b></h2>
 
-            <!-- LEFT -->
-            <div style="width:30%;background:#ffe04d;
-                        display:flex;align-items:center;padding:60px;">
-                <h1 style="color:#0a58ca;font-size:40px;">
-                    Selamat Datang di<br>
-                    Aplikasi Clustering Instansi
-                </h1>
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+
+                <p style="font-size:12px;color:gray;">Gunakan tombol di bawah</p>
             </div>
-
-            <!-- RIGHT -->
-            <div style="width:70%;
-                        background:linear-gradient(135deg,#1bb1dc,#4b6cb7);
-                        display:flex;align-items:center;justify-content:center;
-                        color:white;">
-
-                <div style="display:flex;gap:60px;text-align:center;">
-
-                    <div>
-                        <img src="https://i.pravatar.cc/120?img=5"
-                             style="border-radius:50%;width:130px;">
-                        <p>Analisis Data</p>
-                    </div>
-
-                    <div>
-                        <img src="https://i.pravatar.cc/120?img=8"
-                             style="border-radius:50%;width:130px;">
-                        <p>Clustering</p>
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
+
     </div>
-    """, height=750, scrolling=True)
+
+    </body>
+    </html>
+    """, height=750)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # LOGIN FORM STREAMLIT (AKTIF)
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        if st.button("🚀 Masuk ke Aplikasi", use_container_width=True):
-            pindah("beranda")
+        st.subheader("🔐 Login")
+
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login", use_container_width=True):
+            if username == "admin" and password == "admin":
+                st.session_state.login = True
+                pindah("beranda")
+            else:
+                st.error("Username / Password salah")
 
 # =========================
 # MAIN APP
 # =========================
-else:
+elif st.session_state.login:
 
     col_menu, col_content = st.columns([1,4])
 
     # =========================
-    # MENU (SIDEBAR STYLE)
+    # MENU
     # =========================
     with col_menu:
-        st.markdown('<div class="menu-box">', unsafe_allow_html=True)
-
         st.markdown("### 📌 Menu")
 
         if st.button("🏠 Beranda"):
@@ -164,7 +179,11 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("---")
+
+        if st.button("🚪 Logout"):
+            st.session_state.login = False
+            pindah("login")
 
     # =========================
     # CONTENT
@@ -172,64 +191,41 @@ else:
     with col_content:
 
         # =========================
-        # BERANDA (DASHBOARD)
+        # BERANDA
         # =========================
         if st.session_state.page == "beranda":
 
-            st.markdown('<div class="title">📊 Dashboard Clustering Instansi</div>', unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
+            st.title("📊 Dashboard Clustering Instansi")
 
-            # CARDS
             col1, col2, col3 = st.columns(3)
 
-            col1.markdown("""
-            <div class="card" style="text-align:center;">
-                <h4>Total Data</h4>
-                <h2>100+</h2>
-            </div>
-            """, unsafe_allow_html=True)
+            col1.metric("Total Data", len(df))
+            col2.metric("Cluster", df["Cluster"].nunique())
+            col3.metric("Status", "Aktif")
 
-            col2.markdown("""
-            <div class="card" style="text-align:center;">
-                <h4>Cluster</h4>
-                <h2>3</h2>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("---")
 
-            col3.markdown("""
-            <div class="card" style="text-align:center;">
-                <h4>Status</h4>
-                <h2>Aktif</h2>
-            </div>
-            """, unsafe_allow_html=True)
+            st.subheader("📌 Tentang Aplikasi")
+            st.write("""
+            Aplikasi ini digunakan untuk mengelompokkan instansi 
+            berdasarkan data pengaduan.
+            """)
 
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            # INFO
+            st.subheader("🧭 Cara Menggunakan")
             st.markdown("""
-            <div class="card">
-                <h3>📌 Tentang Aplikasi</h3>
-                <p>
-                Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan data pengaduan.
-                </p>
-
-                <h3>🧭 Cara Menggunakan</h3>
-                <ol>
-                <li>Masuk ke menu Input Data</li>
-                <li>Isi nama instansi</li>
-                <li>Masukkan data</li>
-                <li>Klik proses</li>
-                <li>Lihat hasil clustering</li>
-                </ol>
-            </div>
-            """, unsafe_allow_html=True)
+            1. Masuk ke menu Input Data  
+            2. Isi nama instansi  
+            3. Masukkan data  
+            4. Klik proses  
+            5. Lihat hasil clustering  
+            """)
 
         # =========================
         # INPUT
         # =========================
         elif st.session_state.page == "input":
 
-            st.markdown('<div class="title">📝 Input Data</div>', unsafe_allow_html=True)
+            st.title("📝 Input Data")
 
             with st.form("form_input"):
                 nama = st.text_input("Nama Instansi")
@@ -261,12 +257,10 @@ else:
         # =========================
         elif st.session_state.page == "hasil":
 
-            st.markdown('<div class="title">📊 Hasil Clustering</div>', unsafe_allow_html=True)
+            st.title("📊 Hasil Clustering")
 
             if "hasil" in st.session_state:
                 data = st.session_state.hasil
-
-                st.markdown('<div class="card">', unsafe_allow_html=True)
 
                 st.write(f"**Nama Instansi:** {data['nama']}")
                 st.write(f"**Total Pengaduan:** {data['total']}")
@@ -296,7 +290,12 @@ else:
                 col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
                 col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
 
-                st.markdown('</div>', unsafe_allow_html=True)
-
             else:
                 st.warning("Belum ada data")
+
+# =========================
+# PROTECTION
+# =========================
+else:
+    st.warning("Silakan login terlebih dahulu")
+    pindah("login")
