@@ -124,8 +124,8 @@ body {{
 </html>
 """, height=750)
 
-    # BUTTON MULAI
-    col1, col2 = st.columns([3,2])
+# BUTTON MULAI
+col1, col2 = st.columns([3,2])
 
 with col2:
     st.markdown("<br><br><br>", unsafe_allow_html=True)
