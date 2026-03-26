@@ -6,7 +6,7 @@ import pandas as pd
 # =========================
 @st.cache_data
 def load_data():
-    df = pd.read_excel("tabel_cluster_instansi (1).xlsx")
+    df = pd.read_excel("dataset.xlsx")
     return df
 
 df = load_data()
