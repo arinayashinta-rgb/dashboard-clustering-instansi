@@ -64,7 +64,7 @@ if menu == "beranda":
     st.title("📊 Clustering Instansi")
 
     st.markdown("""
-Dashboard ini digunakan untuk **mengelompokkan instansi**
+Aplikasi ini digunakan untuk **mengelompokkan instansi**
 berdasarkan jumlah:
 
 - Permasalahan
@@ -76,7 +76,7 @@ menggunakan metode **K-Means Clustering**.
 
     st.divider()
 
-    st.subheader("Cara Menggunakan Dashboard")
+    st.subheader("Cara Menggunakan Aplikasi")
 
     st.write("""
 1️⃣ Input data instansi  
