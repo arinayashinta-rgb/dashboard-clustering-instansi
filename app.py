@@ -1,216 +1,104 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-import os
 
-st.set_page_config(
-    page_title="Clustering Instansi",
-    page_icon="📊",
-    layout="wide"
-)
-
-# =============================
-# FILE DATA
-# =============================
-
-DATA_FILE = "data_instansi.csv"
-
-# jika file belum ada
-if not os.path.exists(DATA_FILE):
-    df_init = pd.DataFrame(columns=[
-        "Asal Instansi",
-        "Permasalahan",
-        "Permohonan",
-        "Pertanyaan"
-    ])
-    df_init.to_csv(DATA_FILE, index=False)
-
-# fungsi load data
+# =========================
+# LOAD DATA
+# =========================
+@st.cache_data
 def load_data():
-    return pd.read_csv(DATA_FILE)
+    df = pd.read_excel("tabel_cluster_instansi (1).xlsx")
+    return df
 
-# fungsi simpan data
-def save_data(df):
-    df.to_csv(DATA_FILE, index=False)
+df = load_data()
 
-# =============================
-# MENU
-# =============================
+# =========================
+# SIDEBAR MENU
+# =========================
+st.sidebar.title("Menu")
+menu = st.sidebar.radio("Pilih Menu", [
+    "Beranda",
+    "Input Data",
+    "Hasil Clustering"
+])
 
-if "menu" not in st.session_state:
-    st.session_state.menu = "beranda"
+# =========================
+# SESSION STATE
+# =========================
+if "hasil" not in st.session_state:
+    st.session_state.hasil = None
 
-st.sidebar.title("📁 Navigasi")
-
-if st.sidebar.button("🏠 Beranda"):
-    st.session_state.menu = "beranda"
-
-if st.sidebar.button("📝 Input Data Instansi"):
-    st.session_state.menu = "input"
-
-if st.sidebar.button("🤖 Cek Cluster Instansi"):
-    st.session_state.menu = "cluster"
-
-menu = st.session_state.menu
-
-
-# ====================================================
+# =========================
 # BERANDA
-# ====================================================
+# =========================
+if menu == "Beranda":
+    st.title("📊 Aplikasi Clustering Instansi")
 
-if menu == "beranda":
+    st.write("### Ringkasan Data")
+    st.write(f"Jumlah Instansi: {len(df)}")
+    st.write(f"Jumlah Cluster: {df['Kategori Cluster'].nunique()}")
 
-    st.title("📊 Clustering Instansi")
+    st.write("### Data Contoh")
+    st.dataframe(df.head())
 
-    st.markdown("""
-Aplikasi ini digunakan untuk **mengelompokkan instansi**
-berdasarkan jumlah:
-
-- Permasalahan
-- Permohonan
-- Pertanyaan
-
-menggunakan metode **K-Means Clustering**.
-""")
-
-    st.divider()
-
-    st.subheader("Cara Menggunakan Aplikasi")
-
-    st.write("""
-1️⃣ Input data instansi  
-2️⃣ Tambahkan beberapa instansi  
-3️⃣ Jalankan clustering  
-4️⃣ Lihat instansi masuk cluster mana
-""")
-
-
-# ====================================================
-# INPUT DATA INSTANSI
-# ====================================================
-
-elif menu == "input":
-
+# =========================
+# INPUT DATA
+# =========================
+elif menu == "Input Data":
     st.title("📝 Input Data Instansi")
 
     with st.form("form_input"):
-
         nama = st.text_input("Nama Instansi")
-
-        permasalahan = st.number_input(
-            "Jumlah Permasalahan",
-            min_value=0
-        )
-
-        permohonan = st.number_input(
-            "Jumlah Permohonan",
-            min_value=0
-        )
-
-        pertanyaan = st.number_input(
-            "Jumlah Pertanyaan",
-            min_value=0
-        )
+        permasalahan = st.text_area("Permasalahan")
+        permohonan = st.text_area("Permohonan")
+        pertanyaan = st.text_area("Pertanyaan")
 
         col1, col2 = st.columns(2)
+        submit = col1.form_submit_button("➕ Tambah Data")
+        reset = col2.form_submit_button("🗑️ Hapus Isian")
 
-        tambah = col1.form_submit_button("➕ Tambah Data")
-        reset = col2.form_submit_button("🧹 Hapus Isian")
-        if tambah:
+    if submit:
+        # =========================
+        # LOGIKA SEDERHANA (RULE BASED)
+        # =========================
+        teks = (permasalahan + " " + permohonan + " " + pertanyaan).lower()
 
-            if nama == "":
-                st.warning("Nama instansi harus diisi")
+        if "masalah" in teks or "kendala" in teks:
+            kategori = "Dominan Permasalahan"
+        elif "mohon" in teks or "permintaan" in teks:
+            kategori = "Dominan Permohonan"
+        elif "tanya" in teks or "bagaimana" in teks:
+            kategori = "Dominan Pertanyaan"
+        else:
+            kategori = "Campuran"
 
-            else:
-
-                df = load_data()
-
-                data_baru = {
-                    "Asal Instansi": nama,
-                    "Permasalahan": permasalahan,
-                    "Permohonan": permohonan,
-                    "Pertanyaan": pertanyaan
-                }
-
-                df = pd.concat([df, pd.DataFrame([data_baru])], ignore_index=True)
-
-                save_data(df)
-
-                st.success("Data berhasil disimpan")
-
-        if reset:
-            st.rerun()
-
-    st.divider()
-
-    st.subheader("📋 Data Instansi")
-
-    df = load_data()
-
-    st.dataframe(df, use_container_width=True)
-
-    # ============================
-    # HAPUS DATA
-    # ============================
-
-    if len(df) > 0:
-
-        st.subheader("🗑 Hapus Data Instansi")
-
-        instansi_hapus = st.selectbox(
-            "Pilih Instansi",
-            df["Asal Instansi"]
-        )
-
-        if st.button("Hapus Data"):
-
-            df = df[df["Asal Instansi"] != instansi_hapus]
-
-            save_data(df)
-
-            st.success("Data berhasil dihapus")
-
-            st.rerun()
-
-
-# ====================================================
-# CLUSTERING
-# ====================================================
-
-elif menu == "cluster":
-
-    st.title("🤖 Cek Cluster Instansi")
-
-    df = load_data()
-
-    if len(df) < 4:
-
-        st.warning("Minimal 4 data instansi untuk melakukan clustering")
-
-    else:
-
-        X = df[['Permasalahan','Permohonan','Pertanyaan']]
-
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-
-        kmeans = KMeans(n_clusters=4, random_state=42)
-
-        df["Cluster"] = kmeans.fit_predict(X_scaled)
-
-        cluster_names = {
-            0: "Dominan Permasalahan",
-            1: "Dominan Permohonan",
-            2: "Dominan Pertanyaan",
-            3: "Campuran"
+        st.session_state.hasil = {
+            "nama": nama,
+            "kategori": kategori
         }
 
-        df["Kategori Cluster"] = df["Cluster"].map(cluster_names)
+        st.success("Data berhasil diproses!")
 
-        st.subheader("📊 Hasil Clustering")
+    if reset:
+        st.session_state.hasil = None
+        st.rerun()
 
-        st.dataframe(
-            df[["Asal Instansi","Kategori Cluster"]],
-            use_container_width=True
-        )
+# =========================
+# HASIL CLUSTERING
+# =========================
+elif menu == "Hasil Clustering":
+    st.title("📊 Hasil Clustering")
+
+    if st.session_state.hasil:
+        st.write("### Hasil Analisis")
+
+        st.write(f"**Nama Instansi:** {st.session_state.hasil['nama']}")
+        st.write(f"**Kategori Cluster:** {st.session_state.hasil['kategori']}")
+
+        # tampilkan contoh instansi serupa
+        contoh = df[df["Kategori Cluster"] == st.session_state.hasil["kategori"]]
+
+        st.write("### Contoh Instansi dalam Cluster yang Sama")
+        st.dataframe(contoh)
+
+    else:
+        st.info("Silakan input data terlebih dahulu.")
