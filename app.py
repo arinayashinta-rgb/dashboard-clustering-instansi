@@ -29,34 +29,27 @@ def pindah(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (PROFESIONAL)
+# STYLE (AMAN)
 # =========================
 st.markdown("""
 <style>
 
-/* HILANGKAN PADDING */
+/* padding ringan */
 .block-container {
-    padding: 0rem 2rem;
+    padding: 2rem 3rem;
 }
 
-/* FONT */
-html, body, [class*="css"] {
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* BUTTON */
+/* tombol */
 .stButton>button {
     background: linear-gradient(90deg,#1abc9c,#16a085);
     color: white;
     border-radius: 8px;
     height: 45px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 15px;
 }
 
-/* HOVER */
 .stButton>button:hover {
-    transform: scale(1.03);
+    transform: scale(1.02);
     transition: 0.2s;
 }
 
@@ -64,50 +57,32 @@ html, body, [class*="css"] {
 """, unsafe_allow_html=True)
 
 # =========================
-# LANDING PAGE
+# LANDING
 # =========================
 if st.session_state.page == "landing":
 
-    col1, col2 = st.columns([3,2])
+    col1, col2 = st.columns([3,2], gap="large")
 
-    # =========================
-    # LEFT (GAMBAR)
-    # =========================
+    # LEFT (GAMBAR NORMAL)
     with col1:
         st.image("clustering.jpg", use_container_width=True)
 
-    # =========================
-    # RIGHT (TEXT + BUTTON)
-    # =========================
+    # RIGHT (RAPI TANPA FLEX TINGGI)
     with col2:
-
-        st.markdown("""
-        <div style="
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            height:80vh;
-            padding-left:40px;
-        ">
-        """, unsafe_allow_html=True)
+        st.markdown("<br><br><br><br>", unsafe_allow_html=True)
 
         st.markdown("## **Clustering Instansi**")
 
         st.markdown("""
-        <p style='color:#555;font-size:14px'>
+        <p style='color:#555'>
         Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
         </p>
         """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # BUTTON LEBIH PROPORSIONAL
-        col_btn = st.columns([1,2,1])[1]
-        with col_btn:
-            if st.button("🚀 Mulai"):
-                pindah("beranda")
-
-        st.markdown("</div>", unsafe_allow_html=True)
+        if st.button("🚀 Mulai", use_container_width=True):
+            pindah("beranda")
 
 # =========================
 # MAIN APP
@@ -116,7 +91,6 @@ else:
 
     col_menu, col_content = st.columns([1,4])
 
-    # MENU
     with col_menu:
         st.markdown("### 📌 Menu")
 
@@ -129,7 +103,6 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
-    # CONTENT
     with col_content:
 
         if st.session_state.page == "beranda":
@@ -141,14 +114,6 @@ else:
             col1.metric("Total Data", len(df))
             col2.metric("Cluster", df["Cluster"].nunique())
             col3.metric("Status", "Aktif")
-
-            st.markdown("---")
-
-            st.subheader("📌 Tentang Aplikasi")
-            st.write("""
-            Aplikasi ini digunakan untuk mengelompokkan instansi 
-            berdasarkan data pengaduan.
-            """)
 
         elif st.session_state.page == "input":
 
