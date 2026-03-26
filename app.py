@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 import streamlit.components.v1 as components
 
 # =========================
@@ -38,99 +39,99 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING (DESAIN MODERN)
+# LOAD LOGO
 # =========================
-import base64
-
-# encode gambar lokal ke base64
 def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-img_base64 = get_base64_image("Unsia.png")  # pastikan nama file sama
+img_base64 = get_base64_image("Unsia.png")  # pastikan file ada
 
-components.html(f"""
-<html>
-<head>
-<style>
-body {{
-    margin: 0;
-    font-family: Arial;
-}}
+# =========================
+# LANDING PAGE
+# =========================
+if st.session_state.page == "landing":
 
-.container {{
-    display: flex;
-    height: 100vh;
-}}
+    components.html(f"""
+    <html>
+    <head>
+    <style>
+    body {{
+        margin: 0;
+        font-family: Arial;
+    }}
 
-/* LEFT */
-.left {{
-    width: 55%;
-    background: linear-gradient(135deg, #1abc9c, #16a085);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}}
+    .container {{
+        display: flex;
+        height: 100vh;
+    }}
 
-.left img {{
-    width: 300px;
-}}
+    /* LEFT */
+    .left {{
+        width: 55%;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }}
 
-/* RIGHT */
-.right {{
-    width: 45%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-}}
+    .left img {{
+        width: 280px;
+    }}
 
-.box {{
-    width: 320px;
-    text-align: center;
-}}
+    /* RIGHT */
+    .right {{
+        width: 45%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+    }}
 
-.box h2 {{
-    margin-bottom: 15px;
-}}
+    .box {{
+        width: 320px;
+        text-align: center;
+    }}
 
-.box p {{
-    color: gray;
-    font-size: 14px;
-}}
-</style>
-</head>
+    .box h2 {{
+        margin-bottom: 10px;
+    }}
 
-<body>
+    .box p {{
+        color: gray;
+        font-size: 14px;
+    }}
+    </style>
+    </head>
 
-<div class="container">
+    <body>
 
-    <!-- LEFT -->
-    <div class="left">
-        <img src="data:image/png;base64,{img_base64}">
-    </div>
+    <div class="container">
 
-    <!-- RIGHT -->
-    <div class="right">
-        <div class="box">
-            <h2><b>Clustering App</b></h2>
-            <p>Aplikasi untuk analisis dan clustering data instansi</p>
+        <div class="left">
+            <img src="data:image/png;base64,{img_base64}">
         </div>
+
+        <div class="right">
+            <div class="box">
+                <h2><b>Clustering Instansi</b></h2>
+                <p>Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.</p>
+            </div>
+        </div>
+
     </div>
 
-</div>
+    </body>
+    </html>
+    """, height=750)
 
-</body>
-</html>
-""", height=750)
+    # BUTTON DI KANAN
+    col1, col2 = st.columns([3,2])
 
-# BUTTON MULAI
-col1, col2 = st.columns([3,2])
-
-with col2:
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    if st.button("🚀 Mulai", use_container_width=True):
-        pindah("beranda")
+    with col2:
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        if st.button("🚀 Mulai", use_container_width=True):
+            pindah("beranda")
 
 # =========================
 # MAIN APP
@@ -139,9 +140,7 @@ else:
 
     col_menu, col_content = st.columns([1,4])
 
-    # =========================
     # MENU
-    # =========================
     with col_menu:
         st.markdown("### 📌 Menu")
 
@@ -154,14 +153,10 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
-    # =========================
     # CONTENT
-    # =========================
     with col_content:
 
-        # =========================
         # BERANDA
-        # =========================
         if st.session_state.page == "beranda":
 
             st.title("📊 Dashboard Clustering Instansi")
@@ -189,9 +184,7 @@ else:
             5. Lihat hasil clustering  
             """)
 
-        # =========================
         # INPUT
-        # =========================
         elif st.session_state.page == "input":
 
             st.title("📝 Input Data")
@@ -221,9 +214,7 @@ else:
 
                 st.success("Data berhasil diproses")
 
-        # =========================
         # HASIL
-        # =========================
         elif st.session_state.page == "hasil":
 
             st.title("📊 Hasil Clustering")
