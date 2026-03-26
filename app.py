@@ -40,8 +40,22 @@ if "hasil" not in st.session_state:
 if menu == "Beranda":
     st.title("📊 Aplikasi Clustering Instansi")
 
-    st.write("### 🧭 Cara Menggunakan Aplikasi")
+    st.write("### 📌 Tentang Aplikasi")
+    st.markdown("""
+    Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan hasil clustering 
+    yang telah dilakukan sebelumnya menggunakan metode analisis data.
 
+    Sistem akan menampilkan kategori cluster dari instansi yang diinputkan oleh pengguna.
+    """)
+
+    st.write("### 🎯 Tujuan")
+    st.markdown("""
+    - Mengidentifikasi kategori instansi
+    - Mempermudah analisis data instansi
+    - Menyajikan hasil clustering secara cepat
+    """)
+
+    st.write("### 🧭 Cara Menggunakan Aplikasi")
     st.markdown("""
     1. Pilih menu **Input Data**
     2. Masukkan **nama instansi**
@@ -74,21 +88,19 @@ elif menu == "Input Data":
         else:
             hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
-            # =========================
-            # HITUNG JUMLAH KATA
-            # =========================
-            jumlah_permasalahan = len(permasalahan.split())
-            jumlah_permohonan = len(permohonan.split())
-            jumlah_pertanyaan = len(pertanyaan.split())
+            # hitung jumlah kata (aman walau kosong)
+            jml_permasalahan = len(permasalahan.split()) if permasalahan else 0
+            jml_permohonan = len(permohonan.split()) if permohonan else 0
+            jml_pertanyaan = len(pertanyaan.split()) if pertanyaan else 0
 
             if not hasil.empty:
                 st.session_state.hasil = {
                     "nama": nama,
                     "cluster": hasil.iloc[0]["Cluster"],
                     "kategori": hasil.iloc[0]["Kategori Cluster"],
-                    "jml_permasalahan": jumlah_permasalahan,
-                    "jml_permohonan": jumlah_permohonan,
-                    "jml_pertanyaan": jumlah_pertanyaan
+                    "jml_permasalahan": jml_permasalahan,
+                    "jml_permohonan": jml_permohonan,
+                    "jml_pertanyaan": jml_pertanyaan
                 }
                 st.success("✅ Data berhasil diproses!")
             else:
@@ -96,9 +108,9 @@ elif menu == "Input Data":
                     "nama": nama,
                     "cluster": None,
                     "kategori": "Tidak ditemukan",
-                    "jml_permasalahan": jumlah_permasalahan,
-                    "jml_permohonan": jumlah_permohonan,
-                    "jml_pertanyaan": jumlah_pertanyaan
+                    "jml_permasalahan": jml_permasalahan,
+                    "jml_permohonan": jml_permohonan,
+                    "jml_pertanyaan": jml_pertanyaan
                 }
                 st.error("❌ Instansi tidak ditemukan")
 
@@ -113,26 +125,26 @@ elif menu == "Hasil Clustering":
         data = st.session_state.hasil
 
         st.write("### 📌 Detail")
-        st.write(f"**Nama Instansi:** {data['nama']}")
+        st.write(f"**Nama Instansi:** {data.get('nama', '-')}")
 
         st.write("### 🎯 Hasil Clustering")
 
-        if data["cluster"] is not None:
-            st.success(f"Cluster: {data['cluster']}")
-            st.info(f"Kategori: {data['kategori']}")
+        if data.get("cluster") is not None:
+            st.success(f"Cluster: {data.get('cluster')}")
+            st.info(f"Kategori: {data.get('kategori')}")
         else:
             st.error("Data tidak ditemukan dalam dataset")
 
         # =========================
-        # RINCIAN INPUT
+        # RINCIAN INPUT (ANTI ERROR)
         # =========================
         st.write("### 📊 Rincian Input")
 
         col1, col2, col3 = st.columns(3)
 
-        col1.metric("Permasalahan", data["jml_permasalahan"])
-        col2.metric("Permohonan", data["jml_permohonan"])
-        col3.metric("Pertanyaan", data["jml_pertanyaan"])
+        col1.metric("Permasalahan", data.get("jml_permasalahan", 0))
+        col2.metric("Permohonan", data.get("jml_permohonan", 0))
+        col3.metric("Pertanyaan", data.get("jml_pertanyaan", 0))
 
     else:
         st.warning("Silakan input data terlebih dahulu.")
