@@ -39,19 +39,24 @@ def hitung_jumlah(teks):
 # =========================
 # LANDING PAGE
 # =========================
-if st.session_state.page == "landing":
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+# CENTER GAMBAR
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
+    st.image("logo.png", width=200)
 
-    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135755.png", width=150)
+# JUDUL CENTER
+st.markdown(
+    "<h2 style='text-align: center;'>Aplikasi Clustering Instansi</h2>",
+    unsafe_allow_html=True
+)
 
-    st.markdown(
-        "<h2 style='text-align: center;'>Aplikasi Clustering Instansi</h2>",
-        unsafe_allow_html=True
-    )
+st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
+# BUTTON CENTER
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
     if st.button("🚀 Masuk", use_container_width=True):
         pindah("menu")
 
