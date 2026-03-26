@@ -1,3 +1,120 @@
+import streamlit as st
+import pandas as pd
+
+# =========================
+# CONFIG
+# =========================
+st.set_page_config(
+    page_title="Clustering Instansi",
+    page_icon="📊",
+    layout="wide"
+)
+
+# =========================
+# LOAD DATA
+# =========================
+@st.cache_data
+def load_data():
+    return pd.read_excel("dataset.xlsx")
+
+df = load_data()
+
+# =========================
+# FUNGSI HITUNG (1 BARIS = 1 ITEM)
+# =========================
+def hitung_jumlah(teks):
+    if not teks:
+        return 0
+    return len([line for line in teks.split("\n") if line.strip()])
+
+# =========================
+# SESSION STATE
+# =========================
+if "hasil" not in st.session_state:
+    st.session_state.hasil = None
+
+# =========================
+# MENU NAVIGASI
+# =========================
+menu = st.sidebar.radio("📌 Menu", [
+    "Beranda",
+    "Input Data",
+    "Hasil Clustering"
+])
+
+# =========================
+# BERANDA
+# =========================
+if menu == "Beranda":
+    st.title("📊 Aplikasi Clustering Instansi")
+
+    st.subheader("📌 Tentang Aplikasi")
+    st.write("""
+    Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
+    berdasarkan dataset yang telah dianalisis sebelumnya.
+    """)
+
+    st.subheader("🎯 Tujuan")
+    st.markdown("""
+    - Mengelompokkan instansi berdasarkan cluster
+    - Mempermudah analisis data
+    - Menyajikan hasil secara cepat
+    """)
+
+    st.subheader("🧭 Cara Menggunakan")
+    st.markdown("""
+    1. Pilih menu **Input Data**
+    2. Masukkan nama instansi
+    3. Isi data (1 baris = 1 item)
+    4. Klik tombol **Proses**
+    5. Buka menu **Hasil Clustering**
+    """)
+
+# =========================
+# INPUT DATA
+# =========================
+elif menu == "Input Data":
+
+    st.title("📝 Input Data Instansi")
+
+    st.info("💡 Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
+
+    with st.form("form_input"):
+        nama = st.text_input("🏢 Nama Instansi")
+
+        permasalahan = st.text_area("⚠️ Permasalahan")
+        permohonan = st.text_area("📄 Permohonan")
+        pertanyaan = st.text_area("❓ Pertanyaan")
+
+        submit = st.form_submit_button("➕ Proses")
+
+    if submit:
+        if nama.strip() == "":
+            st.warning("Nama instansi wajib diisi!")
+        else:
+            hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
+
+            if not hasil.empty:
+                st.session_state.hasil = {
+                    "nama": nama,
+                    "permasalahan": permasalahan,
+                    "permohonan": permohonan,
+                    "pertanyaan": pertanyaan,
+                    "cluster": hasil.iloc[0]["Cluster"],
+                    "kategori": hasil.iloc[0]["Kategori Cluster"]
+                }
+                st.success("✅ Data berhasil diproses!")
+            else:
+                st.session_state.hasil = {
+                    "nama": nama,
+                    "permasalahan": permasalahan,
+                    "permohonan": permohonan,
+                    "pertanyaan": pertanyaan,
+                    "cluster": None,
+                    "kategori": "Tidak ditemukan"
+                }
+                st.error("❌ Instansi tidak ditemukan")
+
 # =========================
 # HASIL CLUSTERING
 # =========================
@@ -9,7 +126,7 @@ elif menu == "Hasil Clustering":
         data = st.session_state.hasil
 
         # =========================
-        # SECTION 1: DATA INSTANSI
+        # INFORMASI INSTANSI
         # =========================
         st.subheader("📌 Informasi Instansi")
 
@@ -17,36 +134,34 @@ elif menu == "Hasil Clustering":
 
         with col1:
             st.write("**Nama Instansi**")
-            st.write(data['nama'])
+            st.write(data["nama"])
 
         with col2:
-            st.write("**Status Data**")
             if data["cluster"] is not None:
-                st.success("Ditemukan")
+                st.success("Data ditemukan")
             else:
-                st.error("Tidak ditemukan")
+                st.error("Data tidak ditemukan")
 
         st.divider()
 
         # =========================
-        # SECTION 2: ISI INPUT
+        # DETAIL INPUT
         # =========================
         st.subheader("📝 Detail Input")
 
-        with st.container():
-            st.write("**Permasalahan**")
-            st.write(data["permasalahan"] or "-")
+        st.write("**Permasalahan**")
+        st.write(data["permasalahan"] or "-")
 
-            st.write("**Permohonan**")
-            st.write(data["permohonan"] or "-")
+        st.write("**Permohonan**")
+        st.write(data["permohonan"] or "-")
 
-            st.write("**Pertanyaan**")
-            st.write(data["pertanyaan"] or "-")
+        st.write("**Pertanyaan**")
+        st.write(data["pertanyaan"] or "-")
 
         st.divider()
 
         # =========================
-        # SECTION 3: HASIL
+        # HASIL
         # =========================
         st.subheader("🎯 Hasil Clustering")
 
@@ -67,14 +182,9 @@ elif menu == "Hasil Clustering":
         st.divider()
 
         # =========================
-        # SECTION 4: RINCIAN
+        # RINCIAN
         # =========================
         st.subheader("📊 Rincian Input")
-
-        def hitung_jumlah(teks):
-            if not teks:
-                return 0
-            return len([line for line in teks.split("\n") if line.strip()])
 
         jml_permasalahan = hitung_jumlah(data.get("permasalahan", ""))
         jml_permohonan = hitung_jumlah(data.get("permohonan", ""))
