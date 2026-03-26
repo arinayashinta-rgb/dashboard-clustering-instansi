@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import base64
-import streamlit.components.v1 as components
 
 # =========================
 # CONFIG
@@ -39,114 +37,79 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LOAD LOGO
+# GLOBAL STYLE
 # =========================
-def get_base64_image(image_path):
-    with open(image_path, "rb") as img_file:
-        return base64.b64encode(img_file.read()).decode()
+st.markdown("""
+<style>
+.block-container {
+    padding: 0;
+}
 
-img_base64 = get_base64_image("Unsia.png")
+/* LEFT PANEL */
+.left-box {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+
+/* IMAGE FULL */
+.left-box img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* RIGHT PANEL */
+.right-box {
+    background: #f5f5f5;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONTENT */
+.content-box {
+    text-align: center;
+    width: 320px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # =========================
 # LANDING PAGE
 # =========================
 if st.session_state.page == "landing":
 
-    # COMPONENT HTML + BUTTON TERINTEGRASI
-    mulai = components.html(f"""
-    <html>
-    <head>
-    <style>
-    body {{
-        margin: 0;
-        font-family: Arial;
-    }}
+    col_left, col_right = st.columns([3,2])
 
-    .container {{
-        display: flex;
-        height: 100vh;
-    }}
+    # LEFT (GAMBAR FULL)
+    with col_left:
+        st.markdown('<div class="left-box">', unsafe_allow_html=True)
+        st.image("clustering.jpg", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    .left {{
-        width: 55%;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }}
+    # RIGHT (TEXT + BUTTON)
+    with col_right:
+        st.markdown('<div class="right-box">', unsafe_allow_html=True)
+        st.markdown('<div class="content-box">', unsafe_allow_html=True)
 
-    .left img {{
-        width: 260px;
-    }}
+        st.markdown("## **Clustering Instansi**")
+        st.markdown("""
+        <p style='color:gray'>
+        Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
+        </p>
+        """, unsafe_allow_html=True)
 
-    .right {{
-        width: 45%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f5f5f5;
-    }}
+        st.markdown("<br>", unsafe_allow_html=True)
 
-    .box {{
-        width: 320px;
-        text-align: center;
-    }}
+        if st.button("🚀 Mulai", use_container_width=True):
+            pindah("beranda")
 
-    .box p {{
-        color: gray;
-        margin-bottom: 20px;
-    }}
-
-    .btn {{
-        width: 100%;
-        padding: 12px;
-        background: #1abc9c;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 15px;
-        cursor: pointer;
-    }}
-
-    .btn:hover {{
-        background: #16a085;
-    }}
-    </style>
-    </head>
-
-    <body>
-
-    <div class="container">
-
-        <div class="left">
-            <img src="data:image/png;base64,{img_base64}">
-        </div>
-
-        <div class="right">
-            <div class="box">
-                <h2><b>Clustering Instansi</b></h2>
-                <p>
-                Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
-                </p>
-
-                <!-- BUTTON UTAMA -->
-                <button class="btn"
-                    onclick="window.parent.postMessage({{type:'streamlit:setComponentValue', value:true}}, '*')">
-                    🚀 Mulai
-                </button>
-
-            </div>
-        </div>
-
-    </div>
-
-    </body>
-    </html>
-    """, height=700)
-
-    # HANDLE BUTTON (INI YANG BUAT BERFUNGSI)
-    if mulai:
-        pindah("beranda")
+        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
 # MAIN APP
