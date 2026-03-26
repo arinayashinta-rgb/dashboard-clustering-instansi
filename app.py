@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import base64
 
 # =========================
 # CONFIG
@@ -38,80 +37,23 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LOAD IMAGE BASE64
+# STYLE (RINGAN & AMAN)
 # =========================
-def get_base64(path):
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-img = get_base64("clustering.jpg")
-
-# =========================
-# GLOBAL STYLE (FULL FIX)
-# =========================
-st.markdown(f"""
+st.markdown("""
 <style>
-
-/* HAPUS SEMUA PADDING STREAMLIT */
-.block-container {{
-    padding: 0 !important;
-}}
-
-section.main > div {{
-    padding-top: 0 !important;
-}}
-
-/* FULL SCREEN WRAPPER */
-.full {{
-    display: flex;
-    height: 100vh;
-    margin: 0;
-}}
-
-/* LEFT IMAGE */
-.left {{
-    flex: 3;
-    background-image: url("data:image/jpg;base64,{img}");
-    background-size: cover;
-    background-position: center;
-}}
-
-/* RIGHT PANEL */
-.right {{
-    flex: 2;
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}}
-
-/* CONTENT */
-.box {{
-    width: 320px;
+.block-container {
+    padding: 0;
+}
+.center-box {
     text-align: center;
-}}
-
-.box h2 {{
-    margin-bottom: 10px;
-}}
-
-.box p {{
-    color: gray;
-    margin-bottom: 20px;
-}}
-
-/* BUTTON */
-.stButton>button {{
+    margin-top: 120px;
+}
+.stButton>button {
     background: #1abc9c;
     color: white;
-    border-radius: 6px;
     height: 45px;
-}}
-
-.stButton>button:hover {{
-    background: #16a085;
-}}
-
+    border-radius: 6px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -120,31 +62,25 @@ section.main > div {{
 # =========================
 if st.session_state.page == "landing":
 
-    st.markdown('<div class="full">', unsafe_allow_html=True)
+    col1, col2 = st.columns([3,2])
 
-    col1, col2 = st.columns([3,2], gap="small")
-
-    # LEFT
+    # LEFT (GAMBAR)
     with col1:
-        st.markdown('<div class="left"></div>', unsafe_allow_html=True)
+        st.image("clustering.jpg", use_container_width=True)
 
-    # RIGHT
+    # RIGHT (TEXT + BUTTON)
     with col2:
-        st.markdown('<div class="right">', unsafe_allow_html=True)
-        st.markdown('<div class="box">', unsafe_allow_html=True)
+        st.markdown('<div class="center-box">', unsafe_allow_html=True)
 
         st.markdown("## **Clustering Instansi**")
-        st.markdown("""
-        <p>Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.</p>
-        """, unsafe_allow_html=True)
+        st.write("Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
 
         if st.button("🚀 Mulai", use_container_width=True):
             pindah("beranda")
 
         st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
 # MAIN APP
@@ -176,11 +112,6 @@ else:
             col1.metric("Total Data", len(df))
             col2.metric("Cluster", df["Cluster"].nunique())
             col3.metric("Status", "Aktif")
-
-            st.markdown("---")
-
-            st.subheader("📌 Tentang Aplikasi")
-            st.write("Aplikasi ini digunakan untuk clustering instansi.")
 
         elif st.session_state.page == "input":
 
