@@ -40,35 +40,19 @@ def tentukan_cluster(permasalahan, permohonan, pertanyaan):
     else:
         return "Campuran"
 
-# ====================================================
+# =========================
 # BERANDA
-# ====================================================
-
-if menu == "beranda":
-
-    st.title("📊 Clustering Instansi")
-
-    st.markdown("""
-Aplikasi ini digunakan untuk **mengelompokkan instansi**
-berdasarkan jumlah:
-
-- Permasalahan
-- Permohonan
-- Pertanyaan
-
-menggunakan metode **K-Means Clustering**.
-""")
-
-    st.divider()
-
-    st.subheader("Cara Menggunakan Aplikasi")
+# =========================
+if menu == "Beranda":
+    st.title("📊 Aplikasi Clustering Instansi")
 
     st.write("""
-1️⃣ Input data instansi  
-2️⃣ Tambahkan beberapa instansi  
-3️⃣ Jalankan clustering  
-4️⃣ Lihat instansi masuk cluster mana
-""")
+    Aplikasi ini digunakan untuk:
+    - Mengelompokkan instansi berdasarkan isi laporan
+    - Menentukan kategori cluster secara otomatis
+    """)
+
+    st.info("Silakan masuk ke menu **Input Data** untuk mulai analisis.")
 
 # =========================
 # INPUT DATA
