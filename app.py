@@ -1,116 +1,3 @@
-import streamlit as st
-import pandas as pd
-
-# =========================
-# CONFIG
-# =========================
-st.set_page_config(
-    page_title="Clustering Instansi",
-    page_icon="📊",
-    layout="wide"
-)
-
-# =========================
-# LOAD DATASET
-# =========================
-@st.cache_data
-def load_data():
-    return pd.read_excel("dataset.xlsx")
-
-df = load_data()
-
-# =========================
-# FUNGSI HITUNG (BENAR 🔥)
-# =========================
-def hitung_jumlah(teks):
-    if not teks:
-        return 0
-    
-    # 1 baris = 1 item
-    lines = [line.strip() for line in teks.split("\n") if line.strip()]
-    return len(lines)
-
-# =========================
-# NAVIGASI
-# =========================
-menu = st.sidebar.radio("📌 Menu", [
-    "Beranda",
-    "Input Data",
-    "Hasil Clustering"
-])
-
-# =========================
-# SESSION STATE
-# =========================
-if "hasil" not in st.session_state:
-    st.session_state.hasil = None
-
-# =========================
-# BERANDA
-# =========================
-if menu == "Beranda":
-    st.title("📊 Aplikasi Clustering Instansi")
-
-    st.write("### 📌 Tentang Aplikasi")
-    st.write("""
-    Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
-    berdasarkan data yang telah diolah sebelumnya.
-    """)
-
-    st.write("### 🧭 Cara Menggunakan")
-    st.markdown("""
-    1. Pilih menu **Input Data**
-    2. Masukkan nama instansi
-    3. Isi data (1 baris = 1 item)
-    4. Klik tombol **Proses**
-    5. Lihat hasil di menu **Hasil Clustering**
-    """)
-
-# =========================
-# INPUT DATA
-# =========================
-elif menu == "Input Data":
-
-    st.title("📝 Input Data Instansi")
-
-    st.info("💡 Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
-
-    with st.form("form_input"):
-        nama = st.text_input("🏢 Nama Instansi")
-
-        permasalahan = st.text_area("⚠️ Permasalahan")
-        permohonan = st.text_area("📄 Permohonan")
-        pertanyaan = st.text_area("❓ Pertanyaan")
-
-        submit = st.form_submit_button("➕ Proses")
-
-    if submit:
-        if nama.strip() == "":
-            st.warning("Nama instansi wajib diisi!")
-        else:
-            hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
-
-            if not hasil.empty:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": hasil.iloc[0]["Cluster"],
-                    "kategori": hasil.iloc[0]["Kategori Cluster"]
-                }
-                st.success("✅ Data berhasil diproses!")
-            else:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": None,
-                    "kategori": "Tidak ditemukan"
-                }
-                st.error("❌ Instansi tidak ditemukan")
-
 # =========================
 # HASIL CLUSTERING
 # =========================
@@ -122,30 +9,82 @@ elif menu == "Hasil Clustering":
         data = st.session_state.hasil
 
         # =========================
-        # DATA INPUT
+        # SECTION 1: DATA INSTANSI
         # =========================
-        st.write("### 📌 Data Input")
-        st.write(f"**Nama Instansi:** {data['nama']}")
-        st.write(f"**Permasalahan:** {data['permasalahan']}")
-        st.write(f"**Permohonan:** {data['permohonan']}")
-        st.write(f"**Pertanyaan:** {data['pertanyaan']}")
+        st.subheader("📌 Informasi Instansi")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("**Nama Instansi**")
+            st.write(data['nama'])
+
+        with col2:
+            st.write("**Status Data**")
+            if data["cluster"] is not None:
+                st.success("Ditemukan")
+            else:
+                st.error("Tidak ditemukan")
+
+        st.divider()
 
         # =========================
-        # HITUNG JUMLAH (VALID)
+        # SECTION 2: ISI INPUT
         # =========================
+        st.subheader("📝 Detail Input")
+
+        with st.container():
+            st.write("**Permasalahan**")
+            st.write(data["permasalahan"] or "-")
+
+            st.write("**Permohonan**")
+            st.write(data["permohonan"] or "-")
+
+            st.write("**Pertanyaan**")
+            st.write(data["pertanyaan"] or "-")
+
+        st.divider()
+
+        # =========================
+        # SECTION 3: HASIL
+        # =========================
+        st.subheader("🎯 Hasil Clustering")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if data["cluster"] is not None:
+                st.success(f"Cluster: {data['cluster']}")
+            else:
+                st.error("Cluster tidak tersedia")
+
+        with col2:
+            if data["cluster"] is not None:
+                st.info(f"Kategori: {data['kategori']}")
+            else:
+                st.warning("-")
+
+        st.divider()
+
+        # =========================
+        # SECTION 4: RINCIAN
+        # =========================
+        st.subheader("📊 Rincian Input")
+
+        def hitung_jumlah(teks):
+            if not teks:
+                return 0
+            return len([line for line in teks.split("\n") if line.strip()])
+
         jml_permasalahan = hitung_jumlah(data.get("permasalahan", ""))
         jml_permohonan = hitung_jumlah(data.get("permohonan", ""))
         jml_pertanyaan = hitung_jumlah(data.get("pertanyaan", ""))
 
-        # =========================
-        # HASIL CLUSTERING
-        # =========================
-        st.write("### 🎯 Hasil Clustering")
+        col1, col2, col3 = st.columns(3)
 
-        if data["cluster"] is not None:
-            st.success(f"Cluster: {data['cluster']}")
-            st.info(f"Kategori: {data['kategori']}")
-        else:
-            st.error("Instansi tidak ditemukan dalam dataset")
+        col1.metric("Permasalahan", jml_permasalahan)
+        col2.metric("Permohonan", jml_permohonan)
+        col3.metric("Pertanyaan", jml_pertanyaan)
 
-      
+    else:
+        st.warning("Silakan input data terlebih dahulu.")
