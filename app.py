@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import streamlit.components.v1 as components
 
 # =========================
 # CONFIG
@@ -11,7 +12,7 @@ st.set_page_config(
 )
 
 # =========================
-# CUSTOM CSS (UI MODERN)
+# CSS GLOBAL
 # =========================
 st.markdown("""
 <style>
@@ -19,63 +20,19 @@ st.markdown("""
     padding: 0;
 }
 
-/* NAVBAR */
-.navbar {
-    background-color: #0a58ca;
-    padding: 15px 40px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-}
-
-/* HERO */
-.hero {
-    display: flex;
-    height: 500px;
-}
-
-/* KIRI */
-.hero-left {
-    width: 30%;
-    background-color: #ffe04d;
-    display: flex;
-    align-items: center;
-    padding: 50px;
-}
-
-.hero-left h1 {
-    color: #0a58ca;
-    font-size: 38px;
-}
-
-/* KANAN */
-.hero-right {
-    width: 70%;
-    background: linear-gradient(135deg, #1bb1dc, #4b6cb7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-
-/* CARD */
-.hero-card {
-    display: flex;
-    gap: 40px;
-    text-align: center;
-}
-
-.hero-card img {
-    width: 120px;
-    border-radius: 50%;
+/* SIDEBAR MENU */
+.menu {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
 }
 
 /* BUTTON */
 .stButton>button {
-    border-radius: 10px;
+    width: 100%;
+    border-radius: 8px;
     height: 45px;
-    font-size: 16px;
+    font-size: 15px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -107,41 +64,55 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING PAGE
+# LANDING PAGE (FIXED HTML)
 # =========================
 if st.session_state.page == "landing":
 
-    # NAVBAR
-    st.markdown("""
-    <div class="navbar">
-        <div>Clustering Instansi</div>
-        <div>Dashboard Data</div>
-    </div>
-    """, unsafe_allow_html=True)
+    components.html("""
+    <div style="font-family:Arial;">
 
-    # HERO
-    st.markdown("""
-    <div class="hero">
-
-        <div class="hero-left">
-            <h1>Selamat Datang di<br>Aplikasi Clustering Instansi</h1>
+        <!-- NAVBAR -->
+        <div style="background:#0a58ca;color:white;padding:15px 40px;display:flex;justify-content:space-between;">
+            <div><b>Clustering Instansi</b></div>
+            <div>Dashboard Data</div>
         </div>
 
-        <div class="hero-right">
-            <div class="hero-card">
-                <div>
-                    <img src="https://i.pravatar.cc/120?img=5">
-                    <p>Analisis Data</p>
-                </div>
-                <div>
-                    <img src="https://i.pravatar.cc/120?img=8">
-                    <p>Clustering</p>
-                </div>
+        <!-- HERO -->
+        <div style="display:flex;height:500px;">
+
+            <!-- LEFT -->
+            <div style="width:30%;background:#ffe04d;display:flex;align-items:center;padding:50px;">
+                <h1 style="color:#0a58ca;">
+                    Selamat Datang di<br>
+                    Aplikasi Clustering Instansi
+                </h1>
             </div>
-        </div>
 
+            <!-- RIGHT -->
+            <div style="width:70%;background:linear-gradient(135deg,#1bb1dc,#4b6cb7);
+                        display:flex;align-items:center;justify-content:center;color:white;">
+
+                <div style="display:flex;gap:40px;text-align:center;">
+
+                    <div>
+                        <img src="https://i.pravatar.cc/120?img=5"
+                             style="border-radius:50%;width:120px;">
+                        <p>Analisis Data</p>
+                    </div>
+
+                    <div>
+                        <img src="https://i.pravatar.cc/120?img=8"
+                             style="border-radius:50%;width:120px;">
+                        <p>Clustering</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+    """, height=520)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
