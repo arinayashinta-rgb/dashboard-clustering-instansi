@@ -45,7 +45,7 @@ if st.session_state.page == "landing":
     st.markdown("<div style='height:120px'></div>", unsafe_allow_html=True)
 
     # CENTER GAMBAR
-    col1, col2, col3 = st.columns([1,2,1])
+    col1, col2, col3 = st.columns([1,4,1])
     with col2:
         st.image("logo.png", width=200)
 
