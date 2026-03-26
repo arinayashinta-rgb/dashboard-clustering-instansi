@@ -81,17 +81,53 @@ st.markdown("""
 # =========================
 # LANDING PAGE
 # =========================
+# =========================
+# GLOBAL STYLE (UPDATE)
+# =========================
+st.markdown("""
+<style>
+.block-container {
+    padding: 0;
+}
+
+/* LEFT FULL BACKGROUND */
+.left-box {
+    height: 100vh;
+    background-image: url('clustering.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* RIGHT PANEL */
+.right-box {
+    background: #f5f5f5;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONTENT */
+.content-box {
+    text-align: center;
+    width: 320px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# LANDING PAGE (FIXED)
+# =========================
 if st.session_state.page == "landing":
 
     col_left, col_right = st.columns([3,2])
 
-    # LEFT (GAMBAR FULL)
+    # LEFT (BACKGROUND IMAGE)
     with col_left:
-        st.markdown('<div class="left-box">', unsafe_allow_html=True)
-        st.image("clustering.jpg", use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="left-box"></div>', unsafe_allow_html=True)
 
-    # RIGHT (TEXT + BUTTON)
+    # RIGHT
     with col_right:
         st.markdown('<div class="right-box">', unsafe_allow_html=True)
         st.markdown('<div class="content-box">', unsafe_allow_html=True)
