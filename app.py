@@ -148,16 +148,4 @@ elif menu == "Hasil Clustering":
         else:
             st.error("Instansi tidak ditemukan dalam dataset")
 
-        # =========================
-        # RINCIAN
-        # =========================
-        st.write("### 📊 Rincian Jumlah Input")
-
-        col1, col2, col3 = st.columns(3)
-
-        col1.metric("Permasalahan", jml_permasalahan)
-        col2.metric("Permohonan", jml_permohonan)
-        col3.metric("Pertanyaan", jml_pertanyaan)
-
-    else:
-        st.warning("Silakan input data terlebih dahulu.")
+      
