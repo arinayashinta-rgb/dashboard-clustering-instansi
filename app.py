@@ -40,41 +40,64 @@ def hitung_jumlah(teks):
 # =========================
 # LOAD IMAGE BASE64
 # =========================
-def get_base64_image(path):
+def get_base64(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-img_base64 = get_base64_image("clustering.jpg")
+img = get_base64("clustering.jpg")
 
 # =========================
-# STYLE
+# GLOBAL STYLE (FULL FIX)
 # =========================
 st.markdown(f"""
 <style>
+
+/* HAPUS SEMUA PADDING STREAMLIT */
 .block-container {{
-    padding: 0;
+    padding: 0 !important;
 }}
 
-/* LEFT FULL IMAGE */
-.left-box {{
+section.main > div {{
+    padding-top: 0 !important;
+}}
+
+/* FULL SCREEN WRAPPER */
+.full {{
+    display: flex;
     height: 100vh;
-    background-image: url("data:image/jpg;base64,{img_base64}");
+    margin: 0;
+}}
+
+/* LEFT IMAGE */
+.left {{
+    flex: 3;
+    background-image: url("data:image/jpg;base64,{img}");
     background-size: cover;
     background-position: center;
 }}
 
-/* RIGHT */
-.right-box {{
-    height: 100vh;
+/* RIGHT PANEL */
+.right {{
+    flex: 2;
     background: #f5f5f5;
     display: flex;
     align-items: center;
     justify-content: center;
 }}
 
-.content-box {{
-    text-align: center;
+/* CONTENT */
+.box {{
     width: 320px;
+    text-align: center;
+}}
+
+.box h2 {{
+    margin-bottom: 10px;
+}}
+
+.box p {{
+    color: gray;
+    margin-bottom: 20px;
 }}
 
 /* BUTTON */
@@ -88,6 +111,7 @@ st.markdown(f"""
 .stButton>button:hover {{
     background: #16a085;
 }}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -96,31 +120,31 @@ st.markdown(f"""
 # =========================
 if st.session_state.page == "landing":
 
-    col_left, col_right = st.columns([3,2])
+    st.markdown('<div class="full">', unsafe_allow_html=True)
 
-    # LEFT (IMAGE)
-    with col_left:
-        st.markdown('<div class="left-box"></div>', unsafe_allow_html=True)
+    col1, col2 = st.columns([3,2], gap="small")
 
-    # RIGHT (TEXT + BUTTON)
-    with col_right:
-        st.markdown('<div class="right-box">', unsafe_allow_html=True)
-        st.markdown('<div class="content-box">', unsafe_allow_html=True)
+    # LEFT
+    with col1:
+        st.markdown('<div class="left"></div>', unsafe_allow_html=True)
+
+    # RIGHT
+    with col2:
+        st.markdown('<div class="right">', unsafe_allow_html=True)
+        st.markdown('<div class="box">', unsafe_allow_html=True)
 
         st.markdown("## **Clustering Instansi**")
         st.markdown("""
-        <p style='color:gray'>
-        Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
-        </p>
+        <p>Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.</p>
         """, unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
 
         if st.button("🚀 Mulai", use_container_width=True):
             pindah("beranda")
 
         st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
 # MAIN APP
@@ -129,7 +153,6 @@ else:
 
     col_menu, col_content = st.columns([1,4])
 
-    # MENU
     with col_menu:
         st.markdown("### 📌 Menu")
 
@@ -142,7 +165,6 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
-    # CONTENT
     with col_content:
 
         if st.session_state.page == "beranda":
@@ -158,10 +180,7 @@ else:
             st.markdown("---")
 
             st.subheader("📌 Tentang Aplikasi")
-            st.write("""
-            Aplikasi ini digunakan untuk mengelompokkan instansi 
-            berdasarkan data pengaduan.
-            """)
+            st.write("Aplikasi ini digunakan untuk clustering instansi.")
 
         elif st.session_state.page == "input":
 
@@ -183,9 +202,6 @@ else:
                 st.session_state.hasil = {
                     "nama": nama,
                     "total": total,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
                     "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
                     "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
                 }
@@ -199,16 +215,13 @@ else:
             if "hasil" in st.session_state:
                 data = st.session_state.hasil
 
-                st.write(f"**Nama Instansi:** {data['nama']}")
-                st.write(f"**Total Pengaduan:** {data['total']}")
-
-                st.divider()
+                st.write(f"Nama: {data['nama']}")
+                st.write(f"Total: {data['total']}")
 
                 if data["cluster"] is not None:
                     st.success(f"Cluster: {data['cluster']}")
                     st.info(f"Kategori: {data['kategori']}")
                 else:
                     st.error("Data tidak ditemukan")
-
             else:
                 st.warning("Belum ada data")
