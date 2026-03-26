@@ -40,88 +40,97 @@ def hitung_jumlah(teks):
 # =========================
 # LANDING (DESAIN MODERN)
 # =========================
-if st.session_state.page == "landing":
+import base64
 
-    components.html("""
-    <html>
-    <head>
-    <style>
-    body {
-        margin: 0;
-        font-family: Arial;
-    }
+# encode gambar lokal ke base64
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
 
-    .container {
-        display: flex;
-        height: 100vh;
-    }
+img_base64 = get_base64_image("Unsia.png")  # pastikan nama file sama
 
-    /* LEFT */
-    .left {
-        width: 55%;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+components.html(f"""
+<html>
+<head>
+<style>
+body {{
+    margin: 0;
+    font-family: Arial;
+}}
 
-    .left img {
-        width: 350px;
-    }
+.container {{
+    display: flex;
+    height: 100vh;
+}}
 
-    /* RIGHT */
-    .right {
-        width: 45%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f5f5f5;
-    }
+/* LEFT */
+.left {{
+    width: 55%;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}}
 
-    .box {
-        width: 320px;
-        text-align: center;
-    }
+.left img {{
+    width: 300px;
+}}
 
-    .box h2 {
-        margin-bottom: 15px;
-    }
+/* RIGHT */
+.right {{
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+}}
 
-    .box p {
-        color: gray;
-        font-size: 14px;
-    }
-    </style>
-    </head>
+.box {{
+    width: 320px;
+    text-align: center;
+}}
 
-    <body>
+.box h2 {{
+    margin-bottom: 15px;
+}}
 
-    <div class="container">
+.box p {{
+    color: gray;
+    font-size: 14px;
+}}
+</style>
+</head>
 
-        <div class="left">
-            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
-        </div>
+<body>
 
-        <div class="right">
-            <div class="box">
-                <h2><b>Clustering App</b></h2>
-                <p>Aplikasi untuk analisis dan clustering data instansi</p>
-            </div>
-        </div>
+<div class="container">
 
+    <!-- LEFT -->
+    <div class="left">
+        <img src="data:image/png;base64,{img_base64}">
     </div>
 
-    </body>
-    </html>
-    """, height=750)
+    <!-- RIGHT -->
+    <div class="right">
+        <div class="box">
+            <h2><b>Clustering App</b></h2>
+            <p>Aplikasi untuk analisis dan clustering data instansi</p>
+        </div>
+    </div>
 
-    st.markdown("<br>", unsafe_allow_html=True)
+</div>
+
+</body>
+</html>
+""", height=750)
 
     # BUTTON MULAI
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        if st.button("🚀 Mulai", use_container_width=True):
-            pindah("beranda")
+    col1, col2 = st.columns([3,2])
+
+with col2:
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    if st.button("🚀 Mulai", use_container_width=True):
+        pindah("beranda")
 
 # =========================
 # MAIN APP
