@@ -24,10 +24,7 @@ df = load_data()
 # SESSION
 # =========================
 if "page" not in st.session_state:
-    st.session_state.page = "login"
-
-if "login" not in st.session_state:
-    st.session_state.login = False
+    st.session_state.page = "landing"
 
 def pindah(page):
     st.session_state.page = page
@@ -41,9 +38,9 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LOGIN PAGE (DESIGN MODERN)
+# LANDING (DESAIN MODERN)
 # =========================
-if st.session_state.page == "login":
+if st.session_state.page == "landing":
 
     components.html("""
     <html>
@@ -81,36 +78,18 @@ if st.session_state.page == "login":
         background: #f5f5f5;
     }
 
-    .login-box {
+    .box {
         width: 320px;
         text-align: center;
     }
 
-    .login-box h2 {
-        margin-bottom: 20px;
+    .box h2 {
+        margin-bottom: 15px;
     }
 
-    input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-    }
-
-    button {
-        width: 100%;
-        padding: 10px;
-        background: #1abc9c;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        margin-top: 10px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #16a085;
+    .box p {
+        color: gray;
+        font-size: 14px;
     }
     </style>
     </head>
@@ -124,13 +103,9 @@ if st.session_state.page == "login":
         </div>
 
         <div class="right">
-            <div class="login-box">
+            <div class="box">
                 <h2><b>Clustering App</b></h2>
-
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
-
-                <p style="font-size:12px;color:gray;">Gunakan tombol di bawah</p>
+                <p>Aplikasi untuk analisis dan clustering data instansi</p>
             </div>
         </div>
 
@@ -142,25 +117,16 @@ if st.session_state.page == "login":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # LOGIN FORM STREAMLIT (AKTIF)
+    # BUTTON MULAI
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        st.subheader("🔐 Login")
-
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-
-        if st.button("Login", use_container_width=True):
-            if username == "admin" and password == "admin":
-                st.session_state.login = True
-                pindah("beranda")
-            else:
-                st.error("Username / Password salah")
+        if st.button("🚀 Mulai", use_container_width=True):
+            pindah("beranda")
 
 # =========================
 # MAIN APP
 # =========================
-elif st.session_state.login:
+else:
 
     col_menu, col_content = st.columns([1,4])
 
@@ -178,12 +144,6 @@ elif st.session_state.login:
 
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
-
-        st.markdown("---")
-
-        if st.button("🚪 Logout"):
-            st.session_state.login = False
-            pindah("login")
 
     # =========================
     # CONTENT
@@ -292,10 +252,3 @@ elif st.session_state.login:
 
             else:
                 st.warning("Belum ada data")
-
-# =========================
-# PROTECTION
-# =========================
-else:
-    st.warning("Silakan login terlebih dahulu")
-    pindah("login")
