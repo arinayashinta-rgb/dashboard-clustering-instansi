@@ -37,16 +37,19 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING PAGE
+# LANDING PAGE (FIX CENTER)
 # =========================
 if st.session_state.page == "landing":
 
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    # Spacer atas (atur tinggi biar pas tengah)
+    st.markdown("<div style='height:120px'></div>", unsafe_allow_html=True)
 
+    # CENTER GAMBAR
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         st.image("logo.png", width=200)
 
+    # JUDUL
     st.markdown(
         "<h2 style='text-align:center;'>Aplikasi Clustering Instansi</h2>",
         unsafe_allow_html=True
@@ -54,6 +57,7 @@ if st.session_state.page == "landing":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # BUTTON CENTER
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         if st.button("🚀 Masuk", use_container_width=True):
