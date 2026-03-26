@@ -47,7 +47,7 @@ if st.session_state.page == "landing":
     # LOGO (GESER SEDIKIT KE KANAN)
     col1, col2, col3 = st.columns([0.8,3,1])
     with col2:
-        st.image("logo.png", width=200)
+        st.image("logo.png", width=500)
 
     # JUDUL
     st.markdown(
@@ -145,7 +145,7 @@ elif st.session_state.page == "input":
         pindah("menu")
 
 # =========================
-# HASIL
+# HASIL CLUSTERING
 # =========================
 elif st.session_state.page == "hasil":
 
@@ -154,14 +154,31 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
+        # =========================
         # INFORMASI
+        # =========================
         st.subheader("📌 Informasi")
+
         st.write(f"**Nama Instansi:** {data['nama']}")
         st.write(f"**Total Pengaduan:** {data['total']}")
 
+        # =========================
+        # RINCIAN TAMBAHAN (BARU 🔥)
+        # =========================
+        st.write("**Permasalahan:**")
+        st.write(data["permasalahan"] or "-")
+
+        st.write("**Permohonan:**")
+        st.write(data["permohonan"] or "-")
+
+        st.write("**Pertanyaan:**")
+        st.write(data["pertanyaan"] or "-")
+
         st.divider()
 
+        # =========================
         # HASIL
+        # =========================
         st.subheader("🎯 Hasil")
 
         if data["cluster"] is not None:
@@ -169,18 +186,6 @@ elif st.session_state.page == "hasil":
             st.info(f"Kategori: {data['kategori']}")
         else:
             st.error("Data tidak ditemukan")
-
-        st.divider()
-
-        # VALIDASI
-        total_input = jml_permasalahan + jml_permohonan + jml_pertanyaan
-
-        st.write(f"Total hasil input: **{total_input}**")
-
-        if total_input != data["total"]:
-            st.warning("Jumlah rincian tidak sama dengan total pengaduan")
-        else:
-            st.success("Jumlah rincian sesuai dengan total pengaduan")
 
     else:
         st.warning("Belum ada data")
