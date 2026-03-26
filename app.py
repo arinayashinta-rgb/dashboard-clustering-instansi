@@ -45,7 +45,7 @@ def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-img_base64 = get_base64_image("Unsia.png")  # pastikan file ada
+img_base64 = get_base64_image("Unsia.png")
 
 # =========================
 # LANDING PAGE
@@ -76,7 +76,7 @@ if st.session_state.page == "landing":
     }}
 
     .left img {{
-        width: 280px;
+        width: 260px;
     }}
 
     /* RIGHT */
@@ -100,6 +100,25 @@ if st.session_state.page == "landing":
     .box p {{
         color: gray;
         font-size: 14px;
+        margin-bottom: 20px;
+    }}
+
+    /* BUTTON */
+    .btn {{
+        width: 100%;
+        padding: 12px;
+        background: #1abc9c;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+    }}
+
+    .btn:hover {{
+        background: #16a085;
+        transform: translateY(-2px);
     }}
     </style>
     </head>
@@ -108,14 +127,25 @@ if st.session_state.page == "landing":
 
     <div class="container">
 
+        <!-- LEFT -->
         <div class="left">
             <img src="data:image/png;base64,{img_base64}">
         </div>
 
+        <!-- RIGHT -->
         <div class="right">
             <div class="box">
                 <h2><b>Clustering Instansi</b></h2>
-                <p>Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.</p>
+                <p>
+                Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
+                </p>
+
+                <!-- BUTTON -->
+                <button class="btn"
+                    onclick="window.parent.postMessage({{type:'streamlit:setComponentValue', value: true}}, '*')">
+                    🚀 Mulai
+                </button>
+
             </div>
         </div>
 
@@ -123,15 +153,17 @@ if st.session_state.page == "landing":
 
     </body>
     </html>
-    """, height=750)
+    """, height=700)
 
-    # BUTTON DI KANAN
-    col1, col2 = st.columns([3,2])
+    # HANDLE BUTTON HTML (REAL WORKING)
+    mulai = st.session_state.get("component_value")
 
-    with col2:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        if st.button("🚀 Mulai", use_container_width=True):
-            pindah("beranda")
+    if mulai:
+        pindah("beranda")
+
+    # fallback (jaga-jaga)
+    if st.button("🚀 Mulai"):
+        pindah("beranda")
 
 # =========================
 # MAIN APP
@@ -159,7 +191,7 @@ else:
         # BERANDA
         if st.session_state.page == "beranda":
 
-            st.title("📊 Dashboard Clustering Instansi")
+            st.title("📊 Aplikasi Clustering Instansi")
 
             col1, col2, col3 = st.columns(3)
 
@@ -191,11 +223,12 @@ else:
 
             with st.form("form_input"):
                 nama = st.text_input("Nama Instansi")
-                total = st.number_input("Total Pengaduan", min_value=0)
+                
 
                 permasalahan = st.text_area("Permasalahan")
                 permohonan = st.text_area("Permohonan")
                 pertanyaan = st.text_area("Pertanyaan")
+                total = st.number_input("Total Pengaduan", min_value=0)
 
                 submit = st.form_submit_button("Proses")
 
@@ -243,12 +276,6 @@ else:
                     st.error("Data tidak ditemukan")
 
                 st.divider()
-
-                col1, col2, col3 = st.columns(3)
-
-                col1.metric("Permasalahan", hitung_jumlah(data["permasalahan"]))
-                col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
-                col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
 
             else:
                 st.warning("Belum ada data")
