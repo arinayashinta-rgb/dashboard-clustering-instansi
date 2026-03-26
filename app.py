@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # =========================
-# CONFIG PAGE
+# CONFIG
 # =========================
 st.set_page_config(
     page_title="Clustering Instansi",
@@ -11,43 +11,42 @@ st.set_page_config(
 )
 
 # =========================
-# CUSTOM CSS (BIAR CANTIK 🔥)
+# CUSTOM CSS (SUPER UI 🔥)
 # =========================
 st.markdown("""
 <style>
 .main {
-    background-color: #f5f7fa;
+    background: linear-gradient(to right, #eef2f3, #dfe9f3);
 }
 
-.block-container {
-    padding-top: 2rem;
+/* CARD BUTTON */
+.menu-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0px 6px 18px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.menu-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 22px rgba(0,0,0,0.2);
 }
 
-h1, h2, h3 {
+/* TITLE */
+.title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
     color: #1f3c88;
 }
 
-.stButton>button {
-    background-color: #1f77b4;
-    color: white;
-    border-radius: 8px;
-    height: 3em;
-    width: 100%;
-}
-
-.card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.result-box {
-    padding: 20px;
-    border-radius: 12px;
-    background-color: #e8f4ff;
-    border-left: 6px solid #1f77b4;
+/* SUBTITLE */
+.subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 40px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -62,138 +61,127 @@ def load_data():
 df = load_data()
 
 # =========================
-# SIDEBAR
+# SESSION NAVIGATION
 # =========================
-st.sidebar.title("📌 Navigasi")
-menu = st.sidebar.radio("", [
-    "Beranda",
-    "Input Data",
-    "Hasil Clustering"
-])
+if "page" not in st.session_state:
+    st.session_state.page = "home"
 
 # =========================
-# SESSION
+# NAVIGATION FUNCTION
 # =========================
-if "hasil" not in st.session_state:
-    st.session_state.hasil = None
+def go_to(page):
+    st.session_state.page = page
 
 # =========================
-# BERANDA
+# HOME (LANDING PAGE)
 # =========================
-if menu == "Beranda":
-    st.title("📊 Aplikasi Clustering Instansi")
+if st.session_state.page == "home":
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="title">👋 Selamat Datang di Aplikasi Clustering Instansi</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Sistem untuk mengelompokkan instansi berdasarkan hasil clustering</div>', unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
+    # MENU 1
+    with col1:
+        st.markdown('<div class="menu-card">', unsafe_allow_html=True)
+        st.subheader("📝 Input Data")
+        st.write("Masukkan data instansi untuk dianalisis")
+        if st.button("Masuk", key="btn1"):
+            go_to("input")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # MENU 2
+    with col2:
+        st.markdown('<div class="menu-card">', unsafe_allow_html=True)
+        st.subheader("📊 Hasil Clustering")
+        st.write("Lihat hasil pengelompokan instansi")
+        if st.button("Lihat", key="btn2"):
+            go_to("hasil")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # MENU 3
+    with col3:
+        st.markdown('<div class="menu-card">', unsafe_allow_html=True)
+        st.subheader("ℹ️ Tentang")
+        st.write("Informasi aplikasi dan cara penggunaan")
+        if st.button("Info", key="btn3"):
+            go_to("tentang")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# HALAMAN TENTANG
+# =========================
+elif st.session_state.page == "tentang":
+    st.title("ℹ️ Tentang Aplikasi")
 
     st.write("""
-    ### 🎯 Tentang Aplikasi
-    Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan hasil clustering yang telah dilakukan sebelumnya.
+    Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan hasil clustering.
 
-    ### ⚙️ Cara Menggunakan
-    1. Masuk ke menu **Input Data**
+    ### Cara Penggunaan:
+    1. Masuk ke menu Input Data
     2. Masukkan nama instansi
-    3. Isi deskripsi (opsional)
-    4. Klik **Tambah Data**
-    5. Lihat hasil di menu **Hasil Clustering**
+    3. Klik tombol proses
+    4. Lihat hasil clustering
     """)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    if st.button("⬅️ Kembali"):
+        go_to("home")
 
 # =========================
 # INPUT DATA
 # =========================
-elif menu == "Input Data":
+elif st.session_state.page == "input":
     st.title("📝 Input Data Instansi")
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-
     with st.form("form_input"):
-        nama = st.text_input("🏢 Nama Instansi")
+        nama = st.text_input("Nama Instansi")
+        permasalahan = st.text_area("Permasalahan")
+        permohonan = st.text_area("Permohonan")
+        pertanyaan = st.text_area("Pertanyaan")
 
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            permasalahan = st.text_area("⚠️ Permasalahan")
-        with col2:
-            permohonan = st.text_area("📄 Permohonan")
-        with col3:
-            pertanyaan = st.text_area("❓ Pertanyaan")
-
-        colA, colB = st.columns(2)
-        submit = colA.form_submit_button("➕ Tambah Data")
-        reset = colB.form_submit_button("🗑️ Reset")
-
-    st.markdown('</div>', unsafe_allow_html=True)
+        submit = st.form_submit_button("➕ Proses")
 
     if submit:
-        if nama.strip() == "":
-            st.warning("Nama instansi wajib diisi!")
+        hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
+
+        if not hasil.empty:
+            st.session_state.hasil = {
+                "nama": nama,
+                "cluster": hasil.iloc[0]["Cluster"],
+                "kategori": hasil.iloc[0]["Kategori Cluster"]
+            }
+            st.success("✅ Berhasil diproses!")
         else:
-            hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
+            st.session_state.hasil = {
+                "nama": nama,
+                "cluster": None,
+                "kategori": "Tidak ditemukan"
+            }
+            st.error("Instansi tidak ditemukan")
 
-            if not hasil.empty:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": hasil.iloc[0]["Cluster"],
-                    "kategori": hasil.iloc[0]["Kategori Cluster"]
-                }
-                st.success("✅ Data berhasil diproses!")
-            else:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": None,
-                    "kategori": "Tidak ditemukan"
-                }
-                st.error("❌ Instansi tidak ditemukan!")
-
-    if reset:
-        st.session_state.hasil = None
-        st.rerun()
+    if st.button("⬅️ Kembali"):
+        go_to("home")
 
 # =========================
 # HASIL
 # =========================
-elif menu == "Hasil Clustering":
+elif st.session_state.page == "hasil":
     st.title("📊 Hasil Clustering")
 
-    if st.session_state.hasil:
+    if st.session_state.get("hasil"):
         data = st.session_state.hasil
 
-        col1, col2 = st.columns(2)
+        st.write(f"**Instansi:** {data['nama']}")
 
-        # =========================
-        # DATA INPUT
-        # =========================
-        with col1:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-            st.subheader("📌 Data Input")
-
-            st.write(f"**Instansi:** {data['nama']}")
-            st.write(f"**Permasalahan:** {data['permasalahan']}")
-            st.write(f"**Permohonan:** {data['permohonan']}")
-            st.write(f"**Pertanyaan:** {data['pertanyaan']}")
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        # =========================
-        # HASIL
-        # =========================
-        with col2:
-            st.markdown('<div class="result-box">', unsafe_allow_html=True)
-            st.subheader("🎯 Hasil")
-
-            if data["cluster"] is not None:
-                st.success(f"Cluster: {data['cluster']}")
-                st.write(f"Kategori: {data['kategori']}")
-            else:
-                st.error("Data tidak ditemukan")
-
-            st.markdown('</div>', unsafe_allow_html=True)
+        if data["cluster"] is not None:
+            st.success(f"Cluster: {data['cluster']}")
+            st.info(f"Kategori: {data['kategori']}")
+        else:
+            st.error("Data tidak ditemukan")
 
     else:
-        st.warning("Silakan input data terlebih dahulu.")
+        st.warning("Belum ada data diproses")
+
+    if st.button("⬅️ Kembali"):
+        go_to("home")
