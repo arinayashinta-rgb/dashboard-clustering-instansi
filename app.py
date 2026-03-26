@@ -7,7 +7,7 @@ import pandas as pd
 st.set_page_config(
     page_title="Clustering Instansi",
     page_icon="📊",
-    layout="centered"
+    layout="wide"
 )
 
 # =========================
@@ -29,7 +29,7 @@ def pindah(page):
     st.session_state.page = page
 
 # =========================
-# FUNGSI HITUNG (VALID)
+# FUNGSI HITUNG
 # =========================
 def hitung_jumlah(teks):
     if not teks:
@@ -41,67 +41,82 @@ def hitung_jumlah(teks):
 # =========================
 if st.session_state.page == "landing":
 
-    # Spacer atas
     st.markdown("<div style='height:120px'></div>", unsafe_allow_html=True)
 
-    # LOGO (GESER SEDIKIT KE KANAN)
-    col1, col2, col3 = st.columns([0.8,3,1])
+    col1, col2, col3 = st.columns([1,2,1])
     with col2:
         st.image("logo.png", width=500)
 
-    # JUDUL
     st.markdown(
-        "<h2 style='text-align:center;'>Aplikasi Clustering Instansi</h2>",
+        "<h1 style='text-align:center;'>Aplikasi Clustering Instansi</h1>",
         unsafe_allow_html=True
     )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # BUTTON
-    col1, col2, col3 = st.columns([0.8,3,1])
+    col1, col2, col3 = st.columns([1,2,1])
     with col2:
         if st.button("🚀 Masuk", use_container_width=True):
-            pindah("menu")
+            pindah("home")
 
 # =========================
-# MENU
+# HOME (MENU UTAMA)
 # =========================
-elif st.session_state.page == "menu":
+elif st.session_state.page == "home":
 
-    st.title("📊 Menu Utama")
+    st.title("📊 Aplikasi Clustering Instansi")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    if st.button("ℹ️ Tentang Aplikasi", use_container_width=True):
-        pindah("tentang")
+    col1, col2, col3 = st.columns(3)
 
-    if st.button("📝 Input Data", use_container_width=True):
-        pindah("input")
+    with col1:
+        if st.button("ℹ️ Tentang Aplikasi", use_container_width=True):
+            pindah("tentang")
 
-    if st.button("📊 Hasil Clustering", use_container_width=True):
-        pindah("hasil")
+    with col2:
+        if st.button("📝 Input Data", use_container_width=True):
+            pindah("input")
+
+    with col3:
+        if st.button("📊 Hasil Clustering", use_container_width=True):
+            pindah("hasil")
+
+    st.markdown("<br>")
+
+    if st.button("⬅️ Kembali ke Landing Page"):
+        pindah("landing")
 
 # =========================
 # TENTANG
 # =========================
 elif st.session_state.page == "tentang":
 
-    st.title("ℹ️ Tentang Aplikasi")
+    st.title("📌 Tentang Aplikasi")
 
     st.write("""
     Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
-    berdasarkan dataset yang telah dianalisis sebelumnya.
-
-    ### Cara Penggunaan:
-    1. Masuk ke menu Input Data
-    2. Masukkan nama instansi
-    3. Isi data pengaduan
-    4. Klik proses
-    5. Lihat hasil clustering
+    berdasarkan data yang telah diolah sebelumnya.
     """)
 
-    if st.button("⬅️ Kembali"):
-        pindah("menu")
+    st.subheader("🧭 Cara Menggunakan")
+    st.markdown("""
+    1. Pilih menu Input Data  
+    2. Masukkan nama instansi  
+    3. Isi data (1 baris = 1 item)  
+    4. Klik tombol proses  
+    5. Lihat hasil clustering  
+    """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("⬅️ Kembali ke Menu"):
+            pindah("home")
+
+    with col2:
+        if st.button("🏠 Landing Page"):
+            pindah("landing")
 
 # =========================
 # INPUT DATA
@@ -113,13 +128,12 @@ elif st.session_state.page == "input":
     st.info("Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
 
     with st.form("form_input"):
-        nama = st.text_input("🏢 Nama Instansi")
+        nama = st.text_input("Nama Instansi")
+        total = st.number_input("Total Pengaduan", min_value=0)
 
-        permasalahan = st.text_area("⚠️ Permasalahan")
-        permohonan = st.text_area("📄 Permohonan")
-        pertanyaan = st.text_area("❓ Pertanyaan")
-
-        total_pengaduan = st.number_input("📊 Total Pengaduan", min_value=0, step=1)
+        permasalahan = st.text_area("Permasalahan")
+        permohonan = st.text_area("Permohonan")
+        pertanyaan = st.text_area("Pertanyaan")
 
         submit = st.form_submit_button("Proses")
 
@@ -127,22 +141,26 @@ elif st.session_state.page == "input":
         hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
         st.session_state.hasil = {
-            "nama": nama,          
+            "nama": nama,
+            "total": total,
             "permasalahan": permasalahan,
             "permohonan": permohonan,
             "pertanyaan": pertanyaan,
-            "total": total_pengaduan,
             "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
             "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
         }
 
-        if not hasil.empty:
-            st.success("Data berhasil diproses")
-        else:
-            st.error("Instansi tidak ditemukan")
+        st.success("Data berhasil diproses")
 
-    if st.button("⬅️ Kembali"):
-        pindah("menu")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("⬅️ Kembali ke Menu"):
+            pindah("home")
+
+    with col2:
+        if st.button("🏠 Landing Page"):
+            pindah("landing")
 
 # =========================
 # HASIL CLUSTERING
@@ -154,17 +172,11 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-        # =========================
         # INFORMASI
-        # =========================
         st.subheader("📌 Informasi")
-
         st.write(f"**Nama Instansi:** {data['nama']}")
         st.write(f"**Total Pengaduan:** {data['total']}")
 
-        # =========================
-        # RINCIAN TAMBAHAN (BARU 🔥)
-        # =========================
         st.write("**Permasalahan:**")
         st.write(data["permasalahan"] or "-")
 
@@ -176,9 +188,7 @@ elif st.session_state.page == "hasil":
 
         st.divider()
 
-        # =========================
         # HASIL
-        # =========================
         st.subheader("🎯 Hasil")
 
         if data["cluster"] is not None:
@@ -187,8 +197,26 @@ elif st.session_state.page == "hasil":
         else:
             st.error("Data tidak ditemukan")
 
+        st.divider()
+
+        # RINCIAN
+        st.subheader("📊 Rincian")
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric("Permasalahan", hitung_jumlah(data["permasalahan"]))
+        col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
+        col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
+
     else:
         st.warning("Belum ada data")
 
-    if st.button("⬅️ Kembali"):
-        pindah("menu")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("⬅️ Kembali ke Menu"):
+            pindah("home")
+
+    with col2:
+        if st.button("🏠 Landing Page"):
+            pindah("landing")
