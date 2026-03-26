@@ -12,19 +12,20 @@ st.set_page_config(
 )
 
 # =========================
-# CSS GLOBAL
+# GLOBAL CSS
 # =========================
 st.markdown("""
 <style>
 .block-container {
-    padding: 0;
+    padding: 1rem 2rem;
 }
 
-/* SIDEBAR MENU */
-.menu {
+/* SIDEBAR */
+.menu-box {
+    background: #ffffff;
     padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 /* BUTTON */
@@ -33,6 +34,20 @@ st.markdown("""
     border-radius: 8px;
     height: 45px;
     font-size: 15px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+/* TITLE */
+.title {
+    font-size: 26px;
+    font-weight: bold;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -64,7 +79,7 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING PAGE (FIXED HTML)
+# LANDING PAGE (FIXED & FULL)
 # =========================
 if st.session_state.page == "landing":
 
@@ -72,37 +87,41 @@ if st.session_state.page == "landing":
     <div style="font-family:Arial;">
 
         <!-- NAVBAR -->
-        <div style="background:#0a58ca;color:white;padding:15px 40px;display:flex;justify-content:space-between;">
+        <div style="background:#0a58ca;color:white;padding:15px 40px;
+                    display:flex;justify-content:space-between;">
             <div><b>Clustering Instansi</b></div>
             <div>Dashboard Data</div>
         </div>
 
         <!-- HERO -->
-        <div style="display:flex;height:500px;">
+        <div style="display:flex;min-height:85vh;">
 
             <!-- LEFT -->
-            <div style="width:30%;background:#ffe04d;display:flex;align-items:center;padding:50px;">
-                <h1 style="color:#0a58ca;">
+            <div style="width:30%;background:#ffe04d;
+                        display:flex;align-items:center;padding:60px;">
+                <h1 style="color:#0a58ca;font-size:40px;">
                     Selamat Datang di<br>
                     Aplikasi Clustering Instansi
                 </h1>
             </div>
 
             <!-- RIGHT -->
-            <div style="width:70%;background:linear-gradient(135deg,#1bb1dc,#4b6cb7);
-                        display:flex;align-items:center;justify-content:center;color:white;">
+            <div style="width:70%;
+                        background:linear-gradient(135deg,#1bb1dc,#4b6cb7);
+                        display:flex;align-items:center;justify-content:center;
+                        color:white;">
 
-                <div style="display:flex;gap:40px;text-align:center;">
+                <div style="display:flex;gap:60px;text-align:center;">
 
                     <div>
                         <img src="https://i.pravatar.cc/120?img=5"
-                             style="border-radius:50%;width:120px;">
+                             style="border-radius:50%;width:130px;">
                         <p>Analisis Data</p>
                     </div>
 
                     <div>
                         <img src="https://i.pravatar.cc/120?img=8"
-                             style="border-radius:50%;width:120px;">
+                             style="border-radius:50%;width:130px;">
                         <p>Clustering</p>
                     </div>
 
@@ -112,11 +131,10 @@ if st.session_state.page == "landing":
 
         </div>
     </div>
-    """, height=520)
+    """, height=750, scrolling=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # BUTTON MASUK
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         if st.button("🚀 Masuk ke Aplikasi", use_container_width=True):
@@ -130,9 +148,11 @@ else:
     col_menu, col_content = st.columns([1,4])
 
     # =========================
-    # MENU
+    # MENU (SIDEBAR STYLE)
     # =========================
     with col_menu:
+        st.markdown('<div class="menu-box">', unsafe_allow_html=True)
+
         st.markdown("### 📌 Menu")
 
         if st.button("🏠 Beranda"):
@@ -144,39 +164,72 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
+        st.markdown('</div>', unsafe_allow_html=True)
+
     # =========================
     # CONTENT
     # =========================
     with col_content:
 
         # =========================
-        # BERANDA
+        # BERANDA (DASHBOARD)
         # =========================
         if st.session_state.page == "beranda":
 
-            st.title("📊 Dashboard Clustering Instansi")
+            st.markdown('<div class="title">📊 Dashboard Clustering Instansi</div>', unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
-            st.subheader("📌 Tentang Aplikasi")
-            st.write("""
-            Aplikasi ini digunakan untuk mengelompokkan instansi 
-            berdasarkan data pengaduan yang masuk.
-            """)
+            # CARDS
+            col1, col2, col3 = st.columns(3)
 
-            st.subheader("🧭 Cara Menggunakan")
+            col1.markdown("""
+            <div class="card" style="text-align:center;">
+                <h4>Total Data</h4>
+                <h2>100+</h2>
+            </div>
+            """, unsafe_allow_html=True)
+
+            col2.markdown("""
+            <div class="card" style="text-align:center;">
+                <h4>Cluster</h4>
+                <h2>3</h2>
+            </div>
+            """, unsafe_allow_html=True)
+
+            col3.markdown("""
+            <div class="card" style="text-align:center;">
+                <h4>Status</h4>
+                <h2>Aktif</h2>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            # INFO
             st.markdown("""
-            1. Masuk ke menu Input Data  
-            2. Isi nama instansi  
-            3. Masukkan data  
-            4. Klik proses  
-            5. Lihat hasil clustering  
-            """)
+            <div class="card">
+                <h3>📌 Tentang Aplikasi</h3>
+                <p>
+                Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan data pengaduan.
+                </p>
+
+                <h3>🧭 Cara Menggunakan</h3>
+                <ol>
+                <li>Masuk ke menu Input Data</li>
+                <li>Isi nama instansi</li>
+                <li>Masukkan data</li>
+                <li>Klik proses</li>
+                <li>Lihat hasil clustering</li>
+                </ol>
+            </div>
+            """, unsafe_allow_html=True)
 
         # =========================
         # INPUT
         # =========================
         elif st.session_state.page == "input":
 
-            st.title("📝 Input Data")
+            st.markdown('<div class="title">📝 Input Data</div>', unsafe_allow_html=True)
 
             with st.form("form_input"):
                 nama = st.text_input("Nama Instansi")
@@ -208,12 +261,13 @@ else:
         # =========================
         elif st.session_state.page == "hasil":
 
-            st.title("📊 Hasil Clustering")
+            st.markdown('<div class="title">📊 Hasil Clustering</div>', unsafe_allow_html=True)
 
             if "hasil" in st.session_state:
                 data = st.session_state.hasil
 
-                st.subheader("📌 Informasi")
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+
                 st.write(f"**Nama Instansi:** {data['nama']}")
                 st.write(f"**Total Pengaduan:** {data['total']}")
 
@@ -228,8 +282,6 @@ else:
 
                 st.divider()
 
-                st.subheader("🎯 Hasil")
-
                 if data["cluster"] is not None:
                     st.success(f"Cluster: {data['cluster']}")
                     st.info(f"Kategori: {data['kategori']}")
@@ -238,13 +290,13 @@ else:
 
                 st.divider()
 
-                st.subheader("📊 Rincian")
-
                 col1, col2, col3 = st.columns(3)
 
                 col1.metric("Permasalahan", hitung_jumlah(data["permasalahan"]))
                 col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
                 col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
+
+                st.markdown('</div>', unsafe_allow_html=True)
 
             else:
                 st.warning("Belum ada data")
