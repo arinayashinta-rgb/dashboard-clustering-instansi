@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 
 # =========================
 # CONFIG
@@ -37,97 +38,71 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# GLOBAL STYLE
+# LOAD IMAGE BASE64
 # =========================
-st.markdown("""
+def get_base64_image(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+img_base64 = get_base64_image("clustering.jpg")
+
+# =========================
+# STYLE
+# =========================
+st.markdown(f"""
 <style>
-.block-container {
+.block-container {{
     padding: 0;
-}
+}}
 
-/* LEFT PANEL */
-.left-box {
+/* LEFT FULL IMAGE */
+.left-box {{
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: black;
-}
+    background-image: url("data:image/jpg;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+}}
 
-/* IMAGE FULL */
-.left-box img {
-    width: 100%;
+/* RIGHT */
+.right-box {{
     height: 100vh;
-    object-fit: cover;
-}
-
-/* RIGHT PANEL */
-.right-box {
     background: #f5f5f5;
-    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+}}
 
-/* CONTENT */
-.content-box {
+.content-box {{
     text-align: center;
     width: 320px;
-}
+}}
+
+/* BUTTON */
+.stButton>button {{
+    background: #1abc9c;
+    color: white;
+    border-radius: 6px;
+    height: 45px;
+}}
+
+.stButton>button:hover {{
+    background: #16a085;
+}}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
 # LANDING PAGE
 # =========================
-# =========================
-# GLOBAL STYLE (UPDATE)
-# =========================
-st.markdown("""
-<style>
-.block-container {
-    padding: 0;
-}
-
-/* LEFT FULL BACKGROUND */
-.left-box {
-    height: 100vh;
-    background-image: url('clustering.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* RIGHT PANEL */
-.right-box {
-    background: #f5f5f5;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* CONTENT */
-.content-box {
-    text-align: center;
-    width: 320px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# =========================
-# LANDING PAGE (FIXED)
-# =========================
 if st.session_state.page == "landing":
 
     col_left, col_right = st.columns([3,2])
 
-    # LEFT (BACKGROUND IMAGE)
+    # LEFT (IMAGE)
     with col_left:
         st.markdown('<div class="left-box"></div>', unsafe_allow_html=True)
 
-    # RIGHT
+    # RIGHT (TEXT + BUTTON)
     with col_right:
         st.markdown('<div class="right-box">', unsafe_allow_html=True)
         st.markdown('<div class="content-box">', unsafe_allow_html=True)
@@ -170,7 +145,6 @@ else:
     # CONTENT
     with col_content:
 
-        # BERANDA
         if st.session_state.page == "beranda":
 
             st.title("📊 Dashboard Clustering Instansi")
@@ -189,16 +163,6 @@ else:
             berdasarkan data pengaduan.
             """)
 
-            st.subheader("🧭 Cara Menggunakan")
-            st.markdown("""
-            1. Masuk ke menu Input Data  
-            2. Isi nama instansi  
-            3. Masukkan data  
-            4. Klik proses  
-            5. Lihat hasil clustering  
-            """)
-
-        # INPUT
         elif st.session_state.page == "input":
 
             st.title("📝 Input Data")
@@ -228,7 +192,6 @@ else:
 
                 st.success("Data berhasil diproses")
 
-        # HASIL
         elif st.session_state.page == "hasil":
 
             st.title("📊 Hasil Clustering")
@@ -239,15 +202,6 @@ else:
                 st.write(f"**Nama Instansi:** {data['nama']}")
                 st.write(f"**Total Pengaduan:** {data['total']}")
 
-                st.write("**Permasalahan:**")
-                st.write(data["permasalahan"] or "-")
-
-                st.write("**Permohonan:**")
-                st.write(data["permohonan"] or "-")
-
-                st.write("**Pertanyaan:**")
-                st.write(data["pertanyaan"] or "-")
-
                 st.divider()
 
                 if data["cluster"] is not None:
@@ -255,14 +209,6 @@ else:
                     st.info(f"Kategori: {data['kategori']}")
                 else:
                     st.error("Data tidak ditemukan")
-
-                st.divider()
-
-                col1, col2, col3 = st.columns(3)
-
-                col1.metric("Permasalahan", hitung_jumlah(data["permasalahan"]))
-                col2.metric("Permohonan", hitung_jumlah(data["permohonan"]))
-                col3.metric("Pertanyaan", hitung_jumlah(data["pertanyaan"]))
 
             else:
                 st.warning("Belum ada data")
