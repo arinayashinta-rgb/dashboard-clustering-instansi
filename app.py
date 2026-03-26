@@ -1,15 +1,13 @@
 import streamlit as st
-import pandas as pd
 
 # =========================
-# LOAD DATA
+# KONFIGURASI HALAMAN
 # =========================
-@st.cache_data
-def load_data():
-    df = pd.read_excel("dataset.xlsx")
-    return df
-
-df = load_data()
+st.set_page_config(
+    page_title="Clustering Instansi",
+    page_icon="📊",
+    layout="wide"
+)
 
 # =========================
 # SIDEBAR MENU
@@ -28,17 +26,49 @@ if "hasil" not in st.session_state:
     st.session_state.hasil = None
 
 # =========================
-# BERANDA
+# FUNGSI CLUSTERING (RULE BASED)
 # =========================
-if menu == "Beranda":
-    st.title("📊 Aplikasi Clustering Instansi")
+def tentukan_cluster(permasalahan, permohonan, pertanyaan):
+    teks = (permasalahan + " " + permohonan + " " + pertanyaan).lower()
 
-    st.write("### Ringkasan Data")
-    st.write(f"Jumlah Instansi: {len(df)}")
-    st.write(f"Jumlah Cluster: {df['Kategori Cluster'].nunique()}")
+    if "masalah" in teks or "kendala" in teks:
+        return "Dominan Permasalahan"
+    elif "mohon" in teks or "permintaan" in teks:
+        return "Dominan Permohonan"
+    elif "tanya" in teks or "bagaimana" in teks:
+        return "Dominan Pertanyaan"
+    else:
+        return "Campuran"
 
-    st.write("### Data Contoh")
-    st.dataframe(df.head())
+# ====================================================
+# BERANDA
+# ====================================================
+
+if menu == "beranda":
+
+    st.title("📊 Clustering Instansi")
+
+    st.markdown("""
+Aplikasi ini digunakan untuk **mengelompokkan instansi**
+berdasarkan jumlah:
+
+- Permasalahan
+- Permohonan
+- Pertanyaan
+
+menggunakan metode **K-Means Clustering**.
+""")
+
+    st.divider()
+
+    st.subheader("Cara Menggunakan Aplikasi")
+
+    st.write("""
+1️⃣ Input data instansi  
+2️⃣ Tambahkan beberapa instansi  
+3️⃣ Jalankan clustering  
+4️⃣ Lihat instansi masuk cluster mana
+""")
 
 # =========================
 # INPUT DATA
@@ -56,28 +86,25 @@ elif menu == "Input Data":
         submit = col1.form_submit_button("➕ Tambah Data")
         reset = col2.form_submit_button("🗑️ Hapus Isian")
 
+    # =========================
+    # PROSES SUBMIT
+    # =========================
     if submit:
-        # =========================
-        # LOGIKA SEDERHANA (RULE BASED)
-        # =========================
-        teks = (permasalahan + " " + permohonan + " " + pertanyaan).lower()
-
-        if "masalah" in teks or "kendala" in teks:
-            kategori = "Dominan Permasalahan"
-        elif "mohon" in teks or "permintaan" in teks:
-            kategori = "Dominan Permohonan"
-        elif "tanya" in teks or "bagaimana" in teks:
-            kategori = "Dominan Pertanyaan"
+        if nama.strip() == "":
+            st.warning("Nama instansi wajib diisi!")
         else:
-            kategori = "Campuran"
+            kategori = tentukan_cluster(permasalahan, permohonan, pertanyaan)
 
-        st.session_state.hasil = {
-            "nama": nama,
-            "kategori": kategori
-        }
+            st.session_state.hasil = {
+                "nama": nama,
+                "kategori": kategori
+            }
 
-        st.success("Data berhasil diproses!")
+            st.success("✅ Data berhasil diproses!")
 
+    # =========================
+    # RESET FORM
+    # =========================
     if reset:
         st.session_state.hasil = None
         st.rerun()
@@ -89,16 +116,29 @@ elif menu == "Hasil Clustering":
     st.title("📊 Hasil Clustering")
 
     if st.session_state.hasil:
-        st.write("### Hasil Analisis")
+        st.success("Berhasil menentukan cluster!")
 
+        st.write("### Detail Instansi")
         st.write(f"**Nama Instansi:** {st.session_state.hasil['nama']}")
+
+        st.write("### Hasil Clustering")
         st.write(f"**Kategori Cluster:** {st.session_state.hasil['kategori']}")
 
-        # tampilkan contoh instansi serupa
-        contoh = df[df["Kategori Cluster"] == st.session_state.hasil["kategori"]]
+        # =========================
+        # INTERPRETASI
+        # =========================
+        st.write("### Interpretasi")
 
-        st.write("### Contoh Instansi dalam Cluster yang Sama")
-        st.dataframe(contoh)
+        kategori = st.session_state.hasil['kategori']
+
+        if kategori == "Dominan Permasalahan":
+            st.info("Instansi ini lebih banyak menyampaikan permasalahan.")
+        elif kategori == "Dominan Permohonan":
+            st.info("Instansi ini lebih banyak mengajukan permohonan.")
+        elif kategori == "Dominan Pertanyaan":
+            st.info("Instansi ini cenderung berisi pertanyaan.")
+        else:
+            st.info("Instansi memiliki kombinasi berbagai jenis laporan.")
 
     else:
-        st.info("Silakan input data terlebih dahulu.")
+        st.warning("Belum ada data yang diproses. Silakan input data terlebih dahulu.")
