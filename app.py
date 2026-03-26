@@ -34,7 +34,7 @@ if "hasil" not in st.session_state:
     st.session_state.hasil = None
 
 # =========================
-# MENU NAVIGASI
+# NAVIGASI
 # =========================
 menu = st.sidebar.radio("📌 Menu", [
     "Beranda",
@@ -48,26 +48,25 @@ menu = st.sidebar.radio("📌 Menu", [
 if menu == "Beranda":
     st.title("📊 Aplikasi Clustering Instansi")
 
-    st.subheader("📌 Tentang Aplikasi")
-    st.write("""
+    st.markdown("""
     Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
     berdasarkan dataset yang telah dianalisis sebelumnya.
     """)
 
     st.subheader("🎯 Tujuan")
     st.markdown("""
-    - Mengelompokkan instansi berdasarkan cluster
-    - Mempermudah analisis data
-    - Menyajikan hasil secara cepat
+    - Mengelompokkan instansi berdasarkan cluster  
+    - Mempermudah analisis data  
+    - Menyajikan hasil secara cepat  
     """)
 
     st.subheader("🧭 Cara Menggunakan")
     st.markdown("""
-    1. Pilih menu **Input Data**
-    2. Masukkan nama instansi
-    3. Isi data (1 baris = 1 item)
-    4. Klik tombol **Proses**
-    5. Buka menu **Hasil Clustering**
+    1. Pilih menu **Input Data**  
+    2. Masukkan nama instansi  
+    3. Isi data (1 baris = 1 item)  
+    4. Klik tombol **Proses**  
+    5. Buka menu **Hasil Clustering**  
     """)
 
 # =========================
@@ -77,7 +76,7 @@ elif menu == "Input Data":
 
     st.title("📝 Input Data Instansi")
 
-    st.info("💡 Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
+    st.info("Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
 
     with st.form("form_input"):
         nama = st.text_input("🏢 Nama Instansi")
@@ -86,34 +85,27 @@ elif menu == "Input Data":
         permohonan = st.text_area("📄 Permohonan")
         pertanyaan = st.text_area("❓ Pertanyaan")
 
-        submit = st.form_submit_button("➕ Proses")
+        submit = st.form_submit_button("➕ Proses Data")
 
     if submit:
         if nama.strip() == "":
-            st.warning("Nama instansi wajib diisi!")
+            st.warning("Nama instansi wajib diisi")
         else:
             hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
+            st.session_state.hasil = {
+                "nama": nama,
+                "permasalahan": permasalahan,
+                "permohonan": permohonan,
+                "pertanyaan": pertanyaan,
+                "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
+                "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
+            }
+
             if not hasil.empty:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": hasil.iloc[0]["Cluster"],
-                    "kategori": hasil.iloc[0]["Kategori Cluster"]
-                }
-                st.success("✅ Data berhasil diproses!")
+                st.success("Data berhasil diproses")
             else:
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "permasalahan": permasalahan,
-                    "permohonan": permohonan,
-                    "pertanyaan": pertanyaan,
-                    "cluster": None,
-                    "kategori": "Tidak ditemukan"
-                }
-                st.error("❌ Instansi tidak ditemukan")
+                st.error("Instansi tidak ditemukan dalam dataset")
 
 # =========================
 # HASIL CLUSTERING
@@ -145,6 +137,27 @@ elif menu == "Hasil Clustering":
         st.divider()
 
         # =========================
+        # HASIL CLUSTERING
+        # =========================
+        st.subheader("🎯 Hasil Clustering")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if data["cluster"] is not None:
+                st.success(f"Cluster: {data['cluster']}")
+            else:
+                st.error("-")
+
+        with col2:
+            if data["cluster"] is not None:
+                st.info(f"Kategori: {data['kategori']}")
+            else:
+                st.warning("-")
+
+        st.divider()
+
+        # =========================
         # DETAIL INPUT
         # =========================
         st.subheader("📝 Detail Input")
@@ -157,27 +170,6 @@ elif menu == "Hasil Clustering":
 
         st.write("**Pertanyaan**")
         st.write(data["pertanyaan"] or "-")
-
-        st.divider()
-
-        # =========================
-        # HASIL
-        # =========================
-        st.subheader("🎯 Hasil Clustering")
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if data["cluster"] is not None:
-                st.success(f"Cluster: {data['cluster']}")
-            else:
-                st.error("Cluster tidak tersedia")
-
-        with col2:
-            if data["cluster"] is not None:
-                st.info(f"Kategori: {data['kategori']}")
-            else:
-                st.warning("-")
 
         st.divider()
 
@@ -196,5 +188,27 @@ elif menu == "Hasil Clustering":
         col2.metric("Permohonan", jml_permohonan)
         col3.metric("Pertanyaan", jml_pertanyaan)
 
+        st.divider()
+
+        # =========================
+        # ANALISIS TAMBAHAN
+        # =========================
+        st.subheader("🧠 Analisis")
+
+        kategori_dominan = max(
+            {
+                "Permasalahan": jml_permasalahan,
+                "Permohonan": jml_permohonan,
+                "Pertanyaan": jml_pertanyaan
+            },
+            key=lambda x: {
+                "Permasalahan": jml_permasalahan,
+                "Permohonan": jml_permohonan,
+                "Pertanyaan": jml_pertanyaan
+            }[x]
+        )
+
+        st.info(f"Jenis laporan yang paling dominan: **{kategori_dominan}**")
+
     else:
-        st.warning("Silakan input data terlebih dahulu.")
+        st.warning("Silakan input data terlebih dahulu")
