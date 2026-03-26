@@ -11,6 +11,76 @@ st.set_page_config(
 )
 
 # =========================
+# CUSTOM CSS (UI MODERN)
+# =========================
+st.markdown("""
+<style>
+.block-container {
+    padding: 0;
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: #0a58ca;
+    padding: 15px 40px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    height: 500px;
+}
+
+/* KIRI */
+.hero-left {
+    width: 30%;
+    background-color: #ffe04d;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+}
+
+.hero-left h1 {
+    color: #0a58ca;
+    font-size: 38px;
+}
+
+/* KANAN */
+.hero-right {
+    width: 70%;
+    background: linear-gradient(135deg, #1bb1dc, #4b6cb7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* CARD */
+.hero-card {
+    display: flex;
+    gap: 40px;
+    text-align: center;
+}
+
+.hero-card img {
+    width: 120px;
+    border-radius: 50%;
+}
+
+/* BUTTON */
+.stButton>button {
+    border-radius: 10px;
+    height: 45px;
+    font-size: 16px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
 # LOAD DATA
 # =========================
 @st.cache_data
@@ -29,7 +99,7 @@ def pindah(page):
     st.session_state.page = page
 
 # =========================
-# FUNGSI HITUNG
+# UTIL
 # =========================
 def hitung_jumlah(teks):
     if not teks:
@@ -37,37 +107,59 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING
+# LANDING PAGE
 # =========================
 if st.session_state.page == "landing":
 
-    st.markdown("<div style='height:120px'></div>", unsafe_allow_html=True)
+    # NAVBAR
+    st.markdown("""
+    <div class="navbar">
+        <div>Clustering Instansi</div>
+        <div>Dashboard Data</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([0.8,3,1])
-    with col2:
-        st.image("logo.png", width=500)
+    # HERO
+    st.markdown("""
+    <div class="hero">
 
-    st.markdown(
-        "<h1 style='text-align:center;'>Aplikasi Clustering Instansi</h1>",
-        unsafe_allow_html=True
-    )
+        <div class="hero-left">
+            <h1>Selamat Datang di<br>Aplikasi Clustering Instansi</h1>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-card">
+                <div>
+                    <img src="https://i.pravatar.cc/120?img=5">
+                    <p>Analisis Data</p>
+                </div>
+                <div>
+                    <img src="https://i.pravatar.cc/120?img=8">
+                    <p>Clustering</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # BUTTON MASUK
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        if st.button("🚀 Masuk", use_container_width=True):
+        if st.button("🚀 Masuk ke Aplikasi", use_container_width=True):
             pindah("beranda")
 
 # =========================
-# MAIN LAYOUT (KIRI + KANAN)
+# MAIN APP
 # =========================
-elif st.session_state.page != "landing":
+else:
 
     col_menu, col_content = st.columns([1,4])
 
     # =========================
-    # MENU KIRI (BUTTON)
+    # MENU
     # =========================
     with col_menu:
         st.markdown("### 📌 Menu")
@@ -82,30 +174,30 @@ elif st.session_state.page != "landing":
             pindah("hasil")
 
     # =========================
-    # KONTEN KANAN
+    # CONTENT
     # =========================
     with col_content:
 
         # =========================
-        # BERANDA (SESUAI GAMBAR)
+        # BERANDA
         # =========================
         if st.session_state.page == "beranda":
 
-            st.title("📊 Aplikasi Clustering Instansi")
+            st.title("📊 Dashboard Clustering Instansi")
 
             st.subheader("📌 Tentang Aplikasi")
             st.write("""
-            Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
-            berdasarkan data yang telah diolah sebelumnya.
+            Aplikasi ini digunakan untuk mengelompokkan instansi 
+            berdasarkan data pengaduan yang masuk.
             """)
 
             st.subheader("🧭 Cara Menggunakan")
             st.markdown("""
-            1. Pilih menu Input Data  
-            2. Masukkan nama instansi  
-            3. Isi data (1 baris = 1 item)  
-            4. Klik tombol Proses  
-            5. Lihat hasil di menu Hasil Clustering  
+            1. Masuk ke menu Input Data  
+            2. Isi nama instansi  
+            3. Masukkan data  
+            4. Klik proses  
+            5. Lihat hasil clustering  
             """)
 
         # =========================
