@@ -115,11 +115,11 @@ elif st.session_state.page == "input":
     with st.form("form_input"):
         nama = st.text_input("🏢 Nama Instansi")
 
-        total_pengaduan = st.number_input("📊 Total Pengaduan", min_value=0, step=1)
-
         permasalahan = st.text_area("⚠️ Permasalahan")
         permohonan = st.text_area("📄 Permohonan")
         pertanyaan = st.text_area("❓ Pertanyaan")
+
+        total_pengaduan = st.number_input("📊 Total Pengaduan", min_value=0, step=1)
 
         submit = st.form_submit_button("Proses")
 
