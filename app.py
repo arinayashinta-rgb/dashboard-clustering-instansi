@@ -20,17 +20,15 @@ def load_data():
 df = load_data()
 
 # =========================
-# FUNGSI HITUNG ITEM (FIX 🔥)
+# FUNGSI HITUNG (BENAR 🔥)
 # =========================
 def hitung_jumlah(teks):
-    if not teks.strip():
+    if not teks:
         return 0
     
-    # pisahkan berdasarkan enter, titik, koma
-    teks = teks.replace("\n", ".").replace(",", ".")
-    items = [i.strip() for i in teks.split(".") if i.strip()]
-    
-    return len(items)
+    # 1 baris = 1 item
+    lines = [line.strip() for line in teks.split("\n") if line.strip()]
+    return len(lines)
 
 # =========================
 # NAVIGASI
@@ -42,7 +40,7 @@ menu = st.sidebar.radio("📌 Menu", [
 ])
 
 # =========================
-# SESSION
+# SESSION STATE
 # =========================
 if "hasil" not in st.session_state:
     st.session_state.hasil = None
@@ -54,30 +52,18 @@ if menu == "Beranda":
     st.title("📊 Aplikasi Clustering Instansi")
 
     st.write("### 📌 Tentang Aplikasi")
-    st.markdown("""
-    Aplikasi ini digunakan untuk mengelompokkan instansi berdasarkan hasil clustering 
-    yang telah dilakukan sebelumnya.
-
-    Sistem akan menampilkan kategori cluster dari instansi yang diinputkan.
-    """)
-
-    st.write("### 🎯 Tujuan")
-    st.markdown("""
-    - Mengidentifikasi kategori instansi
-    - Mempermudah analisis data
-    - Menyajikan hasil secara cepat
+    st.write("""
+    Aplikasi ini digunakan untuk menampilkan hasil clustering instansi 
+    berdasarkan data yang telah diolah sebelumnya.
     """)
 
     st.write("### 🧭 Cara Menggunakan")
     st.markdown("""
     1. Pilih menu **Input Data**
     2. Masukkan nama instansi
-    3. Isi:
-       - Permasalahan
-       - Permohonan
-       - Pertanyaan
-    4. Klik **Proses**
-    5. Buka menu **Hasil Clustering**
+    3. Isi data (1 baris = 1 item)
+    4. Klik tombol **Proses**
+    5. Lihat hasil di menu **Hasil Clustering**
     """)
 
 # =========================
@@ -87,10 +73,10 @@ elif menu == "Input Data":
 
     st.title("📝 Input Data Instansi")
 
+    st.info("💡 Gunakan ENTER untuk memisahkan data (1 baris = 1 item)")
+
     with st.form("form_input"):
         nama = st.text_input("🏢 Nama Instansi")
-
-        st.write("### ✏️ Deskripsi (boleh lebih dari 1, pisahkan enter / titik)")
 
         permasalahan = st.text_area("⚠️ Permasalahan")
         permohonan = st.text_area("📄 Permohonan")
@@ -104,31 +90,24 @@ elif menu == "Input Data":
         else:
             hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
-            # =========================
-            # HITUNG ITEM (SUDAH BENAR)
-            # =========================
-            jml_permasalahan = hitung_jumlah(permasalahan)
-            jml_permohonan = hitung_jumlah(permohonan)
-            jml_pertanyaan = hitung_jumlah(pertanyaan)
-
             if not hasil.empty:
                 st.session_state.hasil = {
                     "nama": nama,
+                    "permasalahan": permasalahan,
+                    "permohonan": permohonan,
+                    "pertanyaan": pertanyaan,
                     "cluster": hasil.iloc[0]["Cluster"],
-                    "kategori": hasil.iloc[0]["Kategori Cluster"],
-                    "jml_permasalahan": jml_permasalahan,
-                    "jml_permohonan": jml_permohonan,
-                    "jml_pertanyaan": jml_pertanyaan
+                    "kategori": hasil.iloc[0]["Kategori Cluster"]
                 }
                 st.success("✅ Data berhasil diproses!")
             else:
                 st.session_state.hasil = {
                     "nama": nama,
+                    "permasalahan": permasalahan,
+                    "permohonan": permohonan,
+                    "pertanyaan": pertanyaan,
                     "cluster": None,
-                    "kategori": "Tidak ditemukan",
-                    "jml_permasalahan": jml_permasalahan,
-                    "jml_permohonan": jml_permohonan,
-                    "jml_pertanyaan": jml_pertanyaan
+                    "kategori": "Tidak ditemukan"
                 }
                 st.error("❌ Instansi tidak ditemukan")
 
@@ -143,49 +122,42 @@ elif menu == "Hasil Clustering":
         data = st.session_state.hasil
 
         # =========================
-        # DETAIL
+        # DATA INPUT
         # =========================
-        st.write("### 📌 Detail Instansi")
-        st.write(f"**Nama Instansi:** {data.get('nama')}")
+        st.write("### 📌 Data Input")
+        st.write(f"**Nama Instansi:** {data['nama']}")
+        st.write(f"**Permasalahan:** {data['permasalahan']}")
+        st.write(f"**Permohonan:** {data['permohonan']}")
+        st.write(f"**Pertanyaan:** {data['pertanyaan']}")
 
         # =========================
-        # HASIL
+        # HITUNG JUMLAH (VALID)
+        # =========================
+        jml_permasalahan = hitung_jumlah(data.get("permasalahan", ""))
+        jml_permohonan = hitung_jumlah(data.get("permohonan", ""))
+        jml_pertanyaan = hitung_jumlah(data.get("pertanyaan", ""))
+
+        # =========================
+        # HASIL CLUSTERING
         # =========================
         st.write("### 🎯 Hasil Clustering")
 
-        if data.get("cluster") is not None:
-            st.success(f"Cluster: {data.get('cluster')}")
-            st.info(f"Kategori: {data.get('kategori')}")
+        if data["cluster"] is not None:
+            st.success(f"Cluster: {data['cluster']}")
+            st.info(f"Kategori: {data['kategori']}")
         else:
             st.error("Instansi tidak ditemukan dalam dataset")
 
         # =========================
-        # RINCIAN (SUDAH FIX 🔥)
+        # RINCIAN
         # =========================
-        st.write("### 📊 Rincian Input")
+        st.write("### 📊 Rincian Jumlah Input")
 
         col1, col2, col3 = st.columns(3)
 
-        col1.metric("Permasalahan", data.get("jml_permasalahan", 0))
-        col2.metric("Permohonan", data.get("jml_permohonan", 0))
-        col3.metric("Pertanyaan", data.get("jml_pertanyaan", 0))
-
-        # =========================
-        # ANALISIS TAMBAHAN
-        # =========================
-        st.write("### 🧠 Analisis")
-
-        max_kategori = max({
-            "Permasalahan": data.get("jml_permasalahan", 0),
-            "Permohonan": data.get("jml_permohonan", 0),
-            "Pertanyaan": data.get("jml_pertanyaan", 0)
-        }, key=lambda x: {
-            "Permasalahan": data.get("jml_permasalahan", 0),
-            "Permohonan": data.get("jml_permohonan", 0),
-            "Pertanyaan": data.get("jml_pertanyaan", 0)
-        }[x])
-
-        st.info(f"Jenis laporan yang paling dominan: **{max_kategori}**")
+        col1.metric("Permasalahan", jml_permasalahan)
+        col2.metric("Permohonan", jml_permohonan)
+        col3.metric("Pertanyaan", jml_pertanyaan)
 
     else:
         st.warning("Silakan input data terlebih dahulu.")
