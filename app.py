@@ -37,15 +37,15 @@ def hitung_jumlah(teks):
     return len([line for line in teks.split("\n") if line.strip()])
 
 # =========================
-# LANDING PAGE (FIX CENTER)
+# LANDING PAGE
 # =========================
 if st.session_state.page == "landing":
 
-    # Spacer atas (atur tinggi biar pas tengah)
+    # Spacer atas
     st.markdown("<div style='height:120px'></div>", unsafe_allow_html=True)
 
-    # CENTER GAMBAR
-    col1, col2, col3 = st.columns([1,4,1])
+    # LOGO (GESER SEDIKIT KE KANAN)
+    col1, col2, col3 = st.columns([0.8,3,1])
     with col2:
         st.image("logo.png", width=200)
 
@@ -57,8 +57,8 @@ if st.session_state.page == "landing":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # BUTTON CENTER
-    col1, col2, col3 = st.columns([1,2,1])
+    # BUTTON
+    col1, col2, col3 = st.columns([0.8,3,1])
     with col2:
         if st.button("🚀 Masuk", use_container_width=True):
             pindah("menu")
@@ -127,11 +127,11 @@ elif st.session_state.page == "input":
         hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
         st.session_state.hasil = {
-            "nama": nama,
-            "total": total_pengaduan,
+            "nama": nama,          
             "permasalahan": permasalahan,
             "permohonan": permohonan,
             "pertanyaan": pertanyaan,
+            "total": total_pengaduan,
             "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
             "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
         }
@@ -154,19 +154,14 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-        # =========================
         # INFORMASI
-        # =========================
         st.subheader("📌 Informasi")
-
         st.write(f"**Nama Instansi:** {data['nama']}")
         st.write(f"**Total Pengaduan:** {data['total']}")
 
         st.divider()
 
-        # =========================
         # HASIL
-        # =========================
         st.subheader("🎯 Hasil")
 
         if data["cluster"] is not None:
@@ -177,26 +172,7 @@ elif st.session_state.page == "hasil":
 
         st.divider()
 
-        # =========================
-        # RINCIAN (VALID 🔥)
-        # =========================
-        st.subheader("📊 Rincian Input")
-
-        jml_permasalahan = hitung_jumlah(data["permasalahan"])
-        jml_permohonan = hitung_jumlah(data["permohonan"])
-        jml_pertanyaan = hitung_jumlah(data["pertanyaan"])
-
-        col1, col2, col3 = st.columns(3)
-
-        col1.metric("Permasalahan", jml_permasalahan)
-        col2.metric("Permohonan", jml_permohonan)
-        col3.metric("Pertanyaan", jml_pertanyaan)
-
-        st.divider()
-
-        # =========================
-        # VALIDASI (PENTING 🔥)
-        # =========================
+        # VALIDASI
         total_input = jml_permasalahan + jml_permohonan + jml_pertanyaan
 
         st.write(f"Total hasil input: **{total_input}**")
