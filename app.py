@@ -219,11 +219,19 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-        st.write("Nama:", data["nama"])
-        st.write("Total:", data["total"])
-        st.write("Permasalahan:", data["permasalahan"])
-        st.write("Permohonan:", data["permohonan"])
-        st.write("Pertanyaan:", data["pertanyaan"])
+    # ===== TABEL HASIL =====
+    tabel = pd.DataFrame({
+    "Nama Instansi": [data["nama"]],
+    "Total Pengaduan": [data["total"]],
+    "Permasalahan": [data["permasalahan"]],
+    "Permohonan": [data["permohonan"]],
+    "Pertanyaan": [data["pertanyaan"]],
+    "Cluster": [data["cluster"]],
+    "Kategori": [data["kategori"]]
+})
+
+st.markdown("### 📋 Data Hasil Clustering")
+st.dataframe(tabel, use_container_width=True)
 
         if data["cluster"] is not None:
             cluster = data["cluster"]
@@ -237,28 +245,28 @@ elif st.session_state.page == "hasil":
                 st.warning("""
 **Cluster 0 – Dominan Permasalahan**
 
-Instansi lebih banyak menyampaikan permasalahan, menunjukkan adanya hambatan operasional.
+Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan. Ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut dari pihak penyedia layanan.
                 """)
 
             elif cluster == 1:
                 st.info("""
 **Cluster 1 – Dominan Permohonan**
 
-Instansi lebih banyak menyampaikan permohonan, menunjukkan kebutuhan dukungan tinggi.
+Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya. Permohonan yang dimaksud dapat berupa permintaan bantuan atau permintaan dukungan dalam pelaksanaan kegiatan atau layanan. Instansi ini memiliki kebutuhan koordinasi atau dukungan administratif yang cukup tinggi, sehingga permohonan menjadi jenis laporan yang paling dominan.
                 """)
 
             elif cluster == 2:
                 st.success("""
 **Cluster 2 – Dominan Pertanyaan**
 
-Instansi lebih banyak bertanya, menunjukkan kebutuhan informasi lebih lanjut.
+Instansi ini lebih sering mengajukan pertanyaan dan cenderung menggunakan sistem pelaporan untuk memperoleh informasi atau klarifikasi terkait kebijakan, prosedur, maupun mekanisme layanan tertentu. Tingginya jumlah pertanyaan mengindikasikan bahwa instansi ini masih membutuhkan informasi tambahan atau pemahaman yang lebih jelas mengenai prosedur atau kebijakan yang berlaku.
                 """)
 
             elif cluster == 3:
                 st.markdown("""
 **Cluster 3 – Campuran**
 
-Komposisi laporan seimbang antara permasalahan, permohonan, dan pertanyaan.
+Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan dan menunjukkan bahwa instansi ini menyampaikan berbagai jenis laporan sesuai dengan kebutuhan yang muncul. Instansi ini memanfaatkan sistem pelaporan secara lebih komprehensif, baik untuk melaporkan masalah, mengajukan permohonan, maupun meminta informasi.
                 """)
 
         else:
