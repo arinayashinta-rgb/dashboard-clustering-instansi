@@ -27,7 +27,7 @@ def load_data():
 df = load_data()
 
 # =========================
-# BACKGROUND IMAGE (BASE64)
+# BACKGROUND IMAGE
 # =========================
 def get_base64(file):
     with open(file, "rb") as f:
@@ -45,21 +45,21 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (FINAL UI)
+# STYLE FINAL (SUDAH FIX)
 # =========================
 st.markdown(f"""
 <style>
 
-/* Background gambar transparan */
-.main {{
-    background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
+/* ===== BACKGROUND FIX ===== */
+[data-testid="stAppViewContainer"] {{
+    background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }}
 
-/* Glass effect */
+/* ===== GLASS ===== */
 .glass {{
     background: rgba(255,255,255,0.75);
     backdrop-filter: blur(12px);
@@ -70,7 +70,7 @@ st.markdown(f"""
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }}
 
-/* Hero */
+/* ===== HERO ===== */
 .hero {{
     text-align: center;
     padding: 80px 20px;
@@ -90,7 +90,7 @@ st.markdown(f"""
     margin: auto;
 }}
 
-/* Button */
+/* ===== BUTTON ===== */
 .stButton>button {{
     background: #2c2c2c;
     color: white;
@@ -99,7 +99,7 @@ st.markdown(f"""
     padding: 0 25px;
 }}
 
-/* Hide menu */
+/* ===== HIDE MENU ===== */
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -181,7 +181,7 @@ elif st.session_state.page == "input":
 
     with st.form("form"):
         nama = st.text_input("Nama Instansi")
-        
+
         permasalahan = st.text_area("Permasalahan")
         permohonan = st.text_area("Permohonan")
         pertanyaan = st.text_area("Pertanyaan")
