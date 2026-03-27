@@ -126,16 +126,15 @@ if st.session_state.page == "landing":
         <div class="navbar">
             <div><b>LOGO HERE</b></div>
             <div class="nav-links">
-                <a href="#">HOME</a>
-                <a href="#">SERVICES</a>
-                <a href="#">ABOUT</a>
-                <a href="#">CONTACT</a>
+                <a href="#">BERANDA</a>
+                <a href="#">INPUT DATA</a>
+                <a href="#">HASIL CLUSTERING</a>
             </div>
         </div>
 
         <div class="hero">
-            <h1>Welcome</h1>
-            <h3>To Our Company</h3>
+            <h1>Selamat Datang</h1>
+            <h3>Aplikasi Clustering</h3>
             <p>
             Aplikasi clustering instansi untuk membantu analisis data pengaduan 
             secara otomatis, cepat, dan akurat.
