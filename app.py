@@ -219,26 +219,19 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-    # ===== TABEL HASIL =====
-    tabel = pd.DataFrame({
-    "Nama Instansi": [data["nama"]],
-    "Total Pengaduan": [data["total"]],
-    "Permasalahan": [data["permasalahan"]],
-    "Permohonan": [data["permohonan"]],
-    "Pertanyaan": [data["pertanyaan"]],
-    "Cluster": [data["cluster"]],
-    "Kategori": [data["kategori"]]
-})
+        # ===== TABEL =====
+        tabel = pd.DataFrame({
+            "Nama Instansi": [data["nama"]],
+            "Total Pengaduan": [data["total"]],
+            "Permasalahan": [data["permasalahan"]],
+            "Permohonan": [data["permohonan"]],
+            "Pertanyaan": [data["pertanyaan"]],
+            "Cluster": [data["cluster"]],
+            "Kategori": [data["kategori"]]
+        })
 
-st.markdown("### 📋 Data Hasil Clustering")
-st.dataframe(tabel, use_container_width=True)
-
-        if data["cluster"] is not None:
-            cluster = data["cluster"]
-
-            st.success(f"Cluster: {cluster}")
-            st.info(f"Kategori: {data['kategori']}")
-
+        st.markdown("### 📋 Data Hasil Clustering")
+        st.dataframe(tabel, use_container_width=True)
             st.markdown("### 📊 Analisis Clustering")
 
             if cluster == 0:
