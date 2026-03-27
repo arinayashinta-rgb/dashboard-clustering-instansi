@@ -20,8 +20,8 @@ def load_data():
     except:
         return pd.DataFrame({
             "Asal Instansi": ["A", "B"],
-            "Cluster": [1, 2],
-            "Kategori Cluster": ["Tinggi", "Rendah"]
+            "Cluster": [0, 1],
+            "Kategori Cluster": ["Permasalahan", "Permohonan"]
         })
 
 df = load_data()
@@ -45,12 +45,12 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE FINAL (UPDATED)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
 
-/* ===== BACKGROUND ===== */
+/* Background */
 [data-testid="stAppViewContainer"] {{
     background: linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
                 url("data:image/jpg;base64,{bg}");
@@ -59,7 +59,7 @@ st.markdown(f"""
     background-attachment: fixed;
 }}
 
-/* ===== GLASS ===== */
+/* Glass */
 .glass {{
     background: rgba(255,255,255,0.85);
     backdrop-filter: blur(10px);
@@ -70,7 +70,7 @@ st.markdown(f"""
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }}
 
-/* ===== HERO TEXT (LEBIH BESAR) ===== */
+/* Hero */
 .hero {{
     text-align: center;
     padding: 100px 20px;
@@ -79,40 +79,28 @@ st.markdown(f"""
 .hero h1 {{
     font-size: 60px;
     font-weight: bold;
-    color: #222;
 }}
 
 .hero h3 {{
     font-size: 28px;
-    color: #444;
-    margin-bottom: 15px;
 }}
 
 .hero p {{
     font-size: 18px;
-    color: #555;
     max-width: 600px;
     margin: auto;
-    line-height: 1.6;
 }}
 
-/* ===== BUTTON BIRU ===== */
+/* Button */
 .stButton>button {{
     background: linear-gradient(90deg, #1e90ff, #0066ff);
     color: white;
     border-radius: 25px;
     height: 45px;
     padding: 0 25px;
-    border: none;
-    font-weight: 500;
 }}
 
-.stButton>button:hover {{
-    transform: scale(1.03);
-    transition: 0.2s;
-}}
-
-/* ===== HIDE MENU ===== */
+/* Hide menu */
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -131,15 +119,12 @@ def navbar():
 
     with col2:
         c1, c2, c3 = st.columns(3)
-        with c1:
-            if st.button("BERANDA"):
-                go("home")
-        with c2:
-            if st.button("INPUT"):
-                go("input")
-        with c3:
-            if st.button("HASIL"):
-                go("hasil")
+        if c1.button("BERANDA"):
+            go("home")
+        if c2.button("INPUT"):
+            go("input")
+        if c3.button("HASIL"):
+            go("hasil")
 
 # =========================
 # HOME
@@ -178,7 +163,6 @@ elif st.session_state.page == "input":
 
         col1, col2 = st.columns(2)
 
-        # ===== KOLOM KIRI =====
         with col1:
             st.markdown("**Nama Instansi**")
             nama = st.text_input("nama_instansi", label_visibility="collapsed")
@@ -186,7 +170,6 @@ elif st.session_state.page == "input":
             st.markdown("**Permasalahan**")
             permasalahan = st.text_area("permasalahan", height=80, label_visibility="collapsed")
 
-        # ===== KOLOM KANAN =====
         with col2:
             st.markdown("**Permohonan**")
             permohonan = st.text_area("permohonan", height=80, label_visibility="collapsed")
@@ -194,22 +177,17 @@ elif st.session_state.page == "input":
             st.markdown("**Pertanyaan**")
             pertanyaan = st.text_area("pertanyaan", height=80, label_visibility="collapsed")
 
-        # ===== BAGIAN BAWAH =====
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown("**Total Pengaduan**")
-
-        col_small, _ = st.columns([1, 3])  # kecil di kiri
-
+        col_small, _ = st.columns([1, 3])
         with col_small:
-           total = st.text_input("total_pengaduan", label_visibility="collapsed")
-        
+            total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         submit = st.form_submit_button("Proses")
 
-    # ===== PROCESS =====
     if submit:
         hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
@@ -243,64 +221,49 @@ elif st.session_state.page == "hasil":
 
         st.write("Nama:", data["nama"])
         st.write("Total:", data["total"])
-
         st.write("Permasalahan:", data["permasalahan"])
         st.write("Permohonan:", data["permohonan"])
         st.write("Pertanyaan:", data["pertanyaan"])
 
         if data["cluster"] is not None:
-    cluster = data["cluster"]
+            cluster = data["cluster"]
 
-    st.success(f"Cluster: {cluster}")
-    st.info(f"Kategori: {data['kategori']}")
+            st.success(f"Cluster: {cluster}")
+            st.info(f"Kategori: {data['kategori']}")
 
-    st.markdown("### 📊 Analisis Clustering")
+            st.markdown("### 📊 Analisis Clustering")
 
-    if cluster == 0:
-        st.warning("""
+            if cluster == 0:
+                st.warning("""
 **Cluster 0 – Dominan Permasalahan**
 
-Instansi ini lebih banyak menyampaikan laporan berupa **permasalahan** dibandingkan 
-dengan permohonan maupun pertanyaan.
+Instansi lebih banyak menyampaikan permasalahan, menunjukkan adanya hambatan operasional.
+                """)
 
-Hal ini menunjukkan adanya hambatan operasional atau gangguan layanan yang perlu ditindaklanjuti.
-        """)
-
-    elif cluster == 1:
-        st.info("""
+            elif cluster == 1:
+                st.info("""
 **Cluster 1 – Dominan Permohonan**
 
-Instansi ini lebih sering menyampaikan **permohonan** berupa bantuan atau dukungan.
+Instansi lebih banyak menyampaikan permohonan, menunjukkan kebutuhan dukungan tinggi.
+                """)
 
-Hal ini menunjukkan kebutuhan koordinasi atau dukungan administratif yang cukup tinggi.
-        """)
-
-    elif cluster == 2:
-        st.success("""
+            elif cluster == 2:
+                st.success("""
 **Cluster 2 – Dominan Pertanyaan**
 
-Instansi ini lebih sering mengajukan **pertanyaan** untuk memperoleh informasi atau klarifikasi.
+Instansi lebih banyak bertanya, menunjukkan kebutuhan informasi lebih lanjut.
+                """)
 
-Hal ini menunjukkan perlunya peningkatan pemahaman terhadap prosedur atau kebijakan.
-        """)
-
-    elif cluster == 3:
-        st.markdown("""
+            elif cluster == 3:
+                st.markdown("""
 **Cluster 3 – Campuran**
 
-Instansi ini memiliki komposisi laporan yang relatif seimbang antara:
-- Permasalahan  
-- Permohonan  
-- Pertanyaan  
+Komposisi laporan seimbang antara permasalahan, permohonan, dan pertanyaan.
+                """)
 
-Menunjukkan penggunaan sistem pelaporan yang komprehensif.
-        """)
+        else:
+            st.error("Data tidak ditemukan")
 
-    else:
-        st.write("Analisis tidak tersedia")
-
-else:
-    st.error("Data tidak ditemukan")
     else:
         st.warning("Belum ada data")
 
