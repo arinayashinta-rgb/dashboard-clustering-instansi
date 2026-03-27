@@ -6,30 +6,36 @@ import pandas as pd
 # =========================
 st.set_page_config(
     page_title="Clustering Instansi",
-    page_icon="📊",
     layout="wide"
 )
 
 # =========================
-# LOAD DATA
+# DATA
 # =========================
 @st.cache_data
 def load_data():
-    return pd.read_excel("dataset.xlsx")
+    try:
+        return pd.read_excel("dataset.xlsx")
+    except:
+        return pd.DataFrame({
+            "Asal Instansi": ["A", "B"],
+            "Cluster": [1, 2],
+            "Kategori Cluster": ["Tinggi", "Rendah"]
+        })
 
 df = load_data()
 
 # =========================
-# SESSION
+# SESSION NAVIGATION
 # =========================
 if "page" not in st.session_state:
-    st.session_state.page = "landing"
+    st.session_state.page = "home"
 
-def pindah(page):
+def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE MODERN UI
+# STYLE (MODERN UI)
 # =========================
 st.markdown("""
 <style>
@@ -39,11 +45,11 @@ st.markdown("""
     background: linear-gradient(135deg, #dbe6f6, #c5796d);
 }
 
-/* Glass Container */
+/* Glass Card */
 .glass {
     background: rgba(255,255,255,0.65);
     backdrop-filter: blur(12px);
-    border-radius: 15px;
+    border-radius: 16px;
     padding: 30px;
     margin: 30px auto;
     max-width: 1100px;
@@ -55,14 +61,14 @@ st.markdown("""
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
 }
 
-.nav-links a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #333;
+.nav-links button {
+    background: none;
+    border: none;
+    margin: 0 10px;
     font-size: 14px;
+    cursor: pointer;
 }
 
 /* Hero */
@@ -73,19 +79,16 @@ st.markdown("""
 
 .hero h1 {
     font-size: 48px;
-    margin-bottom: 10px;
 }
 
 .hero h3 {
     color: #555;
-    margin-bottom: 15px;
 }
 
 .hero p {
     color: #666;
     max-width: 500px;
     margin: auto;
-    margin-bottom: 25px;
 }
 
 /* Button */
@@ -94,148 +97,140 @@ st.markdown("""
     color: white;
     border-radius: 25px;
     height: 45px;
-    font-size: 14px;
     padding: 0 25px;
 }
 
-/* Sidebar Button Style */
-.sidebar-btn button {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-/* Metrics */
-.metric-box {
-    background: rgba(255,255,255,0.7);
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
+/* Hide Streamlit Menu */
+#MainMenu, footer {
+    visibility: hidden;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# LANDING PAGE
+# NAVBAR (REAL BUTTON)
 # =========================
-if st.session_state.page == "landing":
+def navbar():
+    col1, col2 = st.columns([2,3])
+
+    with col1:
+        st.markdown("### LOGO")
+
+    with col2:
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            if st.button("BERANDA"):
+                go("home")
+        with c2:
+            if st.button("INPUT"):
+                go("input")
+        with c3:
+            if st.button("HASIL"):
+                go("hasil")
+
+# =========================
+# HOME (HERO PAGE)
+# =========================
+if st.session_state.page == "home":
+
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
+
+    navbar()
 
     st.markdown("""
-    <div class="glass">
-
-        <div class="navbar">
-            <div><b>LOGO HERE</b></div>
-            <div class="nav-links">
-                <a href="#">BERANDA</a>
-                <a href="#">INPUT DATA</a>
-                <a href="#">HASIL CLUSTERING</a>
-            </div>
-        </div>
-
-        <div class="hero">
-            <h1>Selamat Datang</h1>
-            <h3>Aplikasi Clustering</h3>
-            <p>
-            Aplikasi clustering instansi untuk membantu analisis data pengaduan 
-            secara otomatis, cepat, dan akurat.
-            </p>
-        </div>
-
+    <div class="hero">
+        <h1>Welcome</h1>
+        <h3>To Our Company</h3>
+        <p>
+        Aplikasi clustering instansi untuk membantu analisis data 
+        pengaduan secara otomatis, cepat, dan akurat.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
 
     if st.button("🚀 LEARN MORE"):
-        pindah("beranda")
+        go("dashboard")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # =========================
-# MAIN APP
+# DASHBOARD
 # =========================
-else:
+elif st.session_state.page == "dashboard":
 
-    col_menu, col_content = st.columns([1,4])
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
 
-    # ===== SIDEBAR MENU =====
-    with col_menu:
-        st.markdown("### 📌 Menu")
+    navbar()
 
-        if st.button("🏠 Beranda"):
-            pindah("beranda")
+    st.title("📊 Dashboard")
 
-        if st.button("📝 Input Data"):
-            pindah("input")
+    col1, col2, col3 = st.columns(3)
 
-        if st.button("📊 Hasil Clustering"):
-            pindah("hasil")
+    col1.metric("Total Data", len(df))
+    col2.metric("Cluster", df["Cluster"].nunique())
+    col3.metric("Status", "Aktif")
 
-    # ===== CONTENT =====
-    with col_content:
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
+# =========================
+# INPUT
+# =========================
+elif st.session_state.page == "input":
 
-        # ================= BERANDA =================
-        if st.session_state.page == "beranda":
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
 
-            st.title("📊 Dashboard Clustering Instansi")
+    navbar()
 
-            col1, col2, col3 = st.columns(3)
+    st.title("📝 Input Data")
 
-            with col1:
-                st.metric("Total Data", len(df))
+    with st.form("form"):
+        nama = st.text_input("Nama Instansi")
+        total = st.number_input("Total Pengaduan", min_value=0)
 
-            with col2:
-                st.metric("Cluster", df["Cluster"].nunique())
+        submit = st.form_submit_button("Proses")
 
-            with col3:
-                st.metric("Status", "Aktif")
+    if submit:
+        hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
-        # ================= INPUT =================
-        elif st.session_state.page == "input":
+        st.session_state.hasil = {
+            "nama": nama,
+            "total": total,
+            "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
+            "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
+        }
 
-            st.title("📝 Input Data")
+        st.success("Berhasil diproses")
 
-            with st.form("form_input"):
-                nama = st.text_input("Nama Instansi")
-                total = st.number_input("Total Pengaduan", min_value=0)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-                permasalahan = st.text_area("Permasalahan")
-                permohonan = st.text_area("Permohonan")
-                pertanyaan = st.text_area("Pertanyaan")
+# =========================
+# HASIL
+# =========================
+elif st.session_state.page == "hasil":
 
-                submit = st.form_submit_button("Proses")
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
 
-            if submit:
-                hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
+    navbar()
 
-                st.session_state.hasil = {
-                    "nama": nama,
-                    "total": total,
-                    "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
-                    "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
-                }
+    st.title("📊 Hasil Clustering")
 
-                st.success("Data berhasil diproses")
+    if "hasil" in st.session_state:
+        data = st.session_state.hasil
 
-        # ================= HASIL =================
-        elif st.session_state.page == "hasil":
+        st.write("Nama:", data["nama"])
+        st.write("Total:", data["total"])
 
-            st.title("📊 Hasil Clustering")
+        if data["cluster"] is not None:
+            st.success(f"Cluster: {data['cluster']}")
+            st.info(f"Kategori: {data['kategori']}")
+        else:
+            st.error("Data tidak ditemukan")
+    else:
+        st.warning("Belum ada data")
 
-            if "hasil" in st.session_state:
-                data = st.session_state.hasil
-
-                st.write(f"Nama: {data['nama']}")
-                st.write(f"Total: {data['total']}")
-
-                if data["cluster"] is not None:
-                    st.success(f"Cluster: {data['cluster']}")
-                    st.info(f"Kategori: {data['kategori']}")
-                else:
-                    st.error("Data tidak ditemukan")
-            else:
-                st.warning("Belum ada data")
-
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
