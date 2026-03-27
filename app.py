@@ -29,60 +29,128 @@ def pindah(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (AMAN)
+# STYLE MODERN UI
 # =========================
 st.markdown("""
 <style>
 
-/* padding ringan */
-.block-container {
-    padding: 2rem 3rem;
+/* Background */
+.main {
+    background: linear-gradient(135deg, #dbe6f6, #c5796d);
 }
 
-/* tombol */
+/* Glass Container */
+.glass {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 1100px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.hero h3 {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    color: #666;
+    max-width: 500px;
+    margin: auto;
+    margin-bottom: 25px;
+}
+
+/* Button */
 .stButton>button {
-    background: linear-gradient(90deg,#1abc9c,#16a085);
+    background: #2c2c2c;
     color: white;
-    border-radius: 8px;
+    border-radius: 25px;
     height: 45px;
-    font-size: 15px;
+    font-size: 14px;
+    padding: 0 25px;
 }
 
-.stButton>button:hover {
-    transform: scale(1.02);
-    transition: 0.2s;
+/* Sidebar Button Style */
+.sidebar-btn button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Metrics */
+.metric-box {
+    background: rgba(255,255,255,0.7);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# LANDING
+# LANDING PAGE
 # =========================
 if st.session_state.page == "landing":
 
-    col1, col2 = st.columns([3,2], gap="large")
+    st.markdown("""
+    <div class="glass">
 
-    # LEFT (GAMBAR NORMAL)
-    with col1:
-        st.image("clustering.jpg", use_container_width=True)
+        <div class="navbar">
+            <div><b>LOGO HERE</b></div>
+            <div class="nav-links">
+                <a href="#">HOME</a>
+                <a href="#">SERVICES</a>
+                <a href="#">ABOUT</a>
+                <a href="#">CONTACT</a>
+            </div>
+        </div>
 
-    # RIGHT (RAPI TANPA FLEX TINGGI)
-    with col2:
-        st.markdown("<br><br><br><br>", unsafe_allow_html=True)
+        <div class="hero">
+            <h1>Welcome</h1>
+            <h3>To Our Company</h3>
+            <p>
+            Aplikasi clustering instansi untuk membantu analisis data pengaduan 
+            secara otomatis, cepat, dan akurat.
+            </p>
+        </div>
 
-        st.markdown("## **Clustering Instansi**")
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.markdown("""
-        <p style='color:#555'>
-        Aplikasi untuk analisis dan pengelompokan data instansi secara otomatis.
-        </p>
-        """, unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
 
-        st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🚀 LEARN MORE"):
+        pindah("beranda")
 
-        if st.button("🚀 Mulai", use_container_width=True):
-            pindah("beranda")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
 # MAIN APP
@@ -91,6 +159,7 @@ else:
 
     col_menu, col_content = st.columns([1,4])
 
+    # ===== SIDEBAR MENU =====
     with col_menu:
         st.markdown("### 📌 Menu")
 
@@ -103,18 +172,28 @@ else:
         if st.button("📊 Hasil Clustering"):
             pindah("hasil")
 
+    # ===== CONTENT =====
     with col_content:
 
+        st.markdown('<div class="glass">', unsafe_allow_html=True)
+
+        # ================= BERANDA =================
         if st.session_state.page == "beranda":
 
             st.title("📊 Dashboard Clustering Instansi")
 
             col1, col2, col3 = st.columns(3)
 
-            col1.metric("Total Data", len(df))
-            col2.metric("Cluster", df["Cluster"].nunique())
-            col3.metric("Status", "Aktif")
+            with col1:
+                st.metric("Total Data", len(df))
 
+            with col2:
+                st.metric("Cluster", df["Cluster"].nunique())
+
+            with col3:
+                st.metric("Status", "Aktif")
+
+        # ================= INPUT =================
         elif st.session_state.page == "input":
 
             st.title("📝 Input Data")
@@ -141,6 +220,7 @@ else:
 
                 st.success("Data berhasil diproses")
 
+        # ================= HASIL =================
         elif st.session_state.page == "hasil":
 
             st.title("📊 Hasil Clustering")
@@ -158,3 +238,5 @@ else:
                     st.error("Data tidak ditemukan")
             else:
                 st.warning("Belum ada data")
+
+        st.markdown('</div>', unsafe_allow_html=True)
