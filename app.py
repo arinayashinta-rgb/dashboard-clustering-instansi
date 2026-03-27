@@ -45,14 +45,14 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE FINAL (SUDAH FIX)
+# STYLE FINAL (UPDATED)
 # =========================
 st.markdown(f"""
 <style>
 
-/* ===== BACKGROUND FIX ===== */
+/* ===== BACKGROUND ===== */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+    background: linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
     background-position: center;
@@ -61,42 +61,55 @@ st.markdown(f"""
 
 /* ===== GLASS ===== */
 .glass {{
-    background: rgba(255,255,255,0.75);
-    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
-    padding: 30px;
+    padding: 40px;
     margin: 30px auto;
     max-width: 1100px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }}
 
-/* ===== HERO ===== */
+/* ===== HERO TEXT (LEBIH BESAR) ===== */
 .hero {{
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
 }}
 
 .hero h1 {{
-    font-size: 48px;
+    font-size: 60px;
+    font-weight: bold;
+    color: #222;
 }}
 
 .hero h3 {{
-    color: #555;
+    font-size: 28px;
+    color: #444;
+    margin-bottom: 15px;
 }}
 
 .hero p {{
-    color: #666;
-    max-width: 500px;
+    font-size: 18px;
+    color: #555;
+    max-width: 600px;
     margin: auto;
+    line-height: 1.6;
 }}
 
-/* ===== BUTTON ===== */
+/* ===== BUTTON BIRU ===== */
 .stButton>button {{
-    background: #2c2c2c;
+    background: linear-gradient(90deg, #1e90ff, #0066ff);
     color: white;
     border-radius: 25px;
     height: 45px;
     padding: 0 25px;
+    border: none;
+    font-weight: 500;
+}}
+
+.stButton>button:hover {{
+    transform: scale(1.03);
+    transition: 0.2s;
 }}
 
 /* ===== HIDE MENU ===== */
@@ -114,7 +127,7 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("Unsia.png", width=120)  # logo UNSIA
+        st.image("Unsia.png", width=120)
 
     with col2:
         c1, c2, c3 = st.columns(3)
@@ -147,24 +160,6 @@ if st.session_state.page == "home":
         </p>
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# DASHBOARD
-# =========================
-elif st.session_state.page == "dashboard":
-
-    st.markdown('<div class="glass">', unsafe_allow_html=True)
-
-    navbar()
-
-    st.title("📊 Dashboard")
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Data", len(df))
-    col2.metric("Cluster", df["Cluster"].nunique())
-    col3.metric("Status", "Aktif")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
