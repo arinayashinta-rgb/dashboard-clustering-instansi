@@ -95,7 +95,7 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("unsia.png", width=120)  # <-- GANTI FILE LOGO DI SINI
+        st.image("Unsia.png", width=120)  # <-- GANTI FILE LOGO DI SINI
 
     with col2:
         c1, c2, c3 = st.columns(3)
