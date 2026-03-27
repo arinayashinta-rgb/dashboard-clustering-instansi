@@ -184,21 +184,21 @@ elif st.session_state.page == "input":
             nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
             st.markdown("**Permasalahan**")
-            permasalahan = st.text_area("permasalahan", height=110, label_visibility="collapsed")
+            permasalahan = st.text_area("permasalahan", height=80, label_visibility="collapsed")
 
         # ===== KOLOM KANAN =====
         with col2:
             st.markdown("**Permohonan**")
-            permohonan = st.text_area("permohonan", height=110, label_visibility="collapsed")
+            permohonan = st.text_area("permohonan", height=80, label_visibility="collapsed")
 
             st.markdown("**Pertanyaan**")
-            pertanyaan = st.text_area("pertanyaan", height=110, label_visibility="collapsed")
+            pertanyaan = st.text_area("pertanyaan", height=80, label_visibility="collapsed")
 
         # ===== BAGIAN BAWAH =====
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown("**Total Pengaduan**")
-        total = st.number_input("total_pengaduan", min_value=0, label_visibility="collapsed")
+        total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -221,6 +221,7 @@ elif st.session_state.page == "input":
         st.success("Berhasil diproses")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 # =========================
 # HASIL
 # =========================
