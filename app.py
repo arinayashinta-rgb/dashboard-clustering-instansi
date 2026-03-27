@@ -180,15 +180,22 @@ elif st.session_state.page == "input":
 
         # ===== KOLOM KIRI =====
         with col1:
-            nama = st.text_input("Nama Instansi")
-            total = st.number_input("Total Pengaduan", min_value=0)
+            st.markdown("**Nama Instansi**")
+            nama = st.text_input("", label_visibility="collapsed")
 
-            permasalahan = st.text_area("Permasalahan", height=120)
+            st.markdown("**Permasalahan**")
+            permasalahan = st.text_area("", height=110, label_visibility="collapsed")
 
         # ===== KOLOM KANAN =====
         with col2:
-            permohonan = st.text_area("Permohonan", height=120)
-            pertanyaan = st.text_area("Pertanyaan", height=120)
+            st.markdown("**Permohonan**")
+            permohonan = st.text_area("", height=110, label_visibility="collapsed")
+
+            st.markdown("**Pertanyaan**")
+            pertanyaan = st.text_area("", height=110, label_visibility="collapsed")
+
+            st.markdown("**Total Pengaduan**")
+            total = st.number_input("", min_value=0, label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
