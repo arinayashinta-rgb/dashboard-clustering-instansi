@@ -114,7 +114,7 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("unsia.png", width=120)  # logo UNSIA
+        st.image("Unsia.png", width=120)  # logo UNSIA
 
     with col2:
         c1, c2, c3 = st.columns(3)
@@ -181,11 +181,12 @@ elif st.session_state.page == "input":
 
     with st.form("form"):
         nama = st.text_input("Nama Instansi")
-        total = st.number_input("Total Pengaduan", min_value=0)
-
+        
         permasalahan = st.text_area("Permasalahan")
         permohonan = st.text_area("Permohonan")
         pertanyaan = st.text_area("Pertanyaan")
+
+        total = st.number_input("Total Pengaduan", min_value=0)
 
         submit = st.form_submit_button("Proses")
 
@@ -194,10 +195,10 @@ elif st.session_state.page == "input":
 
         st.session_state.hasil = {
             "nama": nama,
-            "total": total,
             "permasalahan": permasalahan,
             "permohonan": permohonan,
             "pertanyaan": pertanyaan,
+            "total": total,
             "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
             "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
         }
