@@ -140,8 +140,8 @@ if st.session_state.page == "home":
 
     st.markdown("""
     <div class="hero">
-        <h1>Welcome</h1>
-        <h3>To Our Company</h3>
+        <h1>Selamat Datang</h1>
+        <h3>di Aplikasi Clustering</h3>
         <p>
         Aplikasi clustering instansi untuk membantu analisis data 
         pengaduan secara otomatis, cepat, dan akurat.
