@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 
 # =========================
 # CONFIG
@@ -10,7 +11,7 @@ st.set_page_config(
 )
 
 # =========================
-# DATA
+# LOAD DATA
 # =========================
 @st.cache_data
 def load_data():
@@ -26,7 +27,16 @@ def load_data():
 df = load_data()
 
 # =========================
-# SESSION NAVIGATION
+# BACKGROUND IMAGE (BASE64)
+# =========================
+def get_base64(file):
+    with open(file, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+bg = get_base64("BG.jpg")
+
+# =========================
+# SESSION
 # =========================
 if "page" not in st.session_state:
     st.session_state.page = "home"
@@ -35,55 +45,64 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE
+# STYLE (FINAL UI)
 # =========================
-st.markdown("""
+st.markdown(f"""
 <style>
 
-.main {
-    background: linear-gradient(135deg, #dbe6f6, #c5796d);
-}
+/* Background gambar transparan */
+.main {{
+    background: linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
+                url("data:image/jpg;base64,{bg}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}}
 
-.glass {
-    background: rgba(255,255,255,0.65);
+/* Glass effect */
+.glass {{
+    background: rgba(255,255,255,0.75);
     backdrop-filter: blur(12px);
     border-radius: 16px;
     padding: 30px;
     margin: 30px auto;
     max-width: 1100px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+}}
 
-.hero {
+/* Hero */
+.hero {{
     text-align: center;
     padding: 80px 20px;
-}
+}}
 
-.hero h1 {
+.hero h1 {{
     font-size: 48px;
-}
+}}
 
-.hero h3 {
+.hero h3 {{
     color: #555;
-}
+}}
 
-.hero p {
+.hero p {{
     color: #666;
     max-width: 500px;
     margin: auto;
-}
+}}
 
-.stButton>button {
+/* Button */
+.stButton>button {{
     background: #2c2c2c;
     color: white;
     border-radius: 25px;
     height: 45px;
     padding: 0 25px;
-}
+}}
 
-#MainMenu, footer {
+/* Hide menu */
+#MainMenu, footer {{
     visibility: hidden;
-}
+}}
 
 </style>
 """, unsafe_allow_html=True)
@@ -95,7 +114,7 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("Unsia.png", width=120)  # <-- GANTI FILE LOGO DI SINI
+        st.image("unsia.png", width=120)  # logo UNSIA
 
     with col2:
         c1, c2, c3 = st.columns(3)
