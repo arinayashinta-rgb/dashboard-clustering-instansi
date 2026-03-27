@@ -198,7 +198,12 @@ elif st.session_state.page == "input":
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown("**Total Pengaduan**")
+
+        col_small, _ = st.columns([1, 3])  # kecil di kiri
+
+        with col_small:
         total = st.text_input("total_pengaduan", label_visibility="collapsed")
+        
 
         st.markdown("<br>", unsafe_allow_html=True)
 
