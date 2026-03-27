@@ -175,13 +175,22 @@ elif st.session_state.page == "input":
     st.title("📝 Input Data")
 
     with st.form("form"):
-        nama = st.text_input("Nama Instansi")
 
-        permasalahan = st.text_area("Permasalahan")
-        permohonan = st.text_area("Permohonan")
-        pertanyaan = st.text_area("Pertanyaan")
+        col1, col2 = st.columns(2)
 
-        total = st.number_input("Total Pengaduan", min_value=0)
+        # ===== KOLOM KIRI =====
+        with col1:
+            nama = st.text_input("Nama Instansi")
+            total = st.number_input("Total Pengaduan", min_value=0)
+
+            permasalahan = st.text_area("Permasalahan", height=120)
+
+        # ===== KOLOM KANAN =====
+        with col2:
+            permohonan = st.text_area("Permohonan", height=120)
+            pertanyaan = st.text_area("Pertanyaan", height=120)
+
+        st.markdown("<br>", unsafe_allow_html=True)
 
         submit = st.form_submit_button("Proses")
 
