@@ -174,33 +174,37 @@ elif st.session_state.page == "input":
 
     st.title("📝 Input Data")
 
-    with st.form("form"):
+    with st.form("form_input"):
 
         col1, col2 = st.columns(2)
 
         # ===== KOLOM KIRI =====
         with col1:
             st.markdown("**Nama Instansi**")
-            nama = st.text_input("", label_visibility="collapsed")
+            nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
             st.markdown("**Permasalahan**")
-            permasalahan = st.text_area("", height=110, label_visibility="collapsed")
+            permasalahan = st.text_area("permasalahan", height=110, label_visibility="collapsed")
 
         # ===== KOLOM KANAN =====
         with col2:
             st.markdown("**Permohonan**")
-            permohonan = st.text_area("", height=110, label_visibility="collapsed")
+            permohonan = st.text_area("permohonan", height=110, label_visibility="collapsed")
 
             st.markdown("**Pertanyaan**")
-            pertanyaan = st.text_area("", height=110, label_visibility="collapsed")
+            pertanyaan = st.text_area("pertanyaan", height=110, label_visibility="collapsed")
 
-            st.markdown("**Total Pengaduan**")
-            total = st.number_input("", min_value=0, label_visibility="collapsed")
+        # ===== BAGIAN BAWAH =====
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        st.markdown("**Total Pengaduan**")
+        total = st.number_input("total_pengaduan", min_value=0, label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         submit = st.form_submit_button("Proses")
 
+    # ===== PROCESS =====
     if submit:
         hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
 
@@ -217,7 +221,6 @@ elif st.session_state.page == "input":
         st.success("Berhasil diproses")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
 # =========================
 # HASIL
 # =========================
