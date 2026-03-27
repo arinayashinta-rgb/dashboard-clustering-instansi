@@ -249,10 +249,58 @@ elif st.session_state.page == "hasil":
         st.write("Pertanyaan:", data["pertanyaan"])
 
         if data["cluster"] is not None:
-            st.success(f"Cluster: {data['cluster']}")
-            st.info(f"Kategori: {data['kategori']}")
-        else:
-            st.error("Data tidak ditemukan")
+    cluster = data["cluster"]
+
+    st.success(f"Cluster: {cluster}")
+    st.info(f"Kategori: {data['kategori']}")
+
+    st.markdown("### 📊 Analisis Clustering")
+
+    if cluster == 0:
+        st.warning("""
+**Cluster 0 – Dominan Permasalahan**
+
+Instansi ini lebih banyak menyampaikan laporan berupa **permasalahan** dibandingkan 
+dengan permohonan maupun pertanyaan.
+
+Hal ini menunjukkan adanya hambatan operasional atau gangguan layanan yang perlu ditindaklanjuti.
+        """)
+
+    elif cluster == 1:
+        st.info("""
+**Cluster 1 – Dominan Permohonan**
+
+Instansi ini lebih sering menyampaikan **permohonan** berupa bantuan atau dukungan.
+
+Hal ini menunjukkan kebutuhan koordinasi atau dukungan administratif yang cukup tinggi.
+        """)
+
+    elif cluster == 2:
+        st.success("""
+**Cluster 2 – Dominan Pertanyaan**
+
+Instansi ini lebih sering mengajukan **pertanyaan** untuk memperoleh informasi atau klarifikasi.
+
+Hal ini menunjukkan perlunya peningkatan pemahaman terhadap prosedur atau kebijakan.
+        """)
+
+    elif cluster == 3:
+        st.markdown("""
+**Cluster 3 – Campuran**
+
+Instansi ini memiliki komposisi laporan yang relatif seimbang antara:
+- Permasalahan  
+- Permohonan  
+- Pertanyaan  
+
+Menunjukkan penggunaan sistem pelaporan yang komprehensif.
+        """)
+
+    else:
+        st.write("Analisis tidak tersedia")
+
+else:
+    st.error("Data tidak ditemukan")
     else:
         st.warning("Belum ada data")
 
