@@ -35,17 +35,15 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (MODERN UI)
+# STYLE
 # =========================
 st.markdown("""
 <style>
 
-/* Background */
 .main {
     background: linear-gradient(135deg, #dbe6f6, #c5796d);
 }
 
-/* Glass Card */
 .glass {
     background: rgba(255,255,255,0.65);
     backdrop-filter: blur(12px);
@@ -56,22 +54,6 @@ st.markdown("""
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-links button {
-    background: none;
-    border: none;
-    margin: 0 10px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-/* Hero */
 .hero {
     text-align: center;
     padding: 80px 20px;
@@ -91,7 +73,6 @@ st.markdown("""
     margin: auto;
 }
 
-/* Button */
 .stButton>button {
     background: #2c2c2c;
     color: white;
@@ -100,7 +81,6 @@ st.markdown("""
     padding: 0 25px;
 }
 
-/* Hide Streamlit Menu */
 #MainMenu, footer {
     visibility: hidden;
 }
@@ -109,13 +89,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# NAVBAR (REAL BUTTON)
+# NAVBAR
 # =========================
 def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.markdown("### LOGO")
+        st.image("unsia.png", width=120)  # <-- GANTI FILE LOGO DI SINI
 
     with col2:
         c1, c2, c3 = st.columns(3)
@@ -130,7 +110,7 @@ def navbar():
                 go("hasil")
 
 # =========================
-# HOME (HERO PAGE)
+# HOME
 # =========================
 if st.session_state.page == "home":
 
@@ -149,13 +129,6 @@ if st.session_state.page == "home":
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-
-    if st.button("🚀 LEARN MORE"):
-        go("dashboard")
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
@@ -170,7 +143,6 @@ elif st.session_state.page == "dashboard":
     st.title("📊 Dashboard")
 
     col1, col2, col3 = st.columns(3)
-
     col1.metric("Total Data", len(df))
     col2.metric("Cluster", df["Cluster"].nunique())
     col3.metric("Status", "Aktif")
@@ -192,6 +164,10 @@ elif st.session_state.page == "input":
         nama = st.text_input("Nama Instansi")
         total = st.number_input("Total Pengaduan", min_value=0)
 
+        permasalahan = st.text_area("Permasalahan")
+        permohonan = st.text_area("Permohonan")
+        pertanyaan = st.text_area("Pertanyaan")
+
         submit = st.form_submit_button("Proses")
 
     if submit:
@@ -200,6 +176,9 @@ elif st.session_state.page == "input":
         st.session_state.hasil = {
             "nama": nama,
             "total": total,
+            "permasalahan": permasalahan,
+            "permohonan": permohonan,
+            "pertanyaan": pertanyaan,
             "cluster": hasil.iloc[0]["Cluster"] if not hasil.empty else None,
             "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
         }
@@ -224,6 +203,10 @@ elif st.session_state.page == "hasil":
 
         st.write("Nama:", data["nama"])
         st.write("Total:", data["total"])
+
+        st.write("Permasalahan:", data["permasalahan"])
+        st.write("Permohonan:", data["permohonan"])
+        st.write("Pertanyaan:", data["pertanyaan"])
 
         if data["cluster"] is not None:
             st.success(f"Cluster: {data['cluster']}")
