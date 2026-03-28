@@ -45,51 +45,101 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE
+# STYLE (UPDATED)
 # =========================
 st.markdown(f"""
 <style>
 
+/* Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.75)),
+    background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
     background-position: center;
-}}
-
-.glass {{
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 40px;
-    margin: 30px auto;
-    max-width: 1100px;
-}}
-
-.hero {{
-    text-align: center;
-    padding: 100px 20px;
-}}
-
-.hero h1 {{
-    font-size: 60px;
-}}
-
-.hero h3 {{
-    font-size: 28px;
-}}
-
-.hero p {{
     font-size: 18px;
 }}
 
+/* Container */
+.glass {{
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 50px;
+    margin: 30px auto;
+    max-width: 1200px;
+}}
+
+/* Hero Section */
+.hero {{
+    text-align: center;
+    padding: 120px 20px;
+}}
+
+.hero h1 {{
+    font-size: 72px;
+    font-weight: 800;
+}}
+
+.hero h3 {{
+    font-size: 36px;
+    font-weight: 700;
+}}
+
+.hero p {{
+    font-size: 22px;
+    font-weight: 500;
+}}
+
+/* Global text */
+html, body, [class*="css"] {{
+    font-size: 18px !important;
+    font-weight: 500;
+}}
+
+/* Titles */
+h1, h2, h3 {{
+    font-weight: 800 !important;
+}}
+
+/* Labels */
+label, .stMarkdown p {{
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}}
+
+/* Input fields */
+input, textarea {{
+    font-size: 18px !important;
+    padding: 10px !important;
+}}
+
+/* Textarea */
+textarea {{
+    height: 120px !important;
+}}
+
+/* Buttons */
 .stButton>button {{
     background: linear-gradient(90deg, #1e90ff, #0066ff);
     color: white;
-    border-radius: 25px;
-    height: 45px;
+    border-radius: 30px;
+    height: 55px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 100%;
 }}
 
+/* Table */
+[data-testid="stDataFrame"] {{
+    font-size: 16px !important;
+}}
+
+/* Alert box */
+.stAlert {{
+    font-size: 18px !important;
+}}
+
+/* Hide menu */
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -104,15 +154,15 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("Unsia.png", width=120)
+        st.image("Unsia.png", width=140)
 
     with col2:
         c1, c2, c3 = st.columns(3)
-        if c1.button("BERANDA"):
+        if c1.button("🏠 BERANDA"):
             go("home")
-        if c2.button("INPUT"):
+        if c2.button("📝 INPUT"):
             go("input")
-        if c3.button("HASIL"):
+        if c3.button("📊 HASIL"):
             go("hasil")
 
 # =========================
@@ -144,7 +194,7 @@ elif st.session_state.page == "input":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.title("📝 Input Data")
+    st.markdown("<h1 style='font-size:40px;'>📝 Input Data</h1>", unsafe_allow_html=True)
 
     with st.form("form_input"):
 
@@ -155,14 +205,14 @@ elif st.session_state.page == "input":
             nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
             st.markdown("**Permasalahan**")
-            permasalahan = st.text_area("permasalahan", height=80, label_visibility="collapsed")
+            permasalahan = st.text_area("permasalahan", label_visibility="collapsed")
 
         with col2:
             st.markdown("**Permohonan**")
-            permohonan = st.text_area("permohonan", height=80, label_visibility="collapsed")
+            permohonan = st.text_area("permohonan", label_visibility="collapsed")
 
             st.markdown("**Pertanyaan**")
-            pertanyaan = st.text_area("pertanyaan", height=80, label_visibility="collapsed")
+            pertanyaan = st.text_area("pertanyaan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -171,7 +221,7 @@ elif st.session_state.page == "input":
         with col_small:
             total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
-        submit = st.form_submit_button("Proses")
+        submit = st.form_submit_button("🚀 Proses")
 
     if submit:
         hasil = df[df["Asal Instansi"].str.lower() == nama.lower()]
@@ -186,7 +236,7 @@ elif st.session_state.page == "input":
             "kategori": hasil.iloc[0]["Kategori Cluster"] if not hasil.empty else "Tidak ditemukan"
         }
 
-        st.success("Berhasil diproses")
+        st.success("✅ Berhasil diproses")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -198,12 +248,11 @@ elif st.session_state.page == "hasil":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.title("📊 Hasil Clustering")
+    st.markdown("<h1 style='font-size:40px;'>📊 Hasil Clustering</h1>", unsafe_allow_html=True)
 
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-        # ===== TABEL =====
         tabel = pd.DataFrame({
             "Nama Instansi": [data["nama"]],
             "Total Pengaduan": [data["total"]],
@@ -217,47 +266,22 @@ elif st.session_state.page == "hasil":
         st.markdown("### 📋 Data Hasil Clustering")
         st.dataframe(tabel, use_container_width=True)
 
-        # ===== ANALISIS =====
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
             st.markdown("### 📊 Analisis Clustering")
 
             if cluster == 0:
-                st.warning("""
-**Cluster 0 – Dominan Permasalahan**
-
-Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan. 
-
-Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut dari pihak penyedia layanan.
-                """)
+                st.warning("Cluster 0 – Dominan Permasalahan")
 
             elif cluster == 1:
-                st.info("""
-**Cluster 1 – Dominan Permohonan**
-
-Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya. 
-
-Permohonan yang dimaksud dapat berupa permintaan bantuan atau permintaan dukungan dalam pelaksanaan kegiatan atau layanan. Instansi ini memiliki kebutuhan koordinasi atau dukungan administratif yang cukup tinggi.
-                """)
+                st.info("Cluster 1 – Dominan Permohonan")
 
             elif cluster == 2:
-                st.success("""
-**Cluster 2 – Dominan Pertanyaan**
-
-Instansi ini lebih sering mengajukan pertanyaan dan cenderung menggunakan sistem pelaporan untuk memperoleh informasi atau klarifikasi terkait kebijakan, prosedur, maupun mekanisme layanan tertentu. 
-
-Tingginya jumlah pertanyaan mengindikasikan bahwa instansi ini masih membutuhkan informasi tambahan atau pemahaman yang lebih jelas.
-                """)
+                st.success("Cluster 2 – Dominan Pertanyaan")
 
             elif cluster == 3:
-                st.markdown("""
-**Cluster 3 – Campuran**
-
-Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan. 
-
-Instansi ini memanfaatkan sistem pelaporan secara lebih komprehensif.
-                """)
+                st.markdown("Cluster 3 – Campuran")
 
         else:
             st.error("Data tidak ditemukan")
