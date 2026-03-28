@@ -45,7 +45,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE
+# STYLE (UPGRADE)
 # =========================
 st.markdown(f"""
 <style>
@@ -55,57 +55,35 @@ st.markdown(f"""
     background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
-    background-position: center;
 }}
 
 /* Container */
 .glass {{
     background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(12px);
     border-radius: 18px;
     padding: 50px;
-    margin: 30px auto;
     max-width: 1200px;
+    margin: auto;
 }}
 
-/* Hero */
-.hero {{
-    text-align: center;
-    padding: 120px 20px;
-}}
-
-.hero h1 {{
-    font-size: 70px;
-    font-weight: 800;
-}}
-
-.hero h3 {{
-    font-size: 34px;
-    font-weight: 700;
-}}
-
-.hero p {{
-    font-size: 22px;
-}}
-
-/* Global text */
+/* TEXT GLOBAL */
 html, body {{
     font-size: 18px;
 }}
 
-/* Label */
+/* LABEL */
 label {{
     font-size: 20px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }}
 
-/* Input */
+/* INPUT */
 input {{
     font-size: 18px !important;
     padding: 10px !important;
 }}
 
-/* Button */
+/* BUTTON */
 .stButton>button {{
     height: 55px;
     font-size: 18px;
@@ -115,7 +93,26 @@ input {{
     color: white;
 }}
 
-/* Hide menu */
+/* ===== TABEL BESAR ===== */
+[data-testid="stDataFrame"] {{
+    font-size: 20px !important;
+}}
+
+[data-testid="stDataFrame"] th {{
+    font-size: 22px !important;
+    font-weight: 800 !important;
+}}
+
+[data-testid="stDataFrame"] td {{
+    font-weight: 600 !important;
+}}
+
+/* ALERT */
+.stAlert {{
+    font-size: 18px !important;
+    font-weight: 500;
+}}
+
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -150,10 +147,10 @@ if st.session_state.page == "home":
     navbar()
 
     st.markdown("""
-    <div class="hero">
-        <h1>Selamat Datang</h1>
-        <h3>di Aplikasi Clustering</h3>
-        <p>
+    <div style="text-align:center; padding:100px;">
+        <h1 style="font-size:70px; font-weight:800;">Selamat Datang</h1>
+        <h3 style="font-size:34px;">di Aplikasi Clustering</h3>
+        <p style="font-size:22px;">
         Aplikasi clustering instansi untuk membantu analisis data pengaduan 
         secara otomatis, cepat, dan akurat.
         </p>
@@ -237,19 +234,46 @@ elif st.session_state.page == "hasil":
             "Kategori": [data["kategori"]]
         })
 
+        st.markdown("### 📋 Data Hasil Clustering")
         st.dataframe(tabel, use_container_width=True)
 
+        # ===== ANALISIS =====
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
+            st.markdown("### 📊 Analisis Clustering")
+
             if cluster == 0:
-                st.warning("Cluster 0 – Dominan Permasalahan")
+                st.warning("""
+**Cluster 0 – Dominan Permasalahan**
+
+Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan. 
+
+Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut dari pihak penyedia layanan.
+                """)
+
             elif cluster == 1:
-                st.info("Cluster 1 – Dominan Permohonan")
+                st.info("""
+**Cluster 1 – Dominan Permohonan**
+
+Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya. 
+
+Permohonan yang dimaksud dapat berupa permintaan bantuan atau dukungan dalam pelaksanaan kegiatan atau layanan.
+                """)
+
             elif cluster == 2:
-                st.success("Cluster 2 – Dominan Pertanyaan")
+                st.success("""
+**Cluster 2 – Dominan Pertanyaan**
+
+Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.
+                """)
+
             elif cluster == 3:
-                st.markdown("Cluster 3 – Campuran")
+                st.markdown("""
+**Cluster 3 – Campuran**
+
+Instansi ini memiliki komposisi laporan yang relatif seimbang.
+                """)
 
         else:
             st.error("Data tidak ditemukan")
