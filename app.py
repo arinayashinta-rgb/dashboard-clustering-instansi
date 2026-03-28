@@ -221,7 +221,7 @@ elif st.session_state.page == "hasil":
             <tbody>
                 <tr>
                     <td style="padding:12px; font-weight:700;">{data["nama"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["total pengaduan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["total"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
