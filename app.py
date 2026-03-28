@@ -126,9 +126,9 @@ if st.session_state.page == "home":
 
     st.markdown("""
     <div style="text-align:center; padding:100px;">
-        <h1 style="font-size:70px; font-weight:800;">Selamat Datang</h1>
+        <h1 style="font-size:80px; font-weight:800;">Selamat Datang</h1>
         <h3 style="font-size:60px;">di Aplikasi Clustering</h3>
-        <p style="font-size:45px;">
+        <p style="font-size:35px;">
         Aplikasi clustering instansi untuk membantu analisis data pengaduan 
         secara otomatis, cepat, dan akurat.
         </p>
