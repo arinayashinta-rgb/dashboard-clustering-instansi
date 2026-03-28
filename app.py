@@ -45,7 +45,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (FINAL)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
@@ -91,23 +91,6 @@ input {{
     color: white;
 }}
 
-/* ===== TABEL ===== */
-[data-testid="stDataFrame"] table {{
-    font-size: 22px !important;
-}}
-
-[data-testid="stDataFrame"] th {{
-    font-size: 24px !important;
-    font-weight: 900 !important;
-    text-align: center !important;
-}}
-
-[data-testid="stDataFrame"] td {{
-    font-size: 22px !important;
-    font-weight: 700 !important;
-}}
-
-/* Hide menu */
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -219,18 +202,37 @@ elif st.session_state.page == "hasil":
     if "hasil" in st.session_state:
         data = st.session_state.hasil
 
-        tabel = pd.DataFrame({
-            "Nama Instansi": [data["nama"]],
-            "Total Pengaduan": [data["total"]],
-            "Permasalahan": [data["permasalahan"]],
-            "Permohonan": [data["permohonan"]],
-            "Pertanyaan": [data["pertanyaan"]],
-            "Cluster": [data["cluster"]],
-            "Kategori": [data["kategori"]]
-        })
-
         st.markdown("### 📋 Data Hasil Clustering")
-        st.dataframe(tabel, use_container_width=True)
+
+        # ===== TABEL BESAR (HTML) =====
+        html_table = f"""
+        <table style="width:100%; border-collapse:collapse; font-size:24px;">
+            <thead>
+                <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
+                    <th style="padding:12px;">Nama Instansi</th>
+                    <th style="padding:12px;">Total</th>
+                    <th style="padding:12px;">Permasalahan</th>
+                    <th style="padding:12px;">Permohonan</th>
+                    <th style="padding:12px;">Pertanyaan</th>
+                    <th style="padding:12px;">Cluster</th>
+                    <th style="padding:12px;">Kategori</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:12px; font-weight:700;">{data["nama"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["total"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["cluster"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["kategori"]}</td>
+                </tr>
+            </tbody>
+        </table>
+        """
+
+        st.markdown(html_table, unsafe_allow_html=True)
 
         # ===== ANALISIS (FIX TOTAL) =====
         if data["cluster"] is not None:
@@ -247,9 +249,11 @@ elif st.session_state.page == "hasil":
                 Cluster 0 – Dominan Permasalahan
                 </div><br>
 
-                Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan.<br><br>
+                Karakteristik utama: Tingginya jumlah laporan permasalahan yang diajukan oleh instansi.<br>
 
-                Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut.
+                Interpretasi: Menunjukkan bahwa instansi mengalami kendala atau hambatan dalam layanan yang mereka akses.<br>
+
+                Rekomendasi perbaikan: Perlu peningkatan kualitas layanan serta respon yang lebih cepat dalam penanganan masalah.
 
                 </div>
                 """, unsafe_allow_html=True)
@@ -263,9 +267,11 @@ elif st.session_state.page == "hasil":
                 Cluster 1 – Dominan Permohonan
                 </div><br>
 
-                Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya.<br><br>
+                Karakteristik utama: Tingginya jumlah permohonan layanan atau administrasi.<br>
 
-                Permohonan berupa permintaan bantuan atau dukungan administratif.
+                Interpretasi: Menunjukkan bahwa instansi pengguna memanfaatkan layanan untuk kebutuhan administratif atau operasional.<br>
+
+                Rekomendasi perbaikan: Optimalisasi sistem layanan agar lebih efisien, cepat, dan mudah diakses.
 
                 </div>
                 """, unsafe_allow_html=True)
@@ -279,7 +285,11 @@ elif st.session_state.page == "hasil":
                 Cluster 2 – Dominan Pertanyaan
                 </div><br>
 
-                Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.
+                Karakteristik utama: Tingginya jumlah pertanyaan atau permintaan informasi.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi pengguna masih membutuhkan kejelasan informasi terkait layanan atau prosedur.<br>
+
+                Rekomendasi perbaikan: Peningkatan kualitas informasi, seperti penyediaan panduan, FAQ, dan transparansi layanan.
 
                 </div>
                 """, unsafe_allow_html=True)
@@ -293,7 +303,11 @@ elif st.session_state.page == "hasil":
                 Cluster 3 – Campuran
                 </div><br>
 
-                Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan.
+                Karakteristik utama: Tidak ada kategori pengaduan yang dominan.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi memiliki kebutuhan layanan yang beragam (permasalahan, permohonan, dan pertanyaan).<br>
+
+                Rekomendasi perbaikan: Diperlukan pendekatan layanan yang komprehensif dan menyeluruh.
 
                 </div>
                 """, unsafe_allow_html=True)
