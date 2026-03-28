@@ -45,7 +45,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (UPGRADE)
+# STYLE (FINAL UPGRADE)
 # =========================
 st.markdown(f"""
 <style>
@@ -93,24 +93,32 @@ input {{
     color: white;
 }}
 
-/* ===== TABEL BESAR ===== */
-[data-testid="stDataFrame"] {{
-    font-size: 20px !important;
+/* ===== TABEL SUPER BESAR ===== */
+[data-testid="stDataFrame"] table {{
+    font-size: 22px !important;
 }}
 
 [data-testid="stDataFrame"] th {{
-    font-size: 22px !important;
-    font-weight: 800 !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    text-align: center !important;
 }}
 
 [data-testid="stDataFrame"] td {{
-    font-weight: 600 !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
 }}
 
-/* ALERT */
+/* ===== ANALISIS ===== */
 .stAlert {{
-    font-size: 18px !important;
-    font-weight: 500;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 1.8;
+}}
+
+.stAlert strong {{
+    font-size: 24px !important;
+    font-weight: 900 !important;
 }}
 
 #MainMenu, footer {{
@@ -241,39 +249,45 @@ elif st.session_state.page == "hasil":
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
-            st.markdown("### 📊 Analisis Clustering")
+            st.markdown("<h2 style='font-size:32px; font-weight:800;'>📊 Analisis Clustering</h2>", unsafe_allow_html=True)
 
             if cluster == 0:
                 st.warning("""
-**Cluster 0 – Dominan Permasalahan**
+<strong>Cluster 0 – Dominan Permasalahan</strong><br><br>
 
-Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan. 
+Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan.<br><br>
 
-Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut dari pihak penyedia layanan.
-                """)
+Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut.
+""", unsafe_allow_html=True)
 
             elif cluster == 1:
                 st.info("""
-**Cluster 1 – Dominan Permohonan**
+<strong>Cluster 1 – Dominan Permohonan</strong><br><br>
 
-Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya. 
+Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya.<br><br>
 
-Permohonan yang dimaksud dapat berupa permintaan bantuan atau dukungan dalam pelaksanaan kegiatan atau layanan.
-                """)
+Permohonan berupa permintaan bantuan atau dukungan administratif.
+""", unsafe_allow_html=True)
 
             elif cluster == 2:
                 st.success("""
-**Cluster 2 – Dominan Pertanyaan**
+<strong>Cluster 2 – Dominan Pertanyaan</strong><br><br>
 
-Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.
-                """)
+Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.<br><br>
+
+Menunjukkan kebutuhan pemahaman lebih lanjut.
+""", unsafe_allow_html=True)
 
             elif cluster == 3:
                 st.markdown("""
-**Cluster 3 – Campuran**
+<div style='font-size:20px; font-weight:600; line-height:1.8;'>
 
-Instansi ini memiliki komposisi laporan yang relatif seimbang.
-                """)
+<strong style='font-size:24px;'>Cluster 3 – Campuran</strong><br><br>
+
+Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan.
+
+</div>
+""", unsafe_allow_html=True)
 
         else:
             st.error("Data tidak ditemukan")
