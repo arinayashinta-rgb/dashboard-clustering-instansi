@@ -125,7 +125,7 @@ if st.session_state.page == "home":
     navbar()
 
     st.markdown("""
-    <div style="text-align:center; padding:100px;">
+    <div style="text-align:center; margin-top:-30px;">
         <h1 style="font-size:80px; font-weight:800;">Selamat Datang</h1>
         <h3 style="font-size:50px;">di Aplikasi Clustering</h3>
         <p style="font-size:30px;">
