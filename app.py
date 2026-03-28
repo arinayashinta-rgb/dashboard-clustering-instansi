@@ -45,7 +45,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (FINAL UPGRADE)
+# STYLE (FINAL)
 # =========================
 st.markdown(f"""
 <style>
@@ -66,24 +66,22 @@ st.markdown(f"""
     margin: auto;
 }}
 
-/* TEXT GLOBAL */
+/* Text */
 html, body {{
     font-size: 18px;
 }}
 
-/* LABEL */
 label {{
     font-size: 20px !important;
     font-weight: 700 !important;
 }}
 
-/* INPUT */
 input {{
     font-size: 18px !important;
     padding: 10px !important;
 }}
 
-/* BUTTON */
+/* Button */
 .stButton>button {{
     height: 55px;
     font-size: 18px;
@@ -93,7 +91,7 @@ input {{
     color: white;
 }}
 
-/* ===== TABEL SUPER BESAR ===== */
+/* ===== TABEL ===== */
 [data-testid="stDataFrame"] table {{
     font-size: 22px !important;
 }}
@@ -109,18 +107,7 @@ input {{
     font-weight: 700 !important;
 }}
 
-/* ===== ANALISIS ===== */
-.stAlert {{
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    line-height: 1.8;
-}}
-
-.stAlert strong {{
-    font-size: 24px !important;
-    font-weight: 900 !important;
-}}
-
+/* Hide menu */
 #MainMenu, footer {{
     visibility: hidden;
 }}
@@ -245,49 +232,71 @@ elif st.session_state.page == "hasil":
         st.markdown("### 📋 Data Hasil Clustering")
         st.dataframe(tabel, use_container_width=True)
 
-        # ===== ANALISIS =====
+        # ===== ANALISIS (FIX TOTAL) =====
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
             st.markdown("<h2 style='font-size:32px; font-weight:800;'>📊 Analisis Clustering</h2>", unsafe_allow_html=True)
 
             if cluster == 0:
-                st.warning("""
-<strong>Cluster 0 – Dominan Permasalahan</strong><br><br>
+                st.markdown("""
+                <div style='background:#fff3cd; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
 
-Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan.<br><br>
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 0 – Dominan Permasalahan
+                </div><br>
 
-Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut.
-""", unsafe_allow_html=True)
+                Instansi ini lebih banyak menyampaikan laporan berupa permasalahan dibandingkan dengan permohonan maupun pertanyaan.<br><br>
+
+                Hal ini menunjukkan bahwa instansi ini sering menemukan hambatan operasional, gangguan layanan, atau kondisi tertentu yang memerlukan penanganan lebih lanjut.
+
+                </div>
+                """, unsafe_allow_html=True)
 
             elif cluster == 1:
-                st.info("""
-<strong>Cluster 1 – Dominan Permohonan</strong><br><br>
+                st.markdown("""
+                <div style='background:#d1ecf1; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
 
-Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya.<br><br>
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 1 – Dominan Permohonan
+                </div><br>
 
-Permohonan berupa permintaan bantuan atau dukungan administratif.
-""", unsafe_allow_html=True)
+                Instansi ini lebih sering menyampaikan permohonan dibandingkan dengan jenis laporan lainnya.<br><br>
+
+                Permohonan berupa permintaan bantuan atau dukungan administratif.
+
+                </div>
+                """, unsafe_allow_html=True)
 
             elif cluster == 2:
-                st.success("""
-<strong>Cluster 2 – Dominan Pertanyaan</strong><br><br>
+                st.markdown("""
+                <div style='background:#d4edda; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
 
-Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.<br><br>
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 2 – Dominan Pertanyaan
+                </div><br>
 
-Menunjukkan kebutuhan pemahaman lebih lanjut.
-""", unsafe_allow_html=True)
+                Instansi ini lebih sering mengajukan pertanyaan untuk memperoleh informasi atau klarifikasi.
+
+                </div>
+                """, unsafe_allow_html=True)
 
             elif cluster == 3:
                 st.markdown("""
-<div style='font-size:20px; font-weight:600; line-height:1.8;'>
+                <div style='background:#eeeeee; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
 
-<strong style='font-size:24px;'>Cluster 3 – Campuran</strong><br><br>
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 3 – Campuran
+                </div><br>
 
-Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan.
+                Instansi ini memiliki komposisi laporan yang relatif seimbang antara permasalahan, permohonan, dan pertanyaan.
 
-</div>
-""", unsafe_allow_html=True)
+                </div>
+                """, unsafe_allow_html=True)
 
         else:
             st.error("Data tidak ditemukan")
