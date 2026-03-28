@@ -210,7 +210,7 @@ elif st.session_state.page == "hasil":
             <thead>
                 <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
                     <th style="padding:12px;">Nama Instansi</th>
-                    <th style="padding:12px;">Total</th>
+                    <th style="padding:12px;">Total Pengaduan</th>
                     <th style="padding:12px;">Permasalahan</th>
                     <th style="padding:12px;">Permohonan</th>
                     <th style="padding:12px;">Pertanyaan</th>
@@ -221,7 +221,7 @@ elif st.session_state.page == "hasil":
             <tbody>
                 <tr>
                     <td style="padding:12px; font-weight:700;">{data["nama"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["total"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["total pengaduan"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
                     <td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
