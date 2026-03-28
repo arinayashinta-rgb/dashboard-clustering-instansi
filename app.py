@@ -105,7 +105,7 @@ def navbar():
     col1, col2 = st.columns([2,3])
 
     with col1:
-        st.image("Unsia.png", width=140)
+        st.image("Unsia.png", width=200)
 
     with col2:
         c1, c2, c3 = st.columns(3)
