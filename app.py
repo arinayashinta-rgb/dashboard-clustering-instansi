@@ -45,7 +45,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (UPDATED)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
@@ -56,7 +56,6 @@ st.markdown(f"""
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
     background-position: center;
-    font-size: 18px;
 }}
 
 /* Container */
@@ -69,74 +68,51 @@ st.markdown(f"""
     max-width: 1200px;
 }}
 
-/* Hero Section */
+/* Hero */
 .hero {{
     text-align: center;
     padding: 120px 20px;
 }}
 
 .hero h1 {{
-    font-size: 72px;
+    font-size: 70px;
     font-weight: 800;
 }}
 
 .hero h3 {{
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 700;
 }}
 
 .hero p {{
     font-size: 22px;
-    font-weight: 500;
 }}
 
 /* Global text */
-html, body, [class*="css"] {{
-    font-size: 18px !important;
-    font-weight: 500;
+html, body {{
+    font-size: 18px;
 }}
 
-/* Titles */
-h1, h2, h3 {{
-    font-weight: 800 !important;
-}}
-
-/* Labels */
-label, .stMarkdown p {{
+/* Label */
+label {{
     font-size: 20px !important;
     font-weight: 600 !important;
 }}
 
-/* Input fields */
-input, textarea {{
+/* Input */
+input {{
     font-size: 18px !important;
     padding: 10px !important;
 }}
 
-/* Textarea */
-textarea {{
-    height: 120px !important;
-}}
-
-/* Buttons */
+/* Button */
 .stButton>button {{
-    background: linear-gradient(90deg, #1e90ff, #0066ff);
-    color: white;
-    border-radius: 30px;
     height: 55px;
     font-size: 18px;
     font-weight: 700;
-    width: 100%;
-}}
-
-/* Table */
-[data-testid="stDataFrame"] {{
-    font-size: 16px !important;
-}}
-
-/* Alert box */
-.stAlert {{
-    font-size: 18px !important;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #1e90ff, #0066ff);
+    color: white;
 }}
 
 /* Hide menu */
@@ -205,21 +181,19 @@ elif st.session_state.page == "input":
             nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
             st.markdown("**Permasalahan**")
-            permasalahan = st.text_area("permasalahan", label_visibility="collapsed")
+            permasalahan = st.text_input("permasalahan", label_visibility="collapsed")
 
         with col2:
             st.markdown("**Permohonan**")
-            permohonan = st.text_area("permohonan", label_visibility="collapsed")
+            permohonan = st.text_input("permohonan", label_visibility="collapsed")
 
             st.markdown("**Pertanyaan**")
-            pertanyaan = st.text_area("pertanyaan", label_visibility="collapsed")
+            pertanyaan = st.text_input("pertanyaan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown("**Total Pengaduan**")
-        col_small, _ = st.columns([1, 3])
-        with col_small:
-            total = st.text_input("total_pengaduan", label_visibility="collapsed")
+        total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
         submit = st.form_submit_button("🚀 Proses")
 
@@ -263,23 +237,17 @@ elif st.session_state.page == "hasil":
             "Kategori": [data["kategori"]]
         })
 
-        st.markdown("### 📋 Data Hasil Clustering")
         st.dataframe(tabel, use_container_width=True)
 
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
-            st.markdown("### 📊 Analisis Clustering")
-
             if cluster == 0:
                 st.warning("Cluster 0 – Dominan Permasalahan")
-
             elif cluster == 1:
                 st.info("Cluster 1 – Dominan Permohonan")
-
             elif cluster == 2:
                 st.success("Cluster 2 – Dominan Pertanyaan")
-
             elif cluster == 3:
                 st.markdown("Cluster 3 – Campuran")
 
