@@ -49,7 +49,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE
+# STYLE (SUDAH DIRAPIKAN)
 # =========================
 st.markdown(f"""
 <style>
@@ -105,43 +105,6 @@ input {{
 </style>
 """, unsafe_allow_html=True)
 
-.glass {{
-    background: rgba(255,255,255,0.95);
-    border-radius: 18px;
-    padding: 50px;
-    max-width: 1200px;
-    margin: auto;
-}}
-
-html, body {{
-    font-size: 18px;
-}}
-
-label {{
-    font-size: 20px !important;
-    font-weight: 700 !important;
-}}
-
-input {{
-    font-size: 18px !important;
-    padding: 10px !important;
-}}
-
-.stButton>button {{
-    height: 55px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 30px;
-    background: linear-gradient(90deg, #1e90ff, #0066ff);
-    color: white;
-}}
-
-#MainMenu, footer {{
-    visibility: hidden;
-}}
-</style>
-""", unsafe_allow_html=True)
-
 # =========================
 # NAVBAR
 # =========================
@@ -163,19 +126,6 @@ def navbar():
             go("anggota")
 
 # =========================
-# FUNCTION WARNA CLUSTER
-# =========================
-def get_color(cluster):
-    if cluster == 0:
-        return "#fff3cd"
-    elif cluster == 1:
-        return "#d1ecf1"
-    elif cluster == 2:
-        return "#d4edda"
-    else:
-        return "#eeeeee"
-
-# =========================
 # HOME
 # =========================
 if st.session_state.page == "home":
@@ -184,7 +134,7 @@ if st.session_state.page == "home":
     navbar()
 
     st.markdown("""
-    <div style="text-align:center; margin-top:-30px;">
+    <div style="text-align:center;">
         <h1 style="font-size:80px; font-weight:800;">Selamat Datang</h1>
         <h3 style="font-size:50px;">di Aplikasi Clustering</h3>
         <p style="font-size:30px;">
@@ -204,29 +154,29 @@ elif st.session_state.page == "input":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:40px;'>📝 Input Data</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:50px; font-weight:900;'>📝 Input Data</h1>", unsafe_allow_html=True)
 
     with st.form("form_input"):
 
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("**Nama Instansi**")
+            st.markdown("<label style='font-size:26px; font-weight:900;'>Nama Instansi</label>", unsafe_allow_html=True)
             nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
-            st.markdown("**Permasalahan**")
+            st.markdown("<label style='font-size:26px; font-weight:900;'>Permasalahan</label>", unsafe_allow_html=True)
             permasalahan = st.text_input("permasalahan", label_visibility="collapsed")
 
         with col2:
-            st.markdown("**Permohonan**")
+            st.markdown("<label style='font-size:26px; font-weight:900;'>Permohonan</label>", unsafe_allow_html=True)
             permohonan = st.text_input("permohonan", label_visibility="collapsed")
 
-            st.markdown("**Pertanyaan**")
+            st.markdown("<label style='font-size:26px; font-weight:900;'>Pertanyaan</label>", unsafe_allow_html=True)
             pertanyaan = st.text_input("pertanyaan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown("**Total Pengaduan**")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Total Pengaduan</label>", unsafe_allow_html=True)
         total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
         submit = st.form_submit_button("🚀 Proses")
@@ -245,103 +195,5 @@ elif st.session_state.page == "input":
         }
 
         st.success("✅ Berhasil diproses")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# HASIL
-# =========================
-elif st.session_state.page == "hasil":
-
-    st.markdown('<div class="glass">', unsafe_allow_html=True)
-    navbar()
-
-    st.markdown("<h1 style='font-size:40px;'>📊 Hasil Clustering</h1>", unsafe_allow_html=True)
-
-    if "hasil" in st.session_state:
-        data = st.session_state.hasil
-        color = get_color(data["cluster"])
-
-        st.markdown("### 📋 Data Hasil Clustering")
-
-        html_table = f"""<table style="width:100%; border-collapse:collapse; font-size:24px; background:{color};">
-<thead>
-<tr style="background:#0066ff; color:white;">
-<th style="padding:12px;">Nama Instansi</th>
-<th style="padding:12px;">Total Pengaduan</th>
-<th style="padding:12px;">Permasalahan</th>
-<th style="padding:12px;">Permohonan</th>
-<th style="padding:12px;">Pertanyaan</th>
-<th style="padding:12px;">Cluster</th>
-<th style="padding:12px;">Kategori</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="padding:12px; font-weight:700;">{data["nama"]}</td>
-<td style="padding:12px; font-weight:700;">{data["total"]}</td>
-<td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
-<td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
-<td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
-<td style="padding:12px; font-weight:700;">{data["cluster"]}</td>
-<td style="padding:12px; font-weight:700;">{data["kategori"]}</td>
-</tr>
-</tbody>
-</table>"""
-
-        st.markdown(html_table, unsafe_allow_html=True)
-
-    else:
-        st.warning("Belum ada data")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# ANGGOTA CLUSTER
-# =========================
-elif st.session_state.page == "anggota":
-
-    st.markdown('<div class="glass">', unsafe_allow_html=True)
-    navbar()
-
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
-
-    cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
-
-    data_cluster = df[df["Cluster"] == cluster_pilih]
-
-    if "Total Pengaduan" in df.columns:
-        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
-
-    data_cluster = data_cluster.head(5)
-
-    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
-<thead>
-<tr style="background:#0066ff; color:white;">
-<th style="padding:14px;">Asal Instansi</th>
-<th style="padding:14px;">Permasalahan</th>
-<th style="padding:14px;">Permohonan</th>
-<th style="padding:14px;">Pertanyaan</th>
-<th style="padding:14px;">Total Pengaduan</th>
-<th style="padding:14px;">Kategori</th>
-</tr>
-</thead>
-<tbody>
-"""
-
-    for _, row in data_cluster.iterrows():
-        html_table += f"""<tr>
-<td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
-</tr>
-"""
-
-    html_table += "</tbody></table>"
-
-    st.markdown(html_table, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
