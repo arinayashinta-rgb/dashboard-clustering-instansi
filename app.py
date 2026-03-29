@@ -102,13 +102,8 @@ input {{
     visibility: hidden;
 }}
 
-
-
-
-
-
 /* =========================
-   SELECTBOX SUPER BESAR
+   SELECTBOX UTAMA
    ========================= */
 div[data-baseweb="select"] > div {{
     background-color: #e3f2fd !important;
@@ -127,30 +122,48 @@ div[data-baseweb="select"] div[role="button"] {{
     color: #0d3b66 !important;
 }}
 
-/* DROPDOWN LIST */
+/* =========================
+   DROPDOWN LIST (ANGKA)
+   ========================= */
 ul[role="listbox"] {{
-    font-size: 22px !important;
-    font-weight: 800 !important;
+    border-radius: 12px !important;
+    overflow: hidden;
 }}
 
-/* ITEM HOVER */
+ul[role="listbox"] li {{
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    padding: 14px !important;
+    color: #0d3b66 !important;
+}}
+
+/* HOVER ITEM */
 ul[role="listbox"] li:hover {{
     background-color: #bbdefb !important;
+    font-weight: 900 !important;
 }}
 
-/* HOVER EFFECT BOX */
+/* =========================
+   EFFECT TAMBAHAN
+   ========================= */
 div[data-baseweb="select"] > div:hover {{
     box-shadow: 0px 6px 16px rgba(0,0,0,0.2);
-}}
+}
 
-/* BACKUP (kalau belum kena styling) */
+/* BACKUP (ANTI GAGAL STYLE) */
 div[data-baseweb="select"] * {{
     font-size: 26px !important;
     font-weight: 900 !important;
 }}
 
+ul[role="listbox"] * {{
+    font-size: 24px !important;
+    font-weight: 900 !important;
+}}
+
 </style>
 """, unsafe_allow_html=True)
+
 # =========================
 # NAVBAR
 # =========================
