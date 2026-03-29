@@ -123,7 +123,7 @@ div[data-baseweb="select"] div[role="button"] {{
 }}
 
 /* =========================
-   DROPDOWN LIST (ANGKA)
+   DROPDOWN LIST
    ========================= */
 ul[role="listbox"] {{
     border-radius: 12px !important;
@@ -140,7 +140,6 @@ ul[role="listbox"] li {{
 /* HOVER ITEM */
 ul[role="listbox"] li:hover {{
     background-color: #bbdefb !important;
-    font-weight: 900 !important;
 }}
 
 /* =========================
@@ -148,7 +147,7 @@ ul[role="listbox"] li:hover {{
    ========================= */
 div[data-baseweb="select"] > div:hover {{
     box-shadow: 0px 6px 16px rgba(0,0,0,0.2);
-}
+}}
 
 /* BACKUP (ANTI GAGAL STYLE) */
 div[data-baseweb="select"] * {{
