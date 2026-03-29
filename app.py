@@ -26,7 +26,7 @@ def load_data():
 
 df = load_data()
 
-# ===== FIX DATA =====
+# ===== FIX DATA (ANTI ERROR) =====
 df.columns = df.columns.str.strip()
 df = df.fillna(0)
 
@@ -246,14 +246,20 @@ elif st.session_state.page == "anggota":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Cluster</h1>", unsafe_allow_html=True)
 
     cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
 
-    # ===== TOP 5 DATA =====
-    data_cluster = df[df["Cluster"] == cluster_pilih] \
-        .sort_values(by="Total Pengaduan", ascending=False) \
-        .head(5)
+    data_cluster = df[df["Cluster"] == cluster_pilih]
+
+    # ===== SORT AMAN (ANTI ERROR) =====
+    if "Total Pengaduan" in df.columns:
+        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
+    elif "Total_Pengaduan" in df.columns:
+        data_cluster = data_cluster.sort_values(by="Total_Pengaduan", ascending=False)
+
+    # ===== AMBIL 5 DATA =====
+    data_cluster = data_cluster.head(5)
 
     st.markdown(f"<h2 style='font-size:30px; font-weight:900;'>📊 Cluster {cluster_pilih} (Top 5)</h2>", unsafe_allow_html=True)
 
@@ -275,12 +281,12 @@ elif st.session_state.page == "anggota":
     for _, row in data_cluster.iterrows():
         html_table += f"""
         <tr>
-            <td style="padding:14px; font-weight:800;">{row["Asal Instansi"]}</td>
-            <td style="padding:14px; font-weight:800;">{row["Permasalahan"]}</td>
-            <td style="padding:14px; font-weight:800;">{row["Permohonan"]}</td>
-            <td style="padding:14px; font-weight:800;">{row["Pertanyaan"]}</td>
-            <td style="padding:14px; font-weight:800;">{row["Total Pengaduan"]}</td>
-            <td style="padding:14px; font-weight:800;">{row["Kategori Cluster"]}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan", row.get("Total_Pengaduan",0))}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
         </tr>
         """
 
