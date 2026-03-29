@@ -113,7 +113,7 @@ def navbar():
             go("input")
         if c3.button("📊 HASIL"):
             go("hasil")
-        if c4.button("👥 ANGGOTA"):
+        if c4.button("👥 CLUSTER"):
             go("anggota")
 
 # =========================
@@ -260,7 +260,7 @@ elif st.session_state.page == "anggota":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Cluster</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
 
     cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
     color = get_color(cluster_pilih)
