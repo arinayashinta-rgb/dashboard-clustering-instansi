@@ -49,7 +49,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (SUDAH DIRAPIKAN)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
@@ -100,6 +100,34 @@ input {{
 
 #MainMenu, footer {{
     visibility: hidden;
+}}
+
+/* =========================
+   SELECTBOX STYLE (BARU)
+   ========================= */
+div[data-baseweb="select"] > div {{
+    background-color: #e3f2fd !important;
+    border-radius: 12px !important;
+    border: 2px solid #1e90ff !important;
+}}
+
+div[data-baseweb="select"] span {{
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #0d3b66 !important;
+}}
+
+ul[role="listbox"] {{
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}}
+
+ul[role="listbox"] li:hover {{
+    background-color: #bbdefb !important;
+}}
+
+div[data-baseweb="select"] > div:hover {{
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
 }}
 
 </style>
