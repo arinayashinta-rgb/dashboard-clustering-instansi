@@ -49,7 +49,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (DITAMBAH UI UPGRADE)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
@@ -69,11 +69,6 @@ st.markdown(f"""
 
 html, body {{
     font-size: 18px;
-}}
-
-label {{
-    font-size: 20px !important;
-    font-weight: 700 !important;
 }}
 
 input {{
@@ -98,9 +93,7 @@ input {{
     border-radius: 40px !important;
     background: linear-gradient(90deg, #ff7b00, #ff3c00) !important;
     color: white !important;
-    border: none !important;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
-}}
+}
 
 #MainMenu, footer {{
     visibility: hidden;
@@ -129,19 +122,6 @@ def navbar():
             go("anggota")
 
 # =========================
-# FUNCTION WARNA CLUSTER
-# =========================
-def get_color(cluster):
-    if cluster == 0:
-        return "#fff3cd"
-    elif cluster == 1:
-        return "#d1ecf1"
-    elif cluster == 2:
-        return "#d4edda"
-    else:
-        return "#eeeeee"
-
-# =========================
 # HOME
 # =========================
 if st.session_state.page == "home":
@@ -150,7 +130,7 @@ if st.session_state.page == "home":
     navbar()
 
     st.markdown("""
-    <div style="text-align:center; margin-top:-30px;">
+    <div style="text-align:center;">
         <h1 style="font-size:80px; font-weight:800;">Selamat Datang</h1>
         <h3 style="font-size:50px;">di Aplikasi Clustering</h3>
         <p style="font-size:30px;">
@@ -170,7 +150,6 @@ elif st.session_state.page == "input":
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    # JUDUL LEBIH BESAR
     st.markdown("<h1 style='font-size:50px; font-weight:900;'>📝 Input Data</h1>", unsafe_allow_html=True)
 
     with st.form("form_input"):
@@ -216,7 +195,7 @@ elif st.session_state.page == "input":
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# ANGGOTA (SELECTBOX BESAR)
+# ANGGOTA CLUSTER
 # =========================
 elif st.session_state.page == "anggota":
 
@@ -227,5 +206,41 @@ elif st.session_state.page == "anggota":
 
     st.markdown("<label style='font-size:28px; font-weight:900;'>Pilih Cluster</label>", unsafe_allow_html=True)
     cluster_pilih = st.selectbox("", sorted(df["Cluster"].unique()))
+
+    data_cluster = df[df["Cluster"] == cluster_pilih]
+
+    if "Total Pengaduan" in df.columns:
+        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
+
+    data_cluster = data_cluster.head(5)
+
+    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
+<thead>
+<tr style="background:#0066ff; color:white;">
+<th style="padding:14px;">Asal Instansi</th>
+<th style="padding:14px;">Permasalahan</th>
+<th style="padding:14px;">Permohonan</th>
+<th style="padding:14px;">Pertanyaan</th>
+<th style="padding:14px;">Total Pengaduan</th>
+<th style="padding:14px;">Kategori</th>
+</tr>
+</thead>
+<tbody>
+"""
+
+    for _, row in data_cluster.iterrows():
+        html_table += f"""<tr>
+<td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
+</tr>
+"""
+
+    html_table += "</tbody></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
