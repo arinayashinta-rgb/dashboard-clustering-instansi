@@ -160,6 +160,25 @@ ul[role="listbox"] * {{
     font-weight: 900 !important;
 }}
 
+/* =========================
+   INPUT BOX LEBIH TERANG
+   ========================= */
+input[type="text"] {
+    background-color: #f1f8ff !important;  /* biru sangat terang */
+    border: 2px solid #1e90ff !important;
+    border-radius: 12px !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #0d3b66 !important;
+}
+
+/* SAAT DIKLIK (FOCUS) */
+input[type="text"]:focus {
+    background-color: #e3f2fd !important;
+    border: 2px solid #0d47a1 !important;
+    box-shadow: 0px 0px 8px rgba(30,144,255,0.4);
+    outline: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
