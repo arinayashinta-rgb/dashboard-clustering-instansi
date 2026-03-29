@@ -197,3 +197,134 @@ elif st.session_state.page == "input":
         st.success("✅ Berhasil diproses")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# HASIL
+# =========================
+elif st.session_state.page == "hasil":
+
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
+    navbar()
+
+    st.markdown("<h1 style='font-size:40px;'>📊 Hasil Clustering</h1>", unsafe_allow_html=True)
+
+    if "hasil" in st.session_state:
+        data = st.session_state.hasil
+
+        st.markdown("### 📋 Data Hasil Clustering")
+
+        # ===== TABEL BESAR (HTML) =====
+        html_table = f"""
+        <table style="width:100%; border-collapse:collapse; font-size:24px;">
+            <thead>
+                <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
+                    <th style="padding:12px;">Nama Instansi</th>
+                    <th style="padding:12px;">Total Pengaduan</th>
+                    <th style="padding:12px;">Permasalahan</th>
+                    <th style="padding:12px;">Permohonan</th>
+                    <th style="padding:12px;">Pertanyaan</th>
+                    <th style="padding:12px;">Cluster</th>
+                    <th style="padding:12px;">Kategori</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:12px; font-weight:700;">{data["nama"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["total"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["cluster"]}</td>
+                    <td style="padding:12px; font-weight:700;">{data["kategori"]}</td>
+                </tr>
+            </tbody>
+        </table>
+        """
+
+        st.markdown(html_table, unsafe_allow_html=True)
+
+        # ===== ANALISIS (FIX TOTAL) =====
+        if data["cluster"] is not None:
+            cluster = data["cluster"]
+
+            st.markdown("<h2 style='font-size:32px; font-weight:800;'>📊 Analisis Clustering</h2>", unsafe_allow_html=True)
+
+            if cluster == 0:
+                st.markdown("""
+                <div style='background:#fff3cd; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
+
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 0 – Dominan Permasalahan
+                </div><br>
+
+                Karakteristik utama: Tingginya jumlah laporan permasalahan yang diajukan oleh instansi.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi mengalami kendala atau hambatan dalam layanan yang mereka akses.<br>
+
+                Rekomendasi perbaikan: Perlu peningkatan kualitas layanan serta respon yang lebih cepat dalam penanganan masalah.
+
+                </div>
+                """, unsafe_allow_html=True)
+
+            elif cluster == 1:
+                st.markdown("""
+                <div style='background:#d1ecf1; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
+
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 1 – Dominan Permohonan
+                </div><br>
+
+                Karakteristik utama: Tingginya jumlah permohonan layanan atau administrasi.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi pengguna memanfaatkan layanan untuk kebutuhan administratif atau operasional.<br>
+
+                Rekomendasi perbaikan: Optimalisasi sistem layanan agar lebih efisien, cepat, dan mudah diakses.
+
+                </div>
+                """, unsafe_allow_html=True)
+
+            elif cluster == 2:
+                st.markdown("""
+                <div style='background:#d4edda; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
+
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 2 – Dominan Pertanyaan
+                </div><br>
+
+                Karakteristik utama: Tingginya jumlah pertanyaan atau permintaan informasi.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi pengguna masih membutuhkan kejelasan informasi terkait layanan atau prosedur.<br>
+
+                Rekomendasi perbaikan: Peningkatan kualitas informasi, seperti penyediaan panduan, FAQ, dan transparansi layanan.
+
+                </div>
+                """, unsafe_allow_html=True)
+
+            elif cluster == 3:
+                st.markdown("""
+                <div style='background:#eeeeee; padding:25px; border-radius:12px;
+                            font-size:22px; font-weight:600; line-height:1.8;'>
+
+                <div style='font-size:26px; font-weight:900;'>
+                Cluster 3 – Campuran
+                </div><br>
+
+                Karakteristik utama: Tidak ada kategori pengaduan yang dominan.<br>
+
+                Interpretasi: Menunjukkan bahwa instansi memiliki kebutuhan layanan yang beragam (permasalahan, permohonan, dan pertanyaan).<br>
+
+                Rekomendasi perbaikan: Diperlukan pendekatan layanan yang komprehensif dan menyeluruh.
+
+                </div>
+                """, unsafe_allow_html=True)
+
+        else:
+            st.error("Data tidak ditemukan")
+
+    else:
+        st.warning("Belum ada data")
+
+    st.markdown('</div>', unsafe_allow_html=True)
