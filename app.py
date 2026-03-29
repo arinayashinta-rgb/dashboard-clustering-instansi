@@ -165,22 +165,27 @@ elif st.session_state.page == "input":
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("**Nama Instansi**")
-            nama = st.text_input("nama_instansi", label_visibility="collapsed")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Nama Instansi</label>", unsafe_allow_html=True)
+nama = st.text_input("nama_instansi", label_visibility="collapsed")
+        nama = st.text_input("nama_instansi", label_visibility="collapsed")
 
-            st.markdown("**Permasalahan**")
-            permasalahan = st.text_input("permasalahan", label_visibility="collapsed")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Permasalahan</label>", unsafe_allow_html=True)
+permasalahan = st.text_input("permasalahan", label_visibility="collapsed")
+        permasalahan = st.text_input("permasalahan", label_visibility="collapsed")
 
         with col2:
-            st.markdown("**Permohonan**")
-            permohonan = st.text_input("permohonan", label_visibility="collapsed")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Permohonan</label>", unsafe_allow_html=True)
+permohonan = st.text_input("permohonan", label_visibility="collapsed")
+        permohonan = st.text_input("permohonan", label_visibility="collapsed")
 
-            st.markdown("**Pertanyaan**")
-            pertanyaan = st.text_input("pertanyaan", label_visibility="collapsed")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Pertanyaan</label>", unsafe_allow_html=True)
+pertanyaan = st.text_input("pertanyaan", label_visibility="collapsed")
+        pertanyaan = st.text_input("pertanyaan", label_visibility="collapsed")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown("**Total Pengaduan**")
+        st.markdown("<label style='font-size:26px; font-weight:900;'>Total Pengaduan</label>", unsafe_allow_html=True)
+total = st.text_input("total_pengaduan", label_visibility="collapsed")
         total = st.text_input("total_pengaduan", label_visibility="collapsed")
 
         submit = st.form_submit_button("🚀 Proses")
@@ -260,7 +265,8 @@ elif st.session_state.page == "anggota":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
 
-    cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
+    st.markdown("<label style='font-size:28px; font-weight:900;'>Pilih Cluster</label>", unsafe_allow_html=True)
+cluster_pilih = st.selectbox("", sorted(df["Cluster"].unique()))
 
     data_cluster = df[df["Cluster"] == cluster_pilih]
 
