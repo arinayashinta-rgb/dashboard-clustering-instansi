@@ -72,10 +72,27 @@ html, body {{
     font-size: 18px;
 }}
 
-input {{
+/* =========================
+   INPUT BOX (TERANG)
+   ========================= */
+input[type="text"] {{
+    background-color: #f1f8ff !important;
+    border: 2px solid #1e90ff !important;
+    border-radius: 12px !important;
     font-size: 20px !important;
-    padding: 12px !important;
-    border-radius: 10px !important;
+    font-weight: 600 !important;
+    color: #0d3b66 !important;
+}}
+
+input[type="text"]:focus {{
+    background-color: #e3f2fd !important;
+    border: 2px solid #0d47a1 !important;
+    box-shadow: 0px 0px 8px rgba(30,144,255,0.4);
+    outline: none !important;
+}}
+
+input[type="text"]:hover {{
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }}
 
 .stButton>button {{
@@ -115,7 +132,6 @@ div[data-baseweb="select"] > div {{
     padding-left: 10px !important;
 }}
 
-/* TEKS YANG DIPILIH */
 div[data-baseweb="select"] div[role="button"] {{
     font-size: 26px !important;
     font-weight: 900 !important;
@@ -137,7 +153,6 @@ ul[role="listbox"] li {{
     color: #0d3b66 !important;
 }}
 
-/* HOVER ITEM */
 ul[role="listbox"] li:hover {{
     background-color: #bbdefb !important;
 }}
@@ -160,25 +175,6 @@ ul[role="listbox"] * {{
     font-weight: 900 !important;
 }}
 
-/* =========================
-   INPUT BOX LEBIH TERANG
-   ========================= */
-input[type="text"] {
-    background-color: #f1f8ff !important;  /* biru sangat terang */
-    border: 2px solid #1e90ff !important;
-    border-radius: 12px !important;
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    color: #0d3b66 !important;
-}
-
-/* SAAT DIKLIK (FOCUS) */
-input[type="text"]:focus {
-    background-color: #e3f2fd !important;
-    border: 2px solid #0d47a1 !important;
-    box-shadow: 0px 0px 8px rgba(30,144,255,0.4);
-    outline: none !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
