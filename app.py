@@ -26,6 +26,10 @@ def load_data():
 
 df = load_data()
 
+# ===== FIX DATA =====
+df.columns = df.columns.str.strip()
+df = df.fillna(0)
+
 # =========================
 # BACKGROUND
 # =========================
@@ -49,15 +53,12 @@ def go(page):
 # =========================
 st.markdown(f"""
 <style>
-
-/* Background */
 [data-testid="stAppViewContainer"] {{
     background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
                 url("data:image/jpg;base64,{bg}");
     background-size: cover;
 }}
 
-/* Container */
 .glass {{
     background: rgba(255,255,255,0.95);
     border-radius: 18px;
@@ -66,7 +67,6 @@ st.markdown(f"""
     margin: auto;
 }}
 
-/* Text */
 html, body {{
     font-size: 18px;
 }}
@@ -81,7 +81,6 @@ input {{
     padding: 10px !important;
 }}
 
-/* Button */
 .stButton>button {{
     height: 55px;
     font-size: 18px;
@@ -94,7 +93,6 @@ input {{
 #MainMenu, footer {{
     visibility: hidden;
 }}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -115,7 +113,7 @@ def navbar():
             go("input")
         if c3.button("📊 HASIL"):
             go("hasil")
-        if c4.button("👥 CLUSTER"):
+        if c4.button("👥 ANGGOTA"):
             go("anggota")
 
 # =========================
@@ -241,20 +239,23 @@ elif st.session_state.page == "hasil":
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# ANGGOTA CLUSTER (DITAMBAH DETAIL BESAR & TEBAL)
+# ANGGOTA CLUSTER
 # =========================
 elif st.session_state.page == "anggota":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Cluster</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
 
     cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
 
-    data_cluster = df[df["Cluster"] == cluster_pilih]
+    # ===== TOP 5 DATA =====
+    data_cluster = df[df["Cluster"] == cluster_pilih] \
+        .sort_values(by="Total Pengaduan", ascending=False) \
+        .head(5)
 
-    st.markdown(f"<h2 style='font-size:30px; font-weight:900;'>📊 Cluster {cluster_pilih}</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='font-size:30px; font-weight:900;'>📊 Cluster {cluster_pilih} (Top 5)</h2>", unsafe_allow_html=True)
 
     html_table = f"""
     <table style="width:100%; border-collapse:collapse; font-size:26px;">
@@ -274,12 +275,12 @@ elif st.session_state.page == "anggota":
     for _, row in data_cluster.iterrows():
         html_table += f"""
         <tr>
-            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Permasalahan","-")}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Permohonan","-")}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Pertanyaan","-")}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan","-")}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row["Asal Instansi"]}</td>
+            <td style="padding:14px; font-weight:800;">{row["Permasalahan"]}</td>
+            <td style="padding:14px; font-weight:800;">{row["Permohonan"]}</td>
+            <td style="padding:14px; font-weight:800;">{row["Pertanyaan"]}</td>
+            <td style="padding:14px; font-weight:800;">{row["Total Pengaduan"]}</td>
+            <td style="padding:14px; font-weight:800;">{row["Kategori Cluster"]}</td>
         </tr>
         """
 
