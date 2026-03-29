@@ -49,7 +49,7 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE (SUDAH DIRAPIKAN)
+# STYLE
 # =========================
 st.markdown(f"""
 <style>
@@ -213,7 +213,6 @@ elif st.session_state.page == "hasil":
 
         st.markdown("### 📋 Data Hasil Clustering")
 
-        # ===== TABEL BESAR (HTML) =====
         html_table = f"""
         <table style="width:100%; border-collapse:collapse; font-size:24px;">
             <thead>
@@ -243,127 +242,35 @@ elif st.session_state.page == "hasil":
 
         st.markdown(html_table, unsafe_allow_html=True)
 
-        # ===== ANALISIS (ENHANCED UI) =====
-if data["cluster"] is not None:
-    cluster = data["cluster"]
+        # ===== ANALISIS =====
+        if data["cluster"] is not None:
+            cluster = data["cluster"]
 
-    st.markdown("<h2 style='font-size:32px; font-weight:800;'>📊 Analisis Clustering</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='font-size:32px; font-weight:800;'>📊 Analisis Clustering</h2>", unsafe_allow_html=True)
 
-    if cluster == 0:
-        st.markdown("""
-        <div style='
-            background: linear-gradient(135deg,#fff8e1,#ffecb3);
-            padding:25px;
-            border-radius:14px;
-            font-size:22px;
-            font-weight:600;
-            line-height:1.8;
-            color:#0d3b66;
-            border-left:10px solid #ff9800;
-            box-shadow:0px 8px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        '>
+            if cluster == 0:
+                st.markdown("<div style='background:#fff3cd; padding:25px; border-radius:12px;'>Cluster 0</div>", unsafe_allow_html=True)
 
-        <div style='font-size:26px; font-weight:900; color:#e65100;'>
-        ⚠️ Cluster 0 – Dominan Permasalahan
-        </div><br>
+            elif cluster == 1:
+                st.markdown("<div style='background:#d1ecf1; padding:25px; border-radius:12px;'>Cluster 1</div>", unsafe_allow_html=True)
 
-        📊 <b>Karakteristik utama:</b> Tingginya jumlah laporan permasalahan yang diajukan oleh instansi.<br><br>
+            elif cluster == 2:
+                st.markdown("<div style='background:#d4edda; padding:25px; border-radius:12px;'>Cluster 2</div>", unsafe_allow_html=True)
 
-        🧠 <b>Interpretasi:</b> Menunjukkan bahwa instansi mengalami kendala atau hambatan dalam layanan yang mereka akses.<br><br>
+            elif cluster == 3:
+                st.markdown("<div style='background:#eeeeee; padding:25px; border-radius:12px;'>Cluster 3</div>", unsafe_allow_html=True)
 
-        🚀 <b>Rekomendasi perbaikan:</b> Perlu peningkatan kualitas layanan serta respon yang lebih cepat dalam penanganan masalah.
+        else:
+            st.error("Data tidak ditemukan")
 
-        </div>
-        """, unsafe_allow_html=True)
+    else:
+        st.warning("Belum ada data")
 
-    elif cluster == 1:
-        st.markdown("""
-        <div style='
-            background: linear-gradient(135deg,#e3f2fd,#bbdefb);
-            padding:25px;
-            border-radius:14px;
-            font-size:22px;
-            font-weight:600;
-            line-height:1.8;
-            color:#0d3b66;
-            border-left:10px solid #0d47a1;
-            box-shadow:0px 8px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        '>
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        <div style='font-size:26px; font-weight:900; color:#0d47a1;'>
-        📌 Cluster 1 – Dominan Permohonan
-        </div><br>
-
-        📊 <b>Karakteristik utama:</b> Tingginya jumlah permohonan layanan atau administrasi.<br><br>
-
-        🧠 <b>Interpretasi:</b> Menunjukkan bahwa instansi pengguna memanfaatkan layanan untuk kebutuhan administratif atau operasional.<br><br>
-
-        🚀 <b>Rekomendasi perbaikan:</b> Optimalisasi sistem layanan agar lebih efisien, cepat, dan mudah diakses.
-
-        </div>
-        """, unsafe_allow_html=True)
-
-    elif cluster == 2:
-        st.markdown("""
-        <div style='
-            background: linear-gradient(135deg,#e8f5e9,#c8e6c9);
-            padding:25px;
-            border-radius:14px;
-            font-size:22px;
-            font-weight:600;
-            line-height:1.8;
-            color:#0d3b66;
-            border-left:10px solid #2e7d32;
-            box-shadow:0px 8px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        '>
-
-        <div style='font-size:26px; font-weight:900; color:#1b5e20;'>
-        ❓ Cluster 2 – Dominan Pertanyaan
-        </div><br>
-
-        📊 <b>Karakteristik utama:</b> Tingginya jumlah pertanyaan atau permintaan informasi.<br><br>
-
-        🧠 <b>Interpretasi:</b> Menunjukkan bahwa instansi pengguna masih membutuhkan kejelasan informasi terkait layanan atau prosedur.<br><br>
-
-        🚀 <b>Rekomendasi perbaikan:</b> Peningkatan kualitas informasi, seperti penyediaan panduan, FAQ, dan transparansi layanan.
-
-        </div>
-        """, unsafe_allow_html=True)
-
-    elif cluster == 3:
-        st.markdown("""
-        <div style='
-            background: linear-gradient(135deg,#f5f5f5,#e0e0e0);
-            padding:25px;
-            border-radius:14px;
-            font-size:22px;
-            font-weight:600;
-            line-height:1.8;
-            color:#0d3b66;
-            border-left:10px solid #616161;
-            box-shadow:0px 8px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        '>
-
-        <div style='font-size:26px; font-weight:900; color:#424242;'>
-        🔀 Cluster 3 – Campuran
-        </div><br>
-
-        📊 <b>Karakteristik utama:</b> Tidak ada kategori pengaduan yang dominan.<br><br>
-
-        🧠 <b>Interpretasi:</b> Menunjukkan bahwa instansi memiliki kebutuhan layanan yang beragam (permasalahan, permohonan, dan pertanyaan).<br><br>
-
-        🚀 <b>Rekomendasi perbaikan:</b> Diperlukan pendekatan layanan yang komprehensif dan menyeluruh.
-
-        </div>
-        """, unsafe_allow_html=True)
-
-else:
-    st.error("Data tidak ditemukan")
-
+# =========================
+# ANGGOTA
+# =========================
 elif st.session_state.page == "anggota":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
@@ -371,44 +278,15 @@ elif st.session_state.page == "anggota":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
 
-    st.markdown("<label style='font-size:28px; font-weight:900;'>Pilih Cluster</label>", unsafe_allow_html=True)
     cluster_pilih = st.selectbox("", sorted(df["Cluster"].unique()))
-
     data_cluster = df[df["Cluster"] == cluster_pilih]
 
-    if "Total Pengaduan" in df.columns:
-        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
-
-    data_cluster = data_cluster.head(5)
-
-    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
-<thead>
-<tr style="background:#0066ff; color:white;">
-<th style="padding:14px;">Asal Instansi</th>
-<th style="padding:14px;">Permasalahan</th>
-<th style="padding:14px;">Permohonan</th>
-<th style="padding:14px;">Pertanyaan</th>
-<th style="padding:14px;">Total Pengaduan</th>
-<th style="padding:14px;">Cluster</th>
-<th style="padding:14px;">Kategori</th>
-</tr>
-</thead>
-<tbody>
-"""
+    html_table = "<table style='width:100%; font-size:26px;'>"
 
     for _, row in data_cluster.iterrows():
-        html_table += f"""<tr>
-<td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
-</tr>
-"""
+        html_table += f"<tr><td>{row['Asal Instansi']}</td></tr>"
 
-    html_table += "</tbody></table>"
+    html_table += "</table>"
 
     st.markdown(html_table, unsafe_allow_html=True)
 
