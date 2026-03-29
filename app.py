@@ -328,3 +328,53 @@ elif st.session_state.page == "hasil":
         st.warning("Belum ada data")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+elif st.session_state.page == "anggota":
+
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
+    navbar()
+
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
+
+    st.markdown("<label style='font-size:28px; font-weight:900;'>Pilih Cluster</label>", unsafe_allow_html=True)
+    cluster_pilih = st.selectbox("", sorted(df["Cluster"].unique()))
+
+    data_cluster = df[df["Cluster"] == cluster_pilih]
+
+    if "Total Pengaduan" in df.columns:
+        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
+
+    data_cluster = data_cluster.head(5)
+
+    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
+<thead>
+<tr style="background:#0066ff; color:white;">
+<th style="padding:14px;">Asal Instansi</th>
+<th style="padding:14px;">Permasalahan</th>
+<th style="padding:14px;">Permohonan</th>
+<th style="padding:14px;">Pertanyaan</th>
+<th style="padding:14px;">Total Pengaduan</th>
+<th style="padding:14px;">Cluster</th>
+<th style="padding:14px;">Kategori</th>
+</tr>
+</thead>
+<tbody>
+"""
+
+    for _, row in data_cluster.iterrows():
+        html_table += f"""<tr>
+<td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
+</tr>
+"""
+
+    html_table += "</tbody></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
