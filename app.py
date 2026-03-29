@@ -277,6 +277,7 @@ elif st.session_state.page == "anggota":
 <th style="padding:14px;">Permohonan</th>
 <th style="padding:14px;">Pertanyaan</th>
 <th style="padding:14px;">Total Pengaduan</th>
+<th style="padding:14px;">Cluster</th>
 <th style="padding:14px;">Kategori</th>
 </tr>
 </thead>
@@ -290,6 +291,7 @@ elif st.session_state.page == "anggota":
 <td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
+<td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
 </tr>
 """
