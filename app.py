@@ -102,37 +102,55 @@ input {{
     visibility: hidden;
 }}
 
+
+
+
+
+
 /* =========================
-   SELECTBOX STYLE (BARU)
+   SELECTBOX SUPER BESAR
    ========================= */
 div[data-baseweb="select"] > div {{
     background-color: #e3f2fd !important;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     border: 2px solid #1e90ff !important;
+    min-height: 65px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 10px !important;
 }}
 
-div[data-baseweb="select"] span {{
-    font-size: 20px !important;
-    font-weight: 800 !important;
+/* TEKS YANG DIPILIH */
+div[data-baseweb="select"] div[role="button"] {{
+    font-size: 26px !important;
+    font-weight: 900 !important;
     color: #0d3b66 !important;
 }}
 
+/* DROPDOWN LIST */
 ul[role="listbox"] {{
-    font-size: 18px !important;
-    font-weight: 700 !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
 }}
 
+/* ITEM HOVER */
 ul[role="listbox"] li:hover {{
     background-color: #bbdefb !important;
 }}
 
+/* HOVER EFFECT BOX */
 div[data-baseweb="select"] > div:hover {{
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0px 6px 16px rgba(0,0,0,0.2);
+}}
+
+/* BACKUP (kalau belum kena styling) */
+div[data-baseweb="select"] * {{
+    font-size: 26px !important;
+    font-weight: 900 !important;
 }}
 
 </style>
 """, unsafe_allow_html=True)
-
 # =========================
 # NAVBAR
 # =========================
