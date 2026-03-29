@@ -25,6 +25,7 @@ def load_data():
         })
 
 df = load_data()
+st.cache_data.clear()
 
 # FIX DATA
 df.columns = df.columns.str.strip()
