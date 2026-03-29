@@ -99,7 +99,7 @@ input {{
 """, unsafe_allow_html=True)
 
 # =========================
-# NAVBAR (DITAMBAH MENU BARU)
+# NAVBAR
 # =========================
 def navbar():
     col1, col2 = st.columns([2,3])
@@ -115,7 +115,7 @@ def navbar():
             go("input")
         if c3.button("📊 HASIL"):
             go("hasil")
-        if c4.button("👥 ANGGOTA"):
+        if c4.button("👥 CLUSTER"):
             go("anggota")
 
 # =========================
@@ -241,21 +241,50 @@ elif st.session_state.page == "hasil":
     st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# HALAMAN BARU: ANGGOTA CLUSTER
+# ANGGOTA CLUSTER (DITAMBAH DETAIL BESAR & TEBAL)
 # =========================
 elif st.session_state.page == "anggota":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:40px;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Cluster</h1>", unsafe_allow_html=True)
 
     cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
 
     data_cluster = df[df["Cluster"] == cluster_pilih]
 
-    st.markdown(f"### 📊 Daftar Instansi pada Cluster {cluster_pilih}")
+    st.markdown(f"<h2 style='font-size:30px; font-weight:900;'>📊 Cluster {cluster_pilih}</h2>", unsafe_allow_html=True)
 
-    st.dataframe(data_cluster, use_container_width=True)
+    html_table = f"""
+    <table style="width:100%; border-collapse:collapse; font-size:26px;">
+        <thead>
+            <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
+                <th style="padding:14px;">Asal Instansi</th>
+                <th style="padding:14px;">Permasalahan</th>
+                <th style="padding:14px;">Permohonan</th>
+                <th style="padding:14px;">Pertanyaan</th>
+                <th style="padding:14px;">Total Pengaduan</th>
+                <th style="padding:14px;">Kategori</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+
+    for _, row in data_cluster.iterrows():
+        html_table += f"""
+        <tr>
+            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Permasalahan","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Permohonan","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Pertanyaan","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan","-")}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
+        </tr>
+        """
+
+    html_table += "</tbody></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
