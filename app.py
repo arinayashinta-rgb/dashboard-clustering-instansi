@@ -26,7 +26,7 @@ def load_data():
 
 df = load_data()
 
-# ===== FIX DATA (ANTI ERROR) =====
+# FIX DATA
 df.columns = df.columns.str.strip()
 df = df.fillna(0)
 
@@ -117,6 +117,19 @@ def navbar():
             go("anggota")
 
 # =========================
+# FUNCTION WARNA CLUSTER
+# =========================
+def get_color(cluster):
+    if cluster == 0:
+        return "#fff3cd"
+    elif cluster == 1:
+        return "#d1ecf1"
+    elif cluster == 2:
+        return "#d4edda"
+    else:
+        return "#eeeeee"
+
+# =========================
 # HOME
 # =========================
 if st.session_state.page == "home":
@@ -201,13 +214,14 @@ elif st.session_state.page == "hasil":
 
     if "hasil" in st.session_state:
         data = st.session_state.hasil
+        color = get_color(data["cluster"])
 
         st.markdown("### 📋 Data Hasil Clustering")
 
         html_table = f"""
-        <table style="width:100%; border-collapse:collapse; font-size:24px;">
+        <table style="width:100%; border-collapse:collapse; font-size:24px; background:{color};">
             <thead>
-                <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
+                <tr style="background:#0066ff; color:white;">
                     <th style="padding:12px;">Nama Instansi</th>
                     <th style="padding:12px;">Total Pengaduan</th>
                     <th style="padding:12px;">Permasalahan</th>
@@ -249,33 +263,30 @@ elif st.session_state.page == "anggota":
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Cluster</h1>", unsafe_allow_html=True)
 
     cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
+    color = get_color(cluster_pilih)
 
     data_cluster = df[df["Cluster"] == cluster_pilih]
 
-    # ===== SORT AMAN (ANTI ERROR) =====
     if "Total Pengaduan" in df.columns:
         data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
     elif "Total_Pengaduan" in df.columns:
         data_cluster = data_cluster.sort_values(by="Total_Pengaduan", ascending=False)
 
-    # ===== AMBIL 5 DATA =====
     data_cluster = data_cluster.head(5)
 
-    st.markdown(f"<h2 style='font-size:30px; font-weight:900;'>📊 Cluster {cluster_pilih} (Top 5)</h2>", unsafe_allow_html=True)
-
     html_table = f"""
-    <table style="width:100%; border-collapse:collapse; font-size:26px;">
-        <thead>
-            <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
-                <th style="padding:14px;">Asal Instansi</th>
-                <th style="padding:14px;">Permasalahan</th>
-                <th style="padding:14px;">Permohonan</th>
-                <th style="padding:14px;">Pertanyaan</th>
-                <th style="padding:14px;">Total Pengaduan</th>
-                <th style="padding:14px;">Kategori</th>
-            </tr>
-        </thead>
-        <tbody>
+    <table style="width:100%; border-collapse:collapse; font-size:26px; background:{color};">
+    <thead>
+        <tr style="background:#0066ff; color:white;">
+            <th style="padding:14px;">Asal Instansi</th>
+            <th style="padding:14px;">Permasalahan</th>
+            <th style="padding:14px;">Permohonan</th>
+            <th style="padding:14px;">Pertanyaan</th>
+            <th style="padding:14px;">Total Pengaduan</th>
+            <th style="padding:14px;">Kategori</th>
+        </tr>
+    </thead>
+    <tbody>
     """
 
     for _, row in data_cluster.iterrows():
