@@ -49,44 +49,44 @@ def go(page):
     st.session_state.page = page
 
 # =========================
-# STYLE
+# STYLE (FIX ERROR DI SINI)
 # =========================
-st.markdown(f"""
+st.markdown("""
 <style>
-[data-testid="stAppViewContainer"] {{
+[data-testid="stAppViewContainer"] {
     background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
-                url("data:image/jpg;base64,{bg}");
+                url("data:image/jpg;base64,""" + bg + """);
     background-size: cover;
-}}
+}
 
-.glass {{
+.glass {
     background: rgba(255,255,255,0.95);
     border-radius: 18px;
     padding: 50px;
     max-width: 1200px;
     margin: auto;
-}}
+}
 
-html, body {{
+html, body {
     font-size: 18px;
-}}
+}
 
-input {{
+input {
     font-size: 20px !important;
     padding: 12px !important;
     border-radius: 10px !important;
-}}
+}
 
-.stButton>button {{
+.stButton>button {
     height: 55px;
     font-size: 18px;
     font-weight: 700;
     border-radius: 30px;
     background: linear-gradient(90deg, #1e90ff, #0066ff);
     color: white;
-}}
+}
 
-.stForm button {{
+.stForm button {
     height: 60px !important;
     font-size: 22px !important;
     font-weight: 900 !important;
@@ -95,9 +95,9 @@ input {{
     color: white !important;
 }
 
-#MainMenu, footer {{
+#MainMenu, footer {
     visibility: hidden;
-}}
+}
 </style>
 """, unsafe_allow_html=True)
 
