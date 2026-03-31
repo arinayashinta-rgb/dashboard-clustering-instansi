@@ -495,18 +495,45 @@ elif st.session_state.page == "dataset":
     # =========================
     st.dataframe(df_page, use_container_width=True)
 
-    # =========================
-    # NAVIGASI NOMOR HALAMAN
-    # =========================
-    st.markdown("<br>", unsafe_allow_html=True)
+   # =========================
+   # NAVIGASI NOMOR HALAMAN (RAPI)
+   # =========================
+   st.markdown("<br>", unsafe_allow_html=True)
 
-    cols = st.columns(total_pages)
+   max_buttons = 5  # jumlah tombol yang tampil
 
-    for i in range(total_pages):
-        with cols[i]:
-            label = f"🔵 {i+1}" if i == st.session_state.page_dataset else f"{i+1}"
-            if st.button(label):
-                st.session_state.page_dataset = i
+   current = st.session_state.page_dataset
+
+   start_page = max(0, current - 2)
+   end_page = min(total_pages, start_page + max_buttons)
+
+   if end_page - start_page < max_buttons:
+    start_page = max(0, end_page - max_buttons)
+
+   cols = st.columns((end_page - start_page) + 2)
+
+   col_idx = 0
+
+   # tombol awal (...)
+   if start_page > 0:
+    with cols[col_idx]:
+        if st.button("..."):
+            st.session_state.page_dataset = start_page - 1
+    col_idx += 1
+
+   # tombol angka halaman
+   for i in range(start_page, end_page):
+    with cols[col_idx]:
+        label = f"🔵 {i+1}" if i == current else f"{i+1}"
+        if st.button(label):
+            st.session_state.page_dataset = i
+    col_idx += 1
+
+   # tombol akhir (...)
+   if end_page < total_pages:
+    with cols[col_idx]:
+        if st.button("... "):
+            st.session_state.page_dataset = end_page
 
     # =========================
     # INFO HALAMAN
