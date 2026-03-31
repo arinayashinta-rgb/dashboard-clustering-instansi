@@ -464,15 +464,14 @@ elif st.session_state.page == "dataset":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
 
-    st.markdown("<h3 style='font-size:28px;'>Tabel Data</h3>", unsafe_allow_html=True)
+    # filter kolom
+    df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
-    # tampilkan dataframe
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(df_tampil, use_container_width=True)
 
-    # optional: info jumlah data
     st.markdown(f"""
     <div style='font-size:22px; font-weight:600; margin-top:20px;'>
-    Total Data: {len(df)} baris
+    Total Data: {len(df_tampil)} baris
     </div>
     """, unsafe_allow_html=True)
 
