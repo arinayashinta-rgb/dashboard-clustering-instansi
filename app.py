@@ -458,21 +458,131 @@ elif st.session_state.page == "anggota":
 # =========================
 # DATASET
 # =========================
+# =========================
+# DATASET
+# =========================
 elif st.session_state.page == "dataset":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:42px; font-weight:900; color:#0d3b66;'>📂 DATASET</h1>", unsafe_allow_html=True)
 
-    # filter kolom
+    # =========================
+    # FILTER KOLOM
+    # =========================
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
-    st.dataframe(df_tampil, use_container_width=True)
+    # =========================
+    # PAGINATION
+    # =========================
+    rows_per_page = 10
+    total_rows = len(df_tampil)
+    total_pages = (total_rows - 1) // rows_per_page + 1
 
+    if "page_dataset" not in st.session_state:
+        st.session_state.page_dataset = 0
+
+    current_page = st.session_state.page_dataset
+
+    start = current_page * rows_per_page
+    end = start + rows_per_page
+    df_page = df_tampil.iloc[start:end]
+
+    # =========================
+    # TABEL CUSTOM (BESAR & BOLD)
+    # =========================
+    html_table = """
+    <table style="width:100%; border-collapse:collapse; font-size:22px;">
+    <thead>
+    <tr style="background:#1565d8; color:white;">
+        <th style="padding:16px; text-align:left;">Asal Instansi</th>
+        <th style="padding:16px;">Permasalahan</th>
+        <th style="padding:16px;">Permohonan</th>
+        <th style="padding:16px;">Pertanyaan</th>
+        <th style="padding:16px;">Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    """
+
+    for _, row in df_page.iterrows():
+        html_table += f"""
+        <tr style="border-bottom:1px solid #ddd;"
+            onmouseover="this.style.background='#f1f8ff'"
+            onmouseout="this.style.background='white'">
+
+            <td style="padding:14px; font-weight:800;">
+                {row.get("Asal Instansi","-")}
+            </td>
+
+            <td style="padding:14px; font-weight:700;">
+                {row.get("Permasalahan",0)}
+            </td>
+
+            <td style="padding:14px; font-weight:700;">
+                {row.get("Permohonan",0)}
+            </td>
+
+            <td style="padding:14px; font-weight:700;">
+                {row.get("Pertanyaan",0)}
+            </td>
+
+            <td style="padding:14px; font-weight:900;">
+                {row.get("Total Pengaduan",0)}
+            </td>
+
+        </tr>
+        """
+
+    html_table += "</tbody></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
+
+    # =========================
+    # SPASI
+    # =========================
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # =========================
+    # PAGINATION RAPI
+    # =========================
+    max_buttons = 5
+
+    start_page = max(0, current_page - 2)
+    end_page = min(total_pages, start_page + max_buttons)
+
+    if end_page - start_page < max_buttons:
+        start_page = max(0, end_page - max_buttons)
+
+    cols = st.columns((end_page - start_page) + 2)
+
+    col_idx = 0
+
+    if start_page > 0:
+        with cols[col_idx]:
+            if st.button("..."):
+                st.session_state.page_dataset = start_page - 1
+        col_idx += 1
+
+    for i in range(start_page, end_page):
+        with cols[col_idx]:
+            label = f"🔵 {i+1}" if i == current_page else f"{i+1}"
+            if st.button(label):
+                st.session_state.page_dataset = i
+        col_idx += 1
+
+    if end_page < total_pages:
+        with cols[col_idx]:
+            if st.button("... "):
+                st.session_state.page_dataset = end_page
+
+    # =========================
+    # INFO HALAMAN
+    # =========================
     st.markdown(f"""
-    <div style='font-size:22px; font-weight:600; margin-top:20px;'>
-    Total Data: {len(df_tampil)} baris
+    <div style='text-align:center; font-size:26px; font-weight:900; margin-top:15px; color:#0d3b66;'>
+    HALAMAN {current_page + 1} DARI {total_pages}
     </div>
     """, unsafe_allow_html=True)
 
