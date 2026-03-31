@@ -289,34 +289,31 @@ elif st.session_state.page == "hasil":
         st.markdown("### 📋 Data Hasil Clustering")
 
         # ===== TABEL BESAR =====
-        html_table = f"""
-        <table style="width:100%; border-collapse:collapse; font-size:24px;">
-            <thead>
-                <tr style="background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;">
-                    <th style="padding:12px;">Nama Instansi</th>
-                    <th style="padding:12px;">Total Pengaduan</th>
-                    <th style="padding:12px;">Permasalahan</th>
-                    <th style="padding:12px;">Permohonan</th>
-                    <th style="padding:12px;">Pertanyaan</th>
-                    <th style="padding:12px;">Cluster</th>
-                    <th style="padding:12px;">Kategori</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding:12px; font-weight:700;">{data["nama"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["total"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["permasalahan"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["permohonan"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["pertanyaan"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["cluster"]}</td>
-                    <td style="padding:12px; font-weight:700;">{data["kategori"]}</td>
-                </tr>
-            </tbody>
-        </table>
-        """
+       html_table = "<table style='width:100%; border-collapse:collapse; font-size:24px;'>"
 
-        st.markdown(html_table, unsafe_allow_html=True)
+       html_table += "<thead><tr style='background:linear-gradient(90deg,#1e90ff,#0066ff); color:white;'>"
+       html_table += "<th style='padding:12px;'>Nama Instansi</th>"
+       html_table += "<th style='padding:12px;'>Total Pengaduan</th>"
+       html_table += "<th style='padding:12px;'>Permasalahan</th>"
+       html_table += "<th style='padding:12px;'>Permohonan</th>"
+       html_table += "<th style='padding:12px;'>Pertanyaan</th>"
+       html_table += "<th style='padding:12px;'>Cluster</th>"
+       html_table += "<th style='padding:12px;'>Kategori</th>"
+       html_table += "</tr></thead><tbody>"
+
+       html_table += "<tr>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['nama']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['total']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['permasalahan']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['permohonan']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['pertanyaan']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['cluster']}</td>"
+       html_table += f"<td style='padding:12px; font-weight:700;'>{data['kategori']}</td>"
+       html_table += "</tr>"
+
+       html_table += "</tbody></table>"
+
+       st.markdown(html_table, unsafe_allow_html=True)
 
         # ===== ANALISIS =====
         if data["cluster"] is not None:
@@ -430,42 +427,32 @@ elif st.session_state.page == "anggota":
     data_page = data_cluster.iloc[start:end]
 
     # ===== TABEL =====
-    html_table = """
-    <table style="width:100%; border-collapse:collapse; font-size:22px;">
-    <thead>
-    <tr style="background:#1565d8; color:white;">
-        <th style="padding:16px;">Asal Instansi</th>
-        <th style="padding:16px;">Permasalahan</th>
-        <th style="padding:16px;">Permohonan</th>
-        <th style="padding:16px;">Pertanyaan</th>
-        <th style="padding:16px;">Total</th>
-        <th style="padding:16px;">Cluster</th>
-        <th style="padding:16px;">Kategori</th>
-    </tr>
-    </thead>
-    <tbody>
-    """
+   html_table = "<table style='width:100%; border-collapse:collapse; font-size:22px;'>"
 
-    for _, row in data_page.iterrows():
-        html_table += f"""
-        <tr style="border-bottom:1px solid #ddd;"
-            onmouseover="this.style.background='#f1f8ff'"
-            onmouseout="this.style.background='white'">
-            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Permasalahan",0)}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Permohonan",0)}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Pertanyaan",0)}</td>
-            <td style="padding:14px; font-weight:900;">{row.get("Total Pengaduan",0)}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
-            <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
-        </tr>
-        """
+   html_table += "<thead><tr style='background:#1565d8; color:white;'>"
+   html_table += "<th style='padding:16px;'>Asal Instansi</th>"
+   html_table += "<th style='padding:16px;'>Permasalahan</th>"
+   html_table += "<th style='padding:16px;'>Permohonan</th>"
+   html_table += "<th style='padding:16px;'>Pertanyaan</th>"
+   html_table += "<th style='padding:16px;'>Total</th>"
+   html_table += "<th style='padding:16px;'>Cluster</th>"
+   html_table += "<th style='padding:16px;'>Kategori</th>"
+   html_table += "</tr></thead><tbody>"
 
-    html_table += "</tbody></table>"
+   for _, row in data_page.iterrows():
+       html_table += "<tr style='border-bottom:1px solid #ddd;'>"
+       html_table += f"<td style='padding:14px; font-weight:800;'>{row.get('Asal Instansi','-')}</td>"
+       html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Permasalahan',0)}</td>"
+       html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Permohonan',0)}</td>"
+       html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Pertanyaan',0)}</td>"
+       html_table += f"<td style='padding:14px; font-weight:900;'>{row.get('Total Pengaduan',0)}</td>"
+       html_table += f"<td style='padding:14px; font-weight:800;'>{row.get('Cluster',0)}</td>"
+       html_table += f"<td style='padding:14px; font-weight:800;'>{row.get('Kategori Cluster','-')}</td>"
+       html_table += "</tr>"
 
-    st.markdown(html_table, unsafe_allow_html=True)
+   html_table += "</tbody></table>"
 
-    st.markdown("<br>", unsafe_allow_html=True)
+   st.markdown(html_table, unsafe_allow_html=True)
 
 # =========================
 # DATASET
@@ -503,31 +490,26 @@ elif st.session_state.page == "dataset":
     # =========================
     html_table = "<table style='width:100%; border-collapse:collapse; font-size:22px;'>"
 
-    html_table += """
-    <thead>
-    <tr style="background:#1565d8; color:white;">
-        <th style="padding:16px; text-align:left;">Asal Instansi</th>
-        <th style="padding:16px;">Permasalahan</th>
-        <th style="padding:16px;">Permohonan</th>
-        <th style="padding:16px;">Pertanyaan</th>
-        <th style="padding:16px;">Total</th>
-    </tr>
-    </thead>
-    <tbody>
-    """
+    html_table += "<thead><tr style='background:#1565d8; color:white;'>"
+    html_table += "<th style='padding:16px;'>Asal Instansi</th>"
+    html_table += "<th style='padding:16px;'>Permasalahan</th>"
+    html_table += "<th style='padding:16px;'>Permohonan</th>"
+    html_table += "<th style='padding:16px;'>Pertanyaan</th>"
+    html_table += "<th style='padding:16px;'>Total</th>"
+    html_table += "</tr></thead><tbody>"
 
     for _, row in df_page.iterrows():
-        html_table += f"""
-        <tr style="border-bottom:1px solid #ddd;">
-            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Permasalahan",0)}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Permohonan",0)}</td>
-            <td style="padding:14px; font-weight:700;">{row.get("Pertanyaan",0)}</td>
-            <td style="padding:14px; font-weight:900;">{row.get("Total Pengaduan",0)}</td>
-        </tr>
-        """
+        html_table += "<tr style='border-bottom:1px solid #ddd;'>"
+        html_table += f"<td style='padding:14px; font-weight:800;'>{row.get('Asal Instansi','-')}</td>"
+        html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Permasalahan',0)}</td>"
+        html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Permohonan',0)}</td>"
+        html_table += f"<td style='padding:14px; font-weight:700;'>{row.get('Pertanyaan',0)}</td>"
+        html_table += f"<td style='padding:14px; font-weight:900;'>{row.get('Total Pengaduan',0)}</td>"
+        html_table += "</tr>"
 
     html_table += "</tbody></table>"
+
+    st.markdown(html_table, unsafe_allow_html=True)
 
     # =========================
     # RENDER (INI KUNCI UTAMA)
