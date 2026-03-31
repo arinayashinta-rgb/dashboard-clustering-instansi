@@ -421,14 +421,10 @@ elif st.session_state.page == "anggota":
 
     data_cluster = data_cluster.head(5)
 
-    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
+    html_table = """<table style="width:100%; border-collapse:collapse; font-size:20px;">
 <thead>
 <tr style="background:#0066ff; color:white;">
 <th style="padding:14px;">Asal Instansi</th>
-<th style="padding:14px;">Permasalahan</th>
-<th style="padding:14px;">Permohonan</th>
-<th style="padding:14px;">Pertanyaan</th>
-<th style="padding:14px;">Total Pengaduan</th>
 <th style="padding:14px;">Cluster</th>
 <th style="padding:14px;">Kategori</th>
 </tr>
@@ -439,10 +435,6 @@ elif st.session_state.page == "anggota":
     for _, row in data_cluster.iterrows():
         html_table += f"""<tr>
 <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
 </tr>
@@ -457,29 +449,47 @@ elif st.session_state.page == "anggota":
 # =========================
 # DATASET
 # =========================
-# =========================
-# DATASET
-# =========================
 elif st.session_state.page == "dataset":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
     # =========================
-    # STYLE TAMBAHAN (BOLD UI)
+    # CSS SUPER KUAT (PASTI KEAPPLY)
     # =========================
     st.markdown("""
     <style>
-    .stButton>button {
+
+    /* ===== TOMBOL ===== */
+    .stButton button {
         font-weight: 900 !important;
         font-size: 18px !important;
         border-radius: 30px !important;
         height: 45px !important;
     }
 
-    [data-testid="stDataFrame"] div {
-        font-weight: 600;
+    /* ===== DATAFRAME ISI ===== */
+    [data-testid="stDataFrame"] * {
+        font-weight: 600 !important;
+        font-size: 16px !important;
     }
+
+    /* ===== HEADER TABEL ===== */
+    [data-testid="stDataFrame"] thead tr th {
+        font-weight: 900 !important;
+        font-size: 18px !important;
+    }
+
+    /* ===== INFO HALAMAN ===== */
+    .page-info {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 900;
+        color: #0d3b66;
+        margin-top: 15px;
+        letter-spacing: 1px;
+    }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -494,7 +504,7 @@ elif st.session_state.page == "dataset":
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
     # =========================
-    # PAGINATION SETTING
+    # PAGINATION
     # =========================
     rows_per_page = 10
     total_rows = len(df_tampil)
@@ -510,7 +520,6 @@ elif st.session_state.page == "dataset":
     # =========================
     start = current_page * rows_per_page
     end = start + rows_per_page
-
     df_page = df_tampil.iloc[start:end]
 
     # =========================
@@ -518,9 +527,6 @@ elif st.session_state.page == "dataset":
     # =========================
     st.dataframe(df_page, use_container_width=True)
 
-    # =========================
-    # SPASI
-    # =========================
     st.markdown("<br>", unsafe_allow_html=True)
 
     # =========================
@@ -538,14 +544,14 @@ elif st.session_state.page == "dataset":
 
     col_idx = 0
 
-    # tombol awal (...)
+    # tombol ...
     if start_page > 0:
         with cols[col_idx]:
             if st.button("..."):
                 st.session_state.page_dataset = start_page - 1
         col_idx += 1
 
-    # tombol angka halaman
+    # tombol angka
     for i in range(start_page, end_page):
         with cols[col_idx]:
             label = f"🔵 {i+1}" if i == current_page else f"{i+1}"
@@ -553,17 +559,17 @@ elif st.session_state.page == "dataset":
                 st.session_state.page_dataset = i
         col_idx += 1
 
-    # tombol akhir (...)
+    # tombol ...
     if end_page < total_pages:
         with cols[col_idx]:
             if st.button("... "):
                 st.session_state.page_dataset = end_page
 
     # =========================
-    # INFO HALAMAN (SUPER BOLD)
+    # INFO HALAMAN
     # =========================
     st.markdown(f"""
-    <div style='text-align:center; font-size:24px; font-weight:900; margin-top:15px; color:#0d3b66; letter-spacing:1px;'>
+    <div class="page-info">
     HALAMAN {current_page + 1} DARI {total_pages}
     </div>
     """, unsafe_allow_html=True)
