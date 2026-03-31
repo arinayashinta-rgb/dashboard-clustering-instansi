@@ -73,7 +73,7 @@ html, body {{
 }}
 
 /* =========================
-   INPUT BOX (TERANG)
+   INPUT BOX
    ========================= */
 input[type="text"] {{
     background-color: #f1f8ff !important;
@@ -318,7 +318,7 @@ elif st.session_state.page == "hasil":
 
         st.markdown(html_table, unsafe_allow_html=True)
 
-        # ===== ANALISIS (FIX TOTAL) =====
+        # ===== ANALISIS =====
         if data["cluster"] is not None:
             cluster = data["cluster"]
 
@@ -411,40 +411,61 @@ elif st.session_state.page == "anggota":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>👥 Anggota Cluster</h1>", unsafe_allow_html=True)
 
-    st.markdown("<label style='font-size:28px; font-weight:900;'>Pilih Cluster</label>", unsafe_allow_html=True)
-    cluster_pilih = st.selectbox("", sorted(df["Cluster"].unique()))
+    cluster_pilih = st.selectbox("Pilih Cluster", sorted(df["Cluster"].unique()))
 
     data_cluster = df[df["Cluster"] == cluster_pilih]
 
-    if "Total Pengaduan" in df.columns:
-        data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
+    rows_per_page = 10
+    total_rows = len(data_cluster)
+    total_pages = (total_rows - 1) // rows_per_page + 1
 
-    data_cluster = data_cluster.head(5)
+    if "page_anggota" not in st.session_state:
+        st.session_state.page_anggota = 0
 
-    html_table = """<table style="width:100%; border-collapse:collapse; font-size:20px;">
-<thead>
-<tr style="background:#0066ff; color:white;">
-<th style="padding:14px;">Asal Instansi</th>
-<th style="padding:14px;">Cluster</th>
-<th style="padding:14px;">Kategori</th>
-</tr>
-</thead>
-<tbody>
-"""
+    current_page = st.session_state.page_anggota
 
-    for _, row in data_cluster.iterrows():
-        html_table += f"""<tr>
-<td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
-</tr>
-"""
+    start = current_page * rows_per_page
+    end = start + rows_per_page
+
+    data_page = data_cluster.iloc[start:end]
+
+    # ===== TABEL =====
+    html_table = """
+    <table style="width:100%; border-collapse:collapse; font-size:22px;">
+    <thead>
+    <tr style="background:#1565d8; color:white;">
+        <th style="padding:16px;">Asal Instansi</th>
+        <th style="padding:16px;">Permasalahan</th>
+        <th style="padding:16px;">Permohonan</th>
+        <th style="padding:16px;">Pertanyaan</th>
+        <th style="padding:16px;">Total</th>
+        <th style="padding:16px;">Cluster</th>
+        <th style="padding:16px;">Kategori</th>
+    </tr>
+    </thead>
+    <tbody>
+    """
+
+    for _, row in data_page.iterrows():
+        html_table += f"""
+        <tr style="border-bottom:1px solid #ddd;"
+            onmouseover="this.style.background='#f1f8ff'"
+            onmouseout="this.style.background='white'">
+            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Permasalahan",0)}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Permohonan",0)}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Pertanyaan",0)}</td>
+            <td style="padding:14px; font-weight:900;">{row.get("Total Pengaduan",0)}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
+            <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
+        </tr>
+        """
 
     html_table += "</tbody></table>"
 
     st.markdown(html_table, unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
 # =========================
 # DATASET
@@ -456,14 +477,8 @@ elif st.session_state.page == "dataset":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900; color:#0d3b66;'>📂 DATASET</h1>", unsafe_allow_html=True)
 
-    # =========================
-    # FILTER KOLOM
-    # =========================
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
-    # =========================
-    # PAGINATION
-    # =========================
     rows_per_page = 10
     total_rows = len(df_tampil)
     total_pages = (total_rows - 1) // rows_per_page + 1
@@ -475,11 +490,10 @@ elif st.session_state.page == "dataset":
 
     start = current_page * rows_per_page
     end = start + rows_per_page
+
     df_page = df_tampil.iloc[start:end]
 
-    # =========================
-    # TABEL CUSTOM (BESAR & BOLD)
-    # =========================
+    # ===== TABEL =====
     html_table = """
     <table style="width:100%; border-collapse:collapse; font-size:22px;">
     <thead>
@@ -499,27 +513,11 @@ elif st.session_state.page == "dataset":
         <tr style="border-bottom:1px solid #ddd;"
             onmouseover="this.style.background='#f1f8ff'"
             onmouseout="this.style.background='white'">
-
-            <td style="padding:14px; font-weight:800;">
-                {row.get("Asal Instansi","-")}
-            </td>
-
-            <td style="padding:14px; font-weight:700;">
-                {row.get("Permasalahan",0)}
-            </td>
-
-            <td style="padding:14px; font-weight:700;">
-                {row.get("Permohonan",0)}
-            </td>
-
-            <td style="padding:14px; font-weight:700;">
-                {row.get("Pertanyaan",0)}
-            </td>
-
-            <td style="padding:14px; font-weight:900;">
-                {row.get("Total Pengaduan",0)}
-            </td>
-
+            <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Permasalahan",0)}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Permohonan",0)}</td>
+            <td style="padding:14px; font-weight:700;">{row.get("Pertanyaan",0)}</td>
+            <td style="padding:14px; font-weight:900;">{row.get("Total Pengaduan",0)}</td>
         </tr>
         """
 
@@ -527,51 +525,4 @@ elif st.session_state.page == "dataset":
 
     st.markdown(html_table, unsafe_allow_html=True)
 
-    # =========================
-    # SPASI
-    # =========================
     st.markdown("<br>", unsafe_allow_html=True)
-
-    # =========================
-    # PAGINATION RAPI
-    # =========================
-    max_buttons = 5
-
-    start_page = max(0, current_page - 2)
-    end_page = min(total_pages, start_page + max_buttons)
-
-    if end_page - start_page < max_buttons:
-        start_page = max(0, end_page - max_buttons)
-
-    cols = st.columns((end_page - start_page) + 2)
-
-    col_idx = 0
-
-    if start_page > 0:
-        with cols[col_idx]:
-            if st.button("..."):
-                st.session_state.page_dataset = start_page - 1
-        col_idx += 1
-
-    for i in range(start_page, end_page):
-        with cols[col_idx]:
-            label = f"🔵 {i+1}" if i == current_page else f"{i+1}"
-            if st.button(label):
-                st.session_state.page_dataset = i
-        col_idx += 1
-
-    if end_page < total_pages:
-        with cols[col_idx]:
-            if st.button("... "):
-                st.session_state.page_dataset = end_page
-
-    # =========================
-    # INFO HALAMAN
-    # =========================
-    st.markdown(f"""
-    <div style='text-align:center; font-size:26px; font-weight:900; margin-top:15px; color:#0d3b66;'>
-    HALAMAN {current_page + 1} DARI {total_pages}
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
