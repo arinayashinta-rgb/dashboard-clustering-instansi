@@ -465,83 +465,14 @@ elif st.session_state.page == "dataset":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
 
-    # =========================
-    # FILTER KOLOM
-    # =========================
+    # filter kolom
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
-    # =========================
-    # PAGINATION SETTING
-    # =========================
-    rows_per_page = 10
-    total_rows = len(df_tampil)
-    total_pages = (total_rows - 1) // rows_per_page + 1
+    st.dataframe(df_tampil, use_container_width=True)
 
-    if "page_dataset" not in st.session_state:
-        st.session_state.page_dataset = 0
-
-    current_page = st.session_state.page_dataset
-
-    # =========================
-    # SLICE DATA
-    # =========================
-    start = current_page * rows_per_page
-    end = start + rows_per_page
-
-    df_page = df_tampil.iloc[start:end]
-
-    # =========================
-    # TABEL
-    # =========================
-    st.dataframe(df_page, use_container_width=True)
-
-    # =========================
-    # SPASI
-    # =========================
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # =========================
-    # PAGINATION RAPI (MAX 5)
-    # =========================
-    max_buttons = 5
-
-    start_page = max(0, current_page - 2)
-    end_page = min(total_pages, start_page + max_buttons)
-
-    if end_page - start_page < max_buttons:
-        start_page = max(0, end_page - max_buttons)
-
-    cols = st.columns((end_page - start_page) + 2)
-
-    col_idx = 0
-
-    # tombol awal (...)
-    if start_page > 0:
-        with cols[col_idx]:
-            if st.button("..."):
-                st.session_state.page_dataset = start_page - 1
-        col_idx += 1
-
-    # tombol angka halaman
-    for i in range(start_page, end_page):
-        with cols[col_idx]:
-            label = f"🔵 {i+1}" if i == current_page else f"{i+1}"
-            if st.button(label):
-                st.session_state.page_dataset = i
-        col_idx += 1
-
-    # tombol akhir (...)
-    if end_page < total_pages:
-        with cols[col_idx]:
-            if st.button("... "):
-                st.session_state.page_dataset = end_page
-
-    # =========================
-    # INFO HALAMAN
-    # =========================
     st.markdown(f"""
-    <div style='text-align:center; font-size:22px; font-weight:700; margin-top:15px;'>
-    Halaman {current_page + 1} dari {total_pages}
+    <div style='font-size:22px; font-weight:600; margin-top:20px;'>
+    Total Data: {len(df_tampil)} baris
     </div>
     """, unsafe_allow_html=True)
 
