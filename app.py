@@ -457,6 +457,9 @@ elif st.session_state.page == "anggota":
 # =========================
 # DATASET
 # =========================
+# =========================
+# DATASET
+# =========================
 elif st.session_state.page == "dataset":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
@@ -465,7 +468,7 @@ elif st.session_state.page == "dataset":
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
 
     # =========================
-    # FILTER KOLOM
+    # FILTER KOLOM (HAPUS CLUSTER)
     # =========================
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
@@ -493,17 +496,17 @@ elif st.session_state.page == "dataset":
     st.dataframe(df_page, use_container_width=True)
 
     # =========================
-    # NAVIGATION BUTTON
+    # NAVIGASI NOMOR HALAMAN
     # =========================
-    col1, col2, col3 = st.columns([1,2,1])
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with col1:
-        if st.button("⬅️ Prev") and st.session_state.page_dataset > 0:
-            st.session_state.page_dataset -= 1
+    cols = st.columns(total_pages)
 
-    with col3:
-        if st.button("Next ➡️") and st.session_state.page_dataset < total_pages - 1:
-            st.session_state.page_dataset += 1
+    for i in range(total_pages):
+        with cols[i]:
+            label = f"🔵 {i+1}" if i == st.session_state.page_dataset else f"{i+1}"
+            if st.button(label):
+                st.session_state.page_dataset = i
 
     # =========================
     # INFO HALAMAN
