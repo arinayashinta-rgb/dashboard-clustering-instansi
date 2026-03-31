@@ -197,6 +197,8 @@ def navbar():
             go("hasil")
         if c4.button("👥 CLUSTER"):
             go("anggota")
+        if c5.button("📂 DATASET"):   # tombol baru
+            go("dataset")
 
 # =========================
 # HOME
@@ -449,5 +451,29 @@ elif st.session_state.page == "anggota":
     html_table += "</tbody></table>"
 
     st.markdown(html_table, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# DATASET
+# =========================
+elif st.session_state.page == "dataset":
+
+    st.markdown('<div class="glass">', unsafe_allow_html=True)
+    navbar()
+
+    st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
+
+    st.markdown("<h3 style='font-size:28px;'>Tabel Data</h3>", unsafe_allow_html=True)
+
+    # tampilkan dataframe
+    st.dataframe(df, use_container_width=True)
+
+    # optional: info jumlah data
+    st.markdown(f"""
+    <div style='font-size:22px; font-weight:600; margin-top:20px;'>
+    Total Data: {len(df)} baris
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
