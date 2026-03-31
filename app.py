@@ -197,7 +197,7 @@ def navbar():
             go("hasil")
         if c4.button("👥 CLUSTER"):
             go("anggota")
-        if c5.button("📂 DATASET"):   # tombol baru
+        if c5.button("📂 DATASET"):   
             go("dataset")
 
 # =========================
@@ -288,7 +288,7 @@ elif st.session_state.page == "hasil":
 
         st.markdown("### 📋 Data Hasil Clustering")
 
-        # ===== TABEL BESAR (HTML) =====
+        # ===== TABEL BESAR =====
         html_table = f"""
         <table style="width:100%; border-collapse:collapse; font-size:24px;">
             <thead>
