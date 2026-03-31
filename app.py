@@ -464,14 +464,53 @@ elif st.session_state.page == "dataset":
 
     st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
 
-    # filter kolom
+    # =========================
+    # FILTER KOLOM
+    # =========================
     df_tampil = df.drop(columns=["Cluster", "Kategori Cluster"], errors="ignore")
 
-    st.dataframe(df_tampil, use_container_width=True)
+    # =========================
+    # PAGINATION SETTING
+    # =========================
+    rows_per_page = 10
+    total_rows = len(df_tampil)
+    total_pages = (total_rows - 1) // rows_per_page + 1
 
+    if "page_dataset" not in st.session_state:
+        st.session_state.page_dataset = 0
+
+    # =========================
+    # SLICE DATA
+    # =========================
+    start = st.session_state.page_dataset * rows_per_page
+    end = start + rows_per_page
+
+    df_page = df_tampil.iloc[start:end]
+
+    # =========================
+    # TABEL
+    # =========================
+    st.dataframe(df_page, use_container_width=True)
+
+    # =========================
+    # NAVIGATION BUTTON
+    # =========================
+    col1, col2, col3 = st.columns([1,2,1])
+
+    with col1:
+        if st.button("⬅️ Prev") and st.session_state.page_dataset > 0:
+            st.session_state.page_dataset -= 1
+
+    with col3:
+        if st.button("Next ➡️") and st.session_state.page_dataset < total_pages - 1:
+            st.session_state.page_dataset += 1
+
+    # =========================
+    # INFO HALAMAN
+    # =========================
     st.markdown(f"""
-    <div style='font-size:22px; font-weight:600; margin-top:20px;'>
-    Total Data: {len(df_tampil)} baris
+    <div style='text-align:center; font-size:22px; font-weight:700; margin-top:10px;'>
+    Halaman {st.session_state.page_dataset + 1} dari {total_pages}
     </div>
     """, unsafe_allow_html=True)
 
