@@ -420,16 +420,15 @@ elif st.session_state.page == "anggota":
     if "Total Pengaduan" in df.columns:
         data_cluster = data_cluster.sort_values(by="Total Pengaduan", ascending=False)
 
-    data_cluster = data_cluster.head(5)
+    limit = st.selectbox("Jumlah data", [5, 10, 20, "Semua"])
 
-    html_table = """<table style="width:100%; border-collapse:collapse; font-size:26px;">
+    if limit != "Semua":
+       data_cluster = data_cluster.head(limit)
+
+    html_table = """<table style="width:100%; border-collapse:collapse; font-size:20px;">
 <thead>
 <tr style="background:#0066ff; color:white;">
 <th style="padding:14px;">Asal Instansi</th>
-<th style="padding:14px;">Permasalahan</th>
-<th style="padding:14px;">Permohonan</th>
-<th style="padding:14px;">Pertanyaan</th>
-<th style="padding:14px;">Total Pengaduan</th>
 <th style="padding:14px;">Cluster</th>
 <th style="padding:14px;">Kategori</th>
 </tr>
@@ -440,10 +439,6 @@ elif st.session_state.page == "anggota":
     for _, row in data_cluster.iterrows():
         html_table += f"""<tr>
 <td style="padding:14px; font-weight:800;">{row.get("Asal Instansi","-")}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permasalahan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Permohonan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Pertanyaan",0)}</td>
-<td style="padding:14px; font-weight:800;">{row.get("Total Pengaduan",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Cluster",0)}</td>
 <td style="padding:14px; font-weight:800;">{row.get("Kategori Cluster","-")}</td>
 </tr>
