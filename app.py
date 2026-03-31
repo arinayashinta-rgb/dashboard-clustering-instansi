@@ -457,12 +457,36 @@ elif st.session_state.page == "anggota":
 # =========================
 # DATASET
 # =========================
+# =========================
+# DATASET
+# =========================
 elif st.session_state.page == "dataset":
 
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     navbar()
 
-    st.markdown("<h1 style='font-size:42px; font-weight:900;'>📂 Dataset</h1>", unsafe_allow_html=True)
+    # =========================
+    # STYLE TAMBAHAN (BOLD UI)
+    # =========================
+    st.markdown("""
+    <style>
+    .stButton>button {
+        font-weight: 900 !important;
+        font-size: 18px !important;
+        border-radius: 30px !important;
+        height: 45px !important;
+    }
+
+    [data-testid="stDataFrame"] div {
+        font-weight: 600;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # =========================
+    # TITLE
+    # =========================
+    st.markdown("<h1 style='font-size:42px; font-weight:900; color:#0d3b66;'>📂 DATASET</h1>", unsafe_allow_html=True)
 
     # =========================
     # FILTER KOLOM
@@ -500,7 +524,7 @@ elif st.session_state.page == "dataset":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # =========================
-    # PAGINATION RAPI (MAX 5)
+    # PAGINATION RAPI
     # =========================
     max_buttons = 5
 
@@ -536,11 +560,11 @@ elif st.session_state.page == "dataset":
                 st.session_state.page_dataset = end_page
 
     # =========================
-    # INFO HALAMAN
+    # INFO HALAMAN (SUPER BOLD)
     # =========================
     st.markdown(f"""
-    <div style='text-align:center; font-size:22px; font-weight:700; margin-top:15px;'>
-    Halaman {current_page + 1} dari {total_pages}
+    <div style='text-align:center; font-size:24px; font-weight:900; margin-top:15px; color:#0d3b66; letter-spacing:1px;'>
+    HALAMAN {current_page + 1} DARI {total_pages}
     </div>
     """, unsafe_allow_html=True)
 
