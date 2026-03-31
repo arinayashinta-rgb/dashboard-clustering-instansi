@@ -188,7 +188,7 @@ def navbar():
         st.image("Unsia.png", width=200)
 
     with col2:
-        c1, c2, c3, c4 = st.columns(4)
+        c1, c2, c3, c4, c5 = st.columns(5)
         if c1.button("🏠 BERANDA"):
             go("home")
         if c2.button("📝 INPUT"):
