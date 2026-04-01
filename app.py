@@ -73,7 +73,7 @@ html, body {{
 }}
 
 /* =========================
-   INPUT BOX (TERANG)
+   INPUT BOX
    ========================= */
 input[type="text"] {{
     background-color: #f1f8ff !important;
@@ -164,7 +164,7 @@ div[data-baseweb="select"] > div:hover {{
     box-shadow: 0px 6px 16px rgba(0,0,0,0.2);
 }}
 
-/* BACKUP (ANTI GAGAL STYLE) */
+/* BACKUP */
 div[data-baseweb="select"] * {{
     font-size: 26px !important;
     font-weight: 900 !important;
@@ -466,7 +466,7 @@ elif st.session_state.page == "dataset":
     st.dataframe(df_tampil, use_container_width=True)
 
     st.markdown(f"""
-    <div style='font-size:22px; font-weight:600; margin-top:20px;'>
+    <div style='font-size:24px; font-weight:900; margin-top:20px;'>
     Total Data: {len(df_tampil)} baris
     </div>
     """, unsafe_allow_html=True)
